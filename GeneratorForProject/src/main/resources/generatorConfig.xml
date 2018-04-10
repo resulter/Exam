@@ -181,7 +181,26 @@
 
             注意，table里面很多参数都是对javaModelGenerator，context等元素的默认属性的一个复写；
          -->
-        <table tableName="test"/>
+        <!--<table tableName="test"/>-->
+        <!--<table tableName="q_exam"/>-->
+        <!--<table tableName="q_exam_record"/>-->
+        <!--<table tableName="q_listening_option"/>-->
+        <!--<table tableName="q_listening_passage"/>-->
+        <!--<table tableName="q_listening_question"/>-->
+        <!--<table tableName="q_listening_section"/>-->
+        <!--<table tableName="q_listening_subject"/>-->
+        <!--<table tableName="q_reading_option"/>-->
+        <!--<table tableName="q_reading_passage"/>-->
+        <!--<table tableName="q_reading_question"/>-->
+        <!--<table tableName="q_reading_section"/>-->
+        <!--<table tableName="q_reading_subject"/>-->
+        <table tableName="q_writing_question">
+        </table>
+        <!--<table tableName="q_speaking_section"/>-->
+        <!--<table tableName="q_speaking_subject"/>-->
+        <!--<table tableName="q_writing_question"/>-->
+        <!--<table tableName="q_writing_section"/>-->
+        <!--<table tableName="q_writing_subject"/>-->
        <!-- <table tableName="user" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
                enableSelectByExample="false" selectByExampleQueryId="false" >-->
 

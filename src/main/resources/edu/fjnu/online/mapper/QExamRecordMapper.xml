@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.fjnu.online.mapper.QExamRecordMapper">
+  <resultMap id="BaseResultMap" type="edu.fjnu.online.bean.QExamRecord">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="reading_question_id" jdbcType="INTEGER" property="readingQuestionId" />
+    <result column="reading_answer" jdbcType="VARCHAR" property="readingAnswer" />
+    <result column="reading_right" jdbcType="INTEGER" property="readingRight" />
+    <result column="listening_question_id" jdbcType="INTEGER" property="listeningQuestionId" />
+    <result column="listening_answer" jdbcType="VARCHAR" property="listeningAnswer" />
+    <result column="listening_right" jdbcType="INTEGER" property="listeningRight" />
+    <result column="speaking_question_id" jdbcType="INTEGER" property="speakingQuestionId" />
+    <result column="speaking_answer_reamrk" jdbcType="VARCHAR" property="speakingAnswerReamrk" />
+    <result column="writing_question_id" jdbcType="INTEGER" property="writingQuestionId" />
+    <result column="writing_answer_word_count" jdbcType="INTEGER" property="writingAnswerWordCount" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="edu.fjnu.online.bean.QExamRecordWithBLOBs">
+    <result column="speakng_answer_url" jdbcType="LONGVARCHAR" property="speakngAnswerUrl" />
+    <result column="writing_answer_content" jdbcType="LONGVARCHAR" property="writingAnswerContent" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, user_id, reading_question_id, reading_answer, reading_right, listening_question_id, 
+    listening_answer, listening_right, speaking_question_id, speaking_answer_reamrk, 
+    writing_question_id, writing_answer_word_count
+  </sql>
+  <sql id="Blob_Column_List">
+    speakng_answer_url, writing_answer_content
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="edu.fjnu.online.bean.QExamRecordExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from q_exam_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="edu.fjnu.online.bean.QExamRecordExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from q_exam_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from q_exam_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from q_exam_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="edu.fjnu.online.bean.QExamRecordExample">
+    delete from q_exam_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="edu.fjnu.online.bean.QExamRecordWithBLOBs">
+    insert into q_exam_record (id, user_id, reading_question_id, 
+      reading_answer, reading_right, listening_question_id, 
+      listening_answer, listening_right, speaking_question_id, 
+      speaking_answer_reamrk, writing_question_id, 
+      writing_answer_word_count, speakng_answer_url, 
+      writing_answer_content)
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{readingQuestionId,jdbcType=INTEGER}, 
+      #{readingAnswer,jdbcType=VARCHAR}, #{readingRight,jdbcType=INTEGER}, #{listeningQuestionId,jdbcType=INTEGER}, 
+      #{listeningAnswer,jdbcType=VARCHAR}, #{listeningRight,jdbcType=INTEGER}, #{speakingQuestionId,jdbcType=INTEGER}, 
+      #{speakingAnswerReamrk,jdbcType=VARCHAR}, #{writingQuestionId,jdbcType=INTEGER}, 
+      #{writingAnswerWordCount,jdbcType=INTEGER}, #{speakngAnswerUrl,jdbcType=LONGVARCHAR}, 
+      #{writingAnswerContent,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="edu.fjnu.online.bean.QExamRecordWithBLOBs">
+    insert into q_exam_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="readingQuestionId != null">
+        reading_question_id,
+      </if>
+      <if test="readingAnswer != null">
+        reading_answer,
+      </if>
+      <if test="readingRight != null">
+        reading_right,
+      </if>
+      <if test="listeningQuestionId != null">
+        listening_question_id,
+      </if>
+      <if test="listeningAnswer != null">
+        listening_answer,
+      </if>
+      <if test="listeningRight != null">
+        listening_right,
+      </if>
+      <if test="speakingQuestionId != null">
+        speaking_question_id,
+      </if>
+      <if test="speakingAnswerReamrk != null">
+        speaking_answer_reamrk,
+      </if>
+      <if test="writingQuestionId != null">
+        writing_question_id,
+      </if>
+      <if test="writingAnswerWordCount != null">
+        writing_answer_word_count,
+      </if>
+      <if test="speakngAnswerUrl != null">
+        speakng_answer_url,
+      </if>
+      <if test="writingAnswerContent != null">
+        writing_answer_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="readingQuestionId != null">
+        #{readingQuestionId,jdbcType=INTEGER},
+      </if>
+      <if test="readingAnswer != null">
+        #{readingAnswer,jdbcType=VARCHAR},
+      </if>
+      <if test="readingRight != null">
+        #{readingRight,jdbcType=INTEGER},
+      </if>
+      <if test="listeningQuestionId != null">
+        #{listeningQuestionId,jdbcType=INTEGER},
+      </if>
+      <if test="listeningAnswer != null">
+        #{listeningAnswer,jdbcType=VARCHAR},
+      </if>
+      <if test="listeningRight != null">
+        #{listeningRight,jdbcType=INTEGER},
+      </if>
+      <if test="speakingQuestionId != null">
+        #{speakingQuestionId,jdbcType=INTEGER},
+      </if>
+      <if test="speakingAnswerReamrk != null">
+        #{speakingAnswerReamrk,jdbcType=VARCHAR},
+      </if>
+      <if test="writingQuestionId != null">
+        #{writingQuestionId,jdbcType=INTEGER},
+      </if>
+      <if test="writingAnswerWordCount != null">
+        #{writingAnswerWordCount,jdbcType=INTEGER},
+      </if>
+      <if test="speakngAnswerUrl != null">
+        #{speakngAnswerUrl,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="writingAnswerContent != null">
+        #{writingAnswerContent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="edu.fjnu.online.bean.QExamRecordExample" resultType="java.lang.Long">
+    select count(*) from q_exam_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update q_exam_record
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.readingQuestionId != null">
+        reading_question_id = #{record.readingQuestionId,jdbcType=INTEGER},
+      </if>
+      <if test="record.readingAnswer != null">
+        reading_answer = #{record.readingAnswer,jdbcType=VARCHAR},
+      </if>
+      <if test="record.readingRight != null">
+        reading_right = #{record.readingRight,jdbcType=INTEGER},
+      </if>
+      <if test="record.listeningQuestionId != null">
+        listening_question_id = #{record.listeningQuestionId,jdbcType=INTEGER},
+      </if>
+      <if test="record.listeningAnswer != null">
+        listening_answer = #{record.listeningAnswer,jdbcType=VARCHAR},
+      </if>
+      <if test="record.listeningRight != null">
+        listening_right = #{record.listeningRight,jdbcType=INTEGER},
+      </if>
+      <if test="record.speakingQuestionId != null">
+        speaking_question_id = #{record.speakingQuestionId,jdbcType=INTEGER},
+      </if>
+      <if test="record.speakingAnswerReamrk != null">
+        speaking_answer_reamrk = #{record.speakingAnswerReamrk,jdbcType=VARCHAR},
+      </if>
+      <if test="record.writingQuestionId != null">
+        writing_question_id = #{record.writingQuestionId,jdbcType=INTEGER},
+      </if>
+      <if test="record.writingAnswerWordCount != null">
+        writing_answer_word_count = #{record.writingAnswerWordCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.speakngAnswerUrl != null">
+        speakng_answer_url = #{record.speakngAnswerUrl,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.writingAnswerContent != null">
+        writing_answer_content = #{record.writingAnswerContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update q_exam_record
+    set id = #{record.id,jdbcType=INTEGER},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      reading_question_id = #{record.readingQuestionId,jdbcType=INTEGER},
+      reading_answer = #{record.readingAnswer,jdbcType=VARCHAR},
+      reading_right = #{record.readingRight,jdbcType=INTEGER},
+      listening_question_id = #{record.listeningQuestionId,jdbcType=INTEGER},
+      listening_answer = #{record.listeningAnswer,jdbcType=VARCHAR},
+      listening_right = #{record.listeningRight,jdbcType=INTEGER},
+      speaking_question_id = #{record.speakingQuestionId,jdbcType=INTEGER},
+      speaking_answer_reamrk = #{record.speakingAnswerReamrk,jdbcType=VARCHAR},
+      writing_question_id = #{record.writingQuestionId,jdbcType=INTEGER},
+      writing_answer_word_count = #{record.writingAnswerWordCount,jdbcType=INTEGER},
+      speakng_answer_url = #{record.speakngAnswerUrl,jdbcType=LONGVARCHAR},
+      writing_answer_content = #{record.writingAnswerContent,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update q_exam_record
+    set id = #{record.id,jdbcType=INTEGER},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      reading_question_id = #{record.readingQuestionId,jdbcType=INTEGER},
+      reading_answer = #{record.readingAnswer,jdbcType=VARCHAR},
+      reading_right = #{record.readingRight,jdbcType=INTEGER},
+      listening_question_id = #{record.listeningQuestionId,jdbcType=INTEGER},
+      listening_answer = #{record.listeningAnswer,jdbcType=VARCHAR},
+      listening_right = #{record.listeningRight,jdbcType=INTEGER},
+      speaking_question_id = #{record.speakingQuestionId,jdbcType=INTEGER},
+      speaking_answer_reamrk = #{record.speakingAnswerReamrk,jdbcType=VARCHAR},
+      writing_question_id = #{record.writingQuestionId,jdbcType=INTEGER},
+      writing_answer_word_count = #{record.writingAnswerWordCount,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="edu.fjnu.online.bean.QExamRecordWithBLOBs">
+    update q_exam_record
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="readingQuestionId != null">
+        reading_question_id = #{readingQuestionId,jdbcType=INTEGER},
+      </if>
+      <if test="readingAnswer != null">
+        reading_answer = #{readingAnswer,jdbcType=VARCHAR},
+      </if>
+      <if test="readingRight != null">
+        reading_right = #{readingRight,jdbcType=INTEGER},
+      </if>
+      <if test="listeningQuestionId != null">
+        listening_question_id = #{listeningQuestionId,jdbcType=INTEGER},
+      </if>
+      <if test="listeningAnswer != null">
+        listening_answer = #{listeningAnswer,jdbcType=VARCHAR},
+      </if>
+      <if test="listeningRight != null">
+        listening_right = #{listeningRight,jdbcType=INTEGER},
+      </if>
+      <if test="speakingQuestionId != null">
+        speaking_question_id = #{speakingQuestionId,jdbcType=INTEGER},
+      </if>
+      <if test="speakingAnswerReamrk != null">
+        speaking_answer_reamrk = #{speakingAnswerReamrk,jdbcType=VARCHAR},
+      </if>
+      <if test="writingQuestionId != null">
+        writing_question_id = #{writingQuestionId,jdbcType=INTEGER},
+      </if>
+      <if test="writingAnswerWordCount != null">
+        writing_answer_word_count = #{writingAnswerWordCount,jdbcType=INTEGER},
+      </if>
+      <if test="speakngAnswerUrl != null">
+        speakng_answer_url = #{speakngAnswerUrl,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="writingAnswerContent != null">
+        writing_answer_content = #{writingAnswerContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="edu.fjnu.online.bean.QExamRecordWithBLOBs">
+    update q_exam_record
+    set user_id = #{userId,jdbcType=INTEGER},
+      reading_question_id = #{readingQuestionId,jdbcType=INTEGER},
+      reading_answer = #{readingAnswer,jdbcType=VARCHAR},
+      reading_right = #{readingRight,jdbcType=INTEGER},
+      listening_question_id = #{listeningQuestionId,jdbcType=INTEGER},
+      listening_answer = #{listeningAnswer,jdbcType=VARCHAR},
+      listening_right = #{listeningRight,jdbcType=INTEGER},
+      speaking_question_id = #{speakingQuestionId,jdbcType=INTEGER},
+      speaking_answer_reamrk = #{speakingAnswerReamrk,jdbcType=VARCHAR},
+      writing_question_id = #{writingQuestionId,jdbcType=INTEGER},
+      writing_answer_word_count = #{writingAnswerWordCount,jdbcType=INTEGER},
+      speakng_answer_url = #{speakngAnswerUrl,jdbcType=LONGVARCHAR},
+      writing_answer_content = #{writingAnswerContent,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="edu.fjnu.online.bean.QExamRecord">
+    update q_exam_record
+    set user_id = #{userId,jdbcType=INTEGER},
+      reading_question_id = #{readingQuestionId,jdbcType=INTEGER},
+      reading_answer = #{readingAnswer,jdbcType=VARCHAR},
+      reading_right = #{readingRight,jdbcType=INTEGER},
+      listening_question_id = #{listeningQuestionId,jdbcType=INTEGER},
+      listening_answer = #{listeningAnswer,jdbcType=VARCHAR},
+      listening_right = #{listeningRight,jdbcType=INTEGER},
+      speaking_question_id = #{speakingQuestionId,jdbcType=INTEGER},
+      speaking_answer_reamrk = #{speakingAnswerReamrk,jdbcType=VARCHAR},
+      writing_question_id = #{writingQuestionId,jdbcType=INTEGER},
+      writing_answer_word_count = #{writingAnswerWordCount,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

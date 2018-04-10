@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.fjnu.online.mapper.QSpeakingQuestionMapper">
+  <resultMap id="BaseResultMap" type="edu.fjnu.online.bean.QSpeakingQuestion">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="subject_id" jdbcType="INTEGER" property="subjectId" />
+    <result column="order_num" jdbcType="INTEGER" property="orderNum" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="edu.fjnu.online.bean.QSpeakingQuestionWithBLOBs">
+    <result column="question_description" jdbcType="LONGVARCHAR" property="questionDescription" />
+    <result column="question_url" jdbcType="LONGVARCHAR" property="questionUrl" />
+    <result column="demo1" jdbcType="LONGVARCHAR" property="demo1" />
+    <result column="demo2" jdbcType="LONGVARCHAR" property="demo2" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, name, subject_id, order_num, remark
+  </sql>
+  <sql id="Blob_Column_List">
+    question_description, question_url, demo1, demo2
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="edu.fjnu.online.bean.QSpeakingQuestionExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from q_speaking_question
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="edu.fjnu.online.bean.QSpeakingQuestionExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from q_speaking_question
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from q_speaking_question
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from q_speaking_question
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="edu.fjnu.online.bean.QSpeakingQuestionExample">
+    delete from q_speaking_question
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="edu.fjnu.online.bean.QSpeakingQuestionWithBLOBs">
+    insert into q_speaking_question (id, name, subject_id, 
+      order_num, remark, question_description, 
+      question_url, demo1, demo2
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{subjectId,jdbcType=INTEGER}, 
+      #{orderNum,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{questionDescription,jdbcType=LONGVARCHAR}, 
+      #{questionUrl,jdbcType=LONGVARCHAR}, #{demo1,jdbcType=LONGVARCHAR}, #{demo2,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="edu.fjnu.online.bean.QSpeakingQuestionWithBLOBs">
+    insert into q_speaking_question
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="subjectId != null">
+        subject_id,
+      </if>
+      <if test="orderNum != null">
+        order_num,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="questionDescription != null">
+        question_description,
+      </if>
+      <if test="questionUrl != null">
+        question_url,
+      </if>
+      <if test="demo1 != null">
+        demo1,
+      </if>
+      <if test="demo2 != null">
+        demo2,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectId != null">
+        #{subjectId,jdbcType=INTEGER},
+      </if>
+      <if test="orderNum != null">
+        #{orderNum,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="questionDescription != null">
+        #{questionDescription,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="questionUrl != null">
+        #{questionUrl,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="demo1 != null">
+        #{demo1,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="demo2 != null">
+        #{demo2,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="edu.fjnu.online.bean.QSpeakingQuestionExample" resultType="java.lang.Long">
+    select count(*) from q_speaking_question
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update q_speaking_question
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.name != null">
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.subjectId != null">
+        subject_id = #{record.subjectId,jdbcType=INTEGER},
+      </if>
+      <if test="record.orderNum != null">
+        order_num = #{record.orderNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.remark != null">
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.questionDescription != null">
+        question_description = #{record.questionDescription,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.questionUrl != null">
+        question_url = #{record.questionUrl,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.demo1 != null">
+        demo1 = #{record.demo1,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.demo2 != null">
+        demo2 = #{record.demo2,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update q_speaking_question
+    set id = #{record.id,jdbcType=INTEGER},
+      name = #{record.name,jdbcType=VARCHAR},
+      subject_id = #{record.subjectId,jdbcType=INTEGER},
+      order_num = #{record.orderNum,jdbcType=INTEGER},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      question_description = #{record.questionDescription,jdbcType=LONGVARCHAR},
+      question_url = #{record.questionUrl,jdbcType=LONGVARCHAR},
+      demo1 = #{record.demo1,jdbcType=LONGVARCHAR},
+      demo2 = #{record.demo2,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update q_speaking_question
+    set id = #{record.id,jdbcType=INTEGER},
+      name = #{record.name,jdbcType=VARCHAR},
+      subject_id = #{record.subjectId,jdbcType=INTEGER},
+      order_num = #{record.orderNum,jdbcType=INTEGER},
+      remark = #{record.remark,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="edu.fjnu.online.bean.QSpeakingQuestionWithBLOBs">
+    update q_speaking_question
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectId != null">
+        subject_id = #{subjectId,jdbcType=INTEGER},
+      </if>
+      <if test="orderNum != null">
+        order_num = #{orderNum,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="questionDescription != null">
+        question_description = #{questionDescription,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="questionUrl != null">
+        question_url = #{questionUrl,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="demo1 != null">
+        demo1 = #{demo1,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="demo2 != null">
+        demo2 = #{demo2,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="edu.fjnu.online.bean.QSpeakingQuestionWithBLOBs">
+    update q_speaking_question
+    set name = #{name,jdbcType=VARCHAR},
+      subject_id = #{subjectId,jdbcType=INTEGER},
+      order_num = #{orderNum,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      question_description = #{questionDescription,jdbcType=LONGVARCHAR},
+      question_url = #{questionUrl,jdbcType=LONGVARCHAR},
+      demo1 = #{demo1,jdbcType=LONGVARCHAR},
+      demo2 = #{demo2,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="edu.fjnu.online.bean.QSpeakingQuestion">
+    update q_speaking_question
+    set name = #{name,jdbcType=VARCHAR},
+      subject_id = #{subjectId,jdbcType=INTEGER},
+      order_num = #{orderNum,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
