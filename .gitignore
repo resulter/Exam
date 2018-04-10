@@ -1,0 +1,13 @@
+.mymetadata
+.checkstyle
+.classpath
+.project
+.class
+.war
+.zip
+.rar
+.idea
+*.iml
+.settings/*
+/target/*
+/target/
