@@ -73,13 +73,14 @@ public class ExamServiceImpl implements ExamService{
                 SubjectReadingVo subjectReadingVo = new SubjectReadingVo();
                 Integer passageId = qReadingSubject.getPassageId();
                 QReadingPassage qReadingPassage = qReadingPassageMapper.selectByPrimaryKey(passageId);
+                subjectReadingVo.setId(qReadingSubject.getId());
                 subjectReadingVo.setPassage(qReadingPassage.getContent());
                 subjectReadingVo.setPassageTitle(qReadingPassage.getTitle());
                 subjectReadingVo.setPassageTitleCn(qReadingPassage.getTitleCn());
                 subjectReadingVo.setOrderNum(qReadingSubject.getOrderNum());
                 QReadingQuestionExample qReadingQuestionExample = new QReadingQuestionExample();
                 qReadingQuestionExample.createCriteria().andSubjectIdEqualTo(qReadingSubject.getId());
-                List<QReadingQuestion> qReadingQuestions = qReadingQuestionMapper.selectByExample(qReadingQuestionExample);
+                List<QReadingQuestion> qReadingQuestions = qReadingQuestionMapper.selectByExampleWithBLOBs(qReadingQuestionExample);
                 List<QuestionReadingVo> questionReadingVos = new ArrayList<>();
                 for (QReadingQuestion qReadingQuestion:  qReadingQuestions) {
                     QuestionReadingVo questionReadingVo = new QuestionReadingVo();

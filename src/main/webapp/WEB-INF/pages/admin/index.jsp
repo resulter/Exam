@@ -48,7 +48,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         	<li><a href="javascript:;" onclick="formSubmit('${ctx}/toQuestionPage.action','mframe');this.blur();">试题管理</a></li>
                             <li><a href="javascript:;" onclick="formSubmit('${ctx}/toTypePage.action','mframe');this.blur();">题型管理</a></li>
                             <li><a href="javascript:;" onclick="formSubmit('${ctx}/mock/toRepositoryReading.action','mframe');this.blur();">阅读管理</a></li>
-                            <li><a href="javascript:;" onclick="formSubmit('${ctx}/toTypePage.action','mframe');this.blur();">听力管理</a></li>
+                            <li><a href="javascript:;" onclick="formSubmit('${ctx}/mock/toRepositoryListening.action','mframe');this.blur();">听力管理</a></li>
                             <li><a href="javascript:;" onclick="formSubmit('${ctx}/toTypePage.action','mframe');this.blur();">口语管理</a></li>
                             <li><a href="javascript:;" onclick="formSubmit('${ctx}/toTypePage.action','mframe');this.blur();">写作管理</a></li>
                         </ul>

@@ -237,15 +237,17 @@ public class PaperMgController {
 		List<Question> inpList = new ArrayList<Question>();
 		List<Question> desList = new ArrayList<Question>();
 		for(int i = 0;i<ids.length;i++){
-			question = questionService.get(Integer.parseInt(ids[i]));
-			if("1".equals(question.getTypeId())){//单选
-				selList.add(question);
-			}
-			if("4".equals(question.getTypeId())){//填空
-				inpList.add(question);
-			}
-			if("5".equals(question.getTypeId())){//简答题
-				desList.add(question);
+			if(ids[i]!=""&&!"".equals(ids[i])) {
+				question = questionService.get(Integer.parseInt(ids[i]));
+				if ("1".equals(question.getTypeId())) {//单选
+					selList.add(question);
+				}
+				if ("4".equals(question.getTypeId())) {//填空
+					inpList.add(question);
+				}
+				if ("5".equals(question.getTypeId())) {//简答题
+					desList.add(question);
+				}
 			}
 		}
 		

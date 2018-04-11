@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <%
 String path = request.getContextPath();
@@ -28,11 +29,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     	<thead>
         	<tr>
         		<th class="num"></th>
-        		<th class="name">题目编号</th>
-                <th class="operate">题目名称</th>
-                <th class="process">对应科目</th>
-                <th class="process">题型</th>
-                <th class="node">难度</th>
+        		<th class="name">阅读ID</th>
+                <th class="operate">阅读名称</th>
+                <th class="process">阅读1</th>
+                <th class="process">阅读2</th>
+                <th class="node">阅读篇数</th>
                 <th class="time">备注</th>
                 <th class="operate">操作</th>
             </tr>
@@ -43,6 +44,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					<td><input type="checkbox" name="questionId" value="${o.id}"/></td>
 					<td>${o.id}</td>
 					<td>${o.name}</td>
+					<td title="${o.subjectReadingVos[0].passageTitleCn}">${o.subjectReadingVos[0].passageTitle}</td>
+					<td title="${o.subjectReadingVos[1].passageTitleCn}">${o.subjectReadingVos[1].passageTitle}</td>
+					<%--<td>${o.subjectReadingVos}</td>--%>
+					<td>${fn:length(o.subjectReadingVos)} </td>
+					<td></td>
 					<%--<td><font color="blue">${o.courseId}</font></td>--%>
 					<%--<td><font color="blue">${o.typeId}</font></td>--%>
 				<%--	<td><font color="blue">
@@ -54,7 +60,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					<td class="operate">
 						<a href="${ctx}/deleteQuestion.action?id=${o.id}" class="del">删除</a>
 						<a href="${ctx}/toUpdQuestion.action?id=${o.id}" class="del">编辑</a>
-						<a href="${ctx}/toQryQuestion.action?id=${o.id}" class="del">查看</a>
+						<a href="${ctx}/mock/toQueryRepositorReading.action?subjectId=${o.subjectReadingVos[0].id}&subjectId=${o.subjectReadingVos[1].id}" class="del">查看</a>
 					</td>
 				</tr>
 			</c:forEach>
@@ -90,25 +96,35 @@ $('.pagination').pagination(${pageInfo.total},{
 			// dataType: "json",
 			data:{page:page+1},
 			success: function(data){
-			    alert(data);
 				var html = "";
 				html += "<div class='table-box' id='myDiv'>";
 				html += "<table border='1' cellspacing='1'>";
 				html += "<thead>";
 				html += "<th class='num'></th>";
-				html += "<th class='name'>题目编号</th><th class='operate'>题目名称</th>";
-				html += "<th class='process'>对应科目</th><th class='process'>题型</th><th class='node'>难度</th>";
+				html += "<th class='name'>阅读ID</th><th class='operate'>阅读名称</th>";
+				html += "<th class='process'>阅读1</th><th class='process'>阅读2</th><th class='node'>阅读篇数</th>";
 				html += "<th class='time'>备注</th><th class='operate'>操作</th>";
 				html += "</thead>";
 				html += "<tbody align='center'>";
 
-                console.log(data);
-
-				for(dataList in data){
+				$.each(data.extend.dataList,function(){
 					html += "<tr align='center'>";
-					html += "<td><input type='checkbox' name='id' value='"+data[dataList].id+"'/></td>";
-					html += "<td>"+data[dataList].id+"</td>";
-					html += "<td>"+data[dataList].name+"</td>";
+					html += "<td><input type='checkbox' name='id' value='"+this.id+"'/></td>";
+					html += "<td>"+this.id+"</td>";
+					html += "<td>"+this.name+"</td>";
+					if(this.subjectReadingVos.length!=0){
+                        if(this.subjectReadingVos.length>0) {
+                            html += "<td title="+ this.subjectReadingVos[0].passageTitleCn+">" + this.subjectReadingVos[0].passageTitle + "</td>";
+                        }
+                        if(this.subjectReadingVos.length>1) {
+                            html += "<td title="+ this.subjectReadingVos[1].passageTitleCn+">" + this.subjectReadingVos[1].passageTitle + "</td>";
+                        }
+                    }else{
+                        html += "<td></td>";
+                        html += "<td></td>";
+					}
+					html += "<td>"+this.subjectReadingVos.length+"</td>";
+					html += "<td></td>";
 				/*	html += "<td><font color='blue'>"+data[dataList].courseId+"</font></td>";
 					html += "<td><font color='blue'>"+data[dataList].typeId+"</font></td>";
 					if(data[dataList].difficulty == 0){
@@ -123,11 +139,11 @@ $('.pagination').pagination(${pageInfo.total},{
 					}else{
 						html += "<td>"+data[dataList].remark+"</td>";
 					}*/
-					html += "<td class='operate'><a href='${ctx}/deleteQuestion.action?id="+data[dataList].id+"' class='del'>删除</a>&nbsp;";
-					html += "<a href='${ctx}/toUpdQuestion.action?id="+data[dataList].id+"' class='del'>编辑</a>&nbsp;";
-					html += "<a href='${ctx}/toQryQuestion.action?id="+data[dataList].id+"' class='del'>查看</a></td>";
+					html += "<td class='operate'><a href='${ctx}/deleteQuestion.action?id="+this.id+"' class='del'>删除</a>&nbsp;";
+					html += "<a href='${ctx}/toUpdQuestion.action?id="+this.id+"' class='del'>编辑</a>&nbsp;";
+					html += "<a href='${ctx}/toQryQuestion.action?subjectId="+this.subjectReadingVos.id+"' class='del'>查看</a></td>";
 					html += "</tr>";
-				}
+                })
 				html += "</tbody>"; 
 				html += "</table>";
 				html += "</div>";
@@ -174,7 +190,8 @@ function addUser(){
 }
 
 $("tbody").find("tr:odd").css("backgroundColor","#eff6fa");
-
+$("tbody td").css("text-align","center");
+$("thead th").css("text-align","center");
 showRemind('input[type=text], textarea','placeholder');
 </script>
 </html>
