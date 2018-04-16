@@ -11,5 +11,14 @@ public class ExamVo {
     private SectionListeningVo  listening;
     private SectionSpeakingVo  speaking;
     private SectionWritingVo  writing;
+    private String readingName;
+    private String listeningName;
+    private String speakingName;
+    private String writingName;
+    private Integer readingId;
+    private Integer listeningId;
+    private Integer speakingId;
+    private Integer writingId;
     private String createTime;
+    private String remark;
 }

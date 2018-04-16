@@ -71,6 +71,12 @@ table tr .operate{ width:96px; padding-left:15px;}
 table tr .operate a{ color:#2c7bbc;}
 table tr .operate a:hover{ text-decoration:underline;}
 
+table tr .section{ width:140px; padding-left:13px;}
+thead tr th {text-align: center;}
+tbody tr {text-align: center;}
+/*th {text-align: center;}*/
+/*tr {text-align: center;}*/
+
 
 /*分页*/
 .pagination{ margin-top:10px;padding:0 10px;}

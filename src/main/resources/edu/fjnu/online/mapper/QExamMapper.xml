@@ -113,6 +113,17 @@
       #{writingSectionId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{reamrk,jdbcType=VARCHAR}
       )
   </insert>
+  <insert id="insertAndGetId" parameterType="edu.fjnu.online.bean.QExam" useGeneratedKeys="true" keyProperty="id">
+    insert into q_exam (id, name, reading_section_id,
+      listening_section_id, speaking_section_id,
+      writing_section_id, create_time, reamrk
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{readingSectionId,jdbcType=INTEGER},
+      #{listeningSectionId,jdbcType=INTEGER}, #{speakingSectionId,jdbcType=INTEGER},
+      #{writingSectionId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{reamrk,jdbcType=VARCHAR}
+      )
+  </insert>
+
   <insert id="insertSelective" parameterType="edu.fjnu.online.bean.QExam">
     insert into q_exam
     <trim prefix="(" suffix=")" suffixOverrides=",">

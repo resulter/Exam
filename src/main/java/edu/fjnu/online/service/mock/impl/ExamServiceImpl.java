@@ -124,7 +124,7 @@ public class ExamServiceImpl implements ExamService{
                 subjectListeningVo.setId(qListeningSubject.getId());
                 Integer passageId = qListeningSubject.getPassageId();
                 QListeningPassage qListeningPassage = qListeningPassageMapper.selectByPrimaryKey(passageId);
-                subjectListeningVo.setAutioURL(BaseConstant.audioURL + qListeningPassage.getAudioUrl());
+                subjectListeningVo.setAudioURL(BaseConstant.audioURL + qListeningPassage.getAudioUrl());
                 subjectListeningVo.setImageURL(BaseConstant.audioURL + qListeningPassage.getImageUrl());
                 subjectListeningVo.setTitle(qListeningPassage.getTitle());
                 subjectListeningVo.setTitleCn(qListeningPassage.getTitleCn());

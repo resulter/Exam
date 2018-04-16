@@ -6,9 +6,11 @@ import edu.fjnu.online.bean.vo.SectionReadingVo;
 import edu.fjnu.online.bean.vo.SubjectReadingVo;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ExamReadingService {
     public List<SectionReadingVo> getAllReading();
     public PageInfo<SectionReadingVo> findByPage(Integer pageNo, Integer pageSize);
-    public SubjectReadingVo getReadingSubjectBySubjectId(Integer subjectId);
+    public List<SubjectReadingVo> getReadingSubjectBysectionId(Integer sectionId);
+
 }

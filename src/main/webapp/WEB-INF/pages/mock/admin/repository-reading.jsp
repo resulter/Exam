@@ -60,7 +60,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					<td class="operate">
 						<a href="${ctx}/deleteQuestion.action?id=${o.id}" class="del">删除</a>
 						<a href="${ctx}/toUpdQuestion.action?id=${o.id}" class="del">编辑</a>
-						<a href="${ctx}/mock/toQueryRepositorReading.action?subjectId=${o.subjectReadingVos[0].id}&subjectId=${o.subjectReadingVos[1].id}" class="del">查看</a>
+						<a href="${ctx}/mock/toQueryRepositorReading.action?sectionId=${o.subjectReadingVos[0].id}" class="del">查看</a>
 					</td>
 				</tr>
 			</c:forEach>
@@ -141,7 +141,7 @@ $('.pagination').pagination(${pageInfo.total},{
 					}*/
 					html += "<td class='operate'><a href='${ctx}/deleteQuestion.action?id="+this.id+"' class='del'>删除</a>&nbsp;";
 					html += "<a href='${ctx}/toUpdQuestion.action?id="+this.id+"' class='del'>编辑</a>&nbsp;";
-					html += "<a href='${ctx}/toQryQuestion.action?subjectId="+this.subjectReadingVos.id+"' class='del'>查看</a></td>";
+					html += "<a href='${ctx}/mock/toQueryRepositorReading.action?sectionId="+this.id+"' class='del'>查看</a></td>";
 					html += "</tr>";
                 })
 				html += "</tbody>"; 

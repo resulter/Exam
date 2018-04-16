@@ -1,5 +1,7 @@
 package edu.fjnu.online.service.mock.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import edu.fjnu.online.bean.*;
 import edu.fjnu.online.bean.vo.*;
 import edu.fjnu.online.mapper.*;
@@ -12,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ExamListeningServiceImpl implements ExamListeningService{
+public class ExamListeningServiceImpl implements ExamListeningService {
     @Autowired
     QExamMapper qExamMapper;
     @Autowired
@@ -52,11 +54,9 @@ public class ExamListeningServiceImpl implements ExamListeningService{
     public List<ExamVo> findAllExam() {
         List<ExamVo> result = new ArrayList<>();
         List<QExam> qExams = qExamMapper.selectByExample(null);
-        for (QExam qExam:qExams ) {
+        for (QExam qExam : qExams) {
             ExamVo examVo = new ExamVo();
             examVo.setName(qExam.getName());
-
-
 
 
             //阅读部分
@@ -69,7 +69,7 @@ public class ExamListeningServiceImpl implements ExamListeningService{
             qReadingSubjectExample.createCriteria().andSectionIdEqualTo(readingSectionId);
             List<QReadingSubject> qReadingSubjects = qReadingSubjectMapper.selectByExample(qReadingSubjectExample);
             List<SubjectReadingVo> subjectReadingVos = new ArrayList<>();
-            for (QReadingSubject qReadingSubject: qReadingSubjects) {
+            for (QReadingSubject qReadingSubject : qReadingSubjects) {
                 SubjectReadingVo subjectReadingVo = new SubjectReadingVo();
                 Integer passageId = qReadingSubject.getPassageId();
                 QReadingPassage qReadingPassage = qReadingPassageMapper.selectByPrimaryKey(passageId);
@@ -81,7 +81,7 @@ public class ExamListeningServiceImpl implements ExamListeningService{
                 qReadingQuestionExample.createCriteria().andSubjectIdEqualTo(qReadingSubject.getId());
                 List<QReadingQuestion> qReadingQuestions = qReadingQuestionMapper.selectByExample(qReadingQuestionExample);
                 List<QuestionReadingVo> questionReadingVos = new ArrayList<>();
-                for (QReadingQuestion qReadingQuestion:  qReadingQuestions) {
+                for (QReadingQuestion qReadingQuestion : qReadingQuestions) {
                     QuestionReadingVo questionReadingVo = new QuestionReadingVo();
                     questionReadingVo.setId(qReadingQuestion.getId());
                     questionReadingVo.setQuestion(qReadingQuestion.getQuestion());
@@ -90,8 +90,8 @@ public class ExamListeningServiceImpl implements ExamListeningService{
                     QReadingOptionExample qReadingOptionExample = new QReadingOptionExample();
                     qReadingOptionExample.createCriteria().andQuestionIdEqualTo(qReadingQuestion.getId());
                     List<QReadingOption> qReadingOptions = qReadingOptionMapper.selectByExample(qReadingOptionExample);
-                    List<OptionReadingVo> optionReadingVos= new ArrayList<>();
-                    for (QReadingOption qReadingOption: qReadingOptions) {
+                    List<OptionReadingVo> optionReadingVos = new ArrayList<>();
+                    for (QReadingOption qReadingOption : qReadingOptions) {
                         OptionReadingVo optionReadingVo = new OptionReadingVo();
                         optionReadingVo.setId(qReadingOption.getId());
                         optionReadingVo.setItemCode(qReadingOption.getItemCode());
@@ -118,12 +118,12 @@ public class ExamListeningServiceImpl implements ExamListeningService{
             qListeningSubjectExample.createCriteria().andSectionIdEqualTo(listeningSectionId);
             List<QListeningSubject> qListeningSubjects = qListeningSubjectMapper.selectByExample(qListeningSubjectExample);
             List<SubjectListeningVo> subjectListeningVos = new ArrayList<>();
-            for (QListeningSubject qListeningSubject:qListeningSubjects) {
+            for (QListeningSubject qListeningSubject : qListeningSubjects) {
                 SubjectListeningVo subjectListeningVo = new SubjectListeningVo();
                 subjectListeningVo.setId(qListeningSubject.getId());
                 Integer passageId = qListeningSubject.getPassageId();
                 QListeningPassage qListeningPassage = qListeningPassageMapper.selectByPrimaryKey(passageId);
-                subjectListeningVo.setAutioURL(qListeningPassage.getAudioUrl());
+                subjectListeningVo.setAudioURL(qListeningPassage.getAudioUrl());
                 subjectListeningVo.setImageURL(qListeningPassage.getImageUrl());
                 subjectListeningVo.setTitle(qListeningPassage.getTitle());
                 subjectListeningVo.setTitleCn(qListeningPassage.getTitleCn());
@@ -131,7 +131,7 @@ public class ExamListeningServiceImpl implements ExamListeningService{
                 qListeningQuestionExample.createCriteria().andSubjectIdEqualTo(qListeningSubject.getId());
                 List<QListeningQuestion> qListeningQuestions = qListeningQuestionMapper.selectByExample(qListeningQuestionExample);
                 List<QuestionListeningVo> questionListeningVos = new ArrayList<>();
-                for (QListeningQuestion qListeningQuestion: qListeningQuestions) {
+                for (QListeningQuestion qListeningQuestion : qListeningQuestions) {
                     QuestionListeningVo questionListeningVo = new QuestionListeningVo();
                     questionListeningVo.setId(qListeningQuestion.getId());
                     questionListeningVo.setOrderNum(qListeningQuestion.getOrderNum());
@@ -142,7 +142,7 @@ public class ExamListeningServiceImpl implements ExamListeningService{
                     qListeningOptionExample.createCriteria().andQuestionIdEqualTo(qListeningQuestion.getId());
                     List<QListeningOption> qListeningOptions = qListeningOptionMapper.selectByExample(qListeningOptionExample);
                     List<OptionListeningVo> optionListeningVos = new ArrayList<>();
-                    for (QListeningOption qListeningOption: qListeningOptions) {
+                    for (QListeningOption qListeningOption : qListeningOptions) {
                         OptionListeningVo optionListeningVo = new OptionListeningVo();
                         optionListeningVo.setId(qListeningOption.getId());
                         optionListeningVo.setItemCode(qListeningOption.getItemCode());
@@ -169,7 +169,7 @@ public class ExamListeningServiceImpl implements ExamListeningService{
             qSpeakingSubjectExample.createCriteria().andSectionIdEqualTo(speakingSectionId);
             List<SubjectSpeakingVo> subjectSpeakingVos = new ArrayList<>();
             List<QSpeakingSubject> qSpeakingSubjects = qSpeakingSubjectMapper.selectByExample(qSpeakingSubjectExample);
-            for (QSpeakingSubject qSpeakingSubject: qSpeakingSubjects) {
+            for (QSpeakingSubject qSpeakingSubject : qSpeakingSubjects) {
                 SubjectSpeakingVo subjectSpeakingVo = new SubjectSpeakingVo();
                 subjectSpeakingVo.setId(qSpeakingSubject.getId());
                 subjectSpeakingVo.setOrderNum(qSpeakingSubject.getOrderNum());
@@ -177,7 +177,7 @@ public class ExamListeningServiceImpl implements ExamListeningService{
                 qSpeakingQuestionExample.createCriteria().andSubjectIdEqualTo(qSpeakingSubject.getId());
                 List<QSpeakingQuestionWithBLOBs> qSpeakingQuestionWithBLOBs = qSpeakingQuestionMapper.selectByExampleWithBLOBs(qSpeakingQuestionExample);
                 List<QuestionSpeakingVo> questionSpeakingVos = new ArrayList<>();
-                for (QSpeakingQuestionWithBLOBs qSpeakingQuestion: qSpeakingQuestionWithBLOBs) {
+                for (QSpeakingQuestionWithBLOBs qSpeakingQuestion : qSpeakingQuestionWithBLOBs) {
                     QuestionSpeakingVo questionSpeakingVo = new QuestionSpeakingVo();
                     questionSpeakingVo.setId(qSpeakingQuestion.getId());
                     questionSpeakingVo.setQuestionDescription(qSpeakingQuestion.getQuestionDescription());
@@ -193,7 +193,7 @@ public class ExamListeningServiceImpl implements ExamListeningService{
             sectionSpeakingVo.setSubjectSpeakingVos(subjectSpeakingVos);
             examVo.setSpeaking(sectionSpeakingVo);
             //写作部分
-            SectionWritingVo sectionWritingVo =new SectionWritingVo();
+            SectionWritingVo sectionWritingVo = new SectionWritingVo();
             Integer writingSectionId = qExam.getWritingSectionId();
             QWritingSection qWritingSection = qWritingSectionMapper.selectByPrimaryKey(writingSectionId);
             sectionWritingVo.setId(qWritingSection.getId());
@@ -203,7 +203,7 @@ public class ExamListeningServiceImpl implements ExamListeningService{
             qWritingSubjectExample.createCriteria().andSectionIdEqualTo(writingSectionId);
             List<SubjectWritingVo> subjectWritingVos = new ArrayList<>();
             List<QWritingSubject> qWritingSubjects = qWritingSubjectMapper.selectByExample(qWritingSubjectExample);
-            for (QWritingSubject qWritingSubject:qWritingSubjects) {
+            for (QWritingSubject qWritingSubject : qWritingSubjects) {
                 SubjectWritingVo subjectWritingVo = new SubjectWritingVo();
                 subjectWritingVo.setId(qWritingSubject.getId());
                 subjectWritingVo.setOrderNum(qWritingSubject.getOrderNum());
@@ -211,7 +211,7 @@ public class ExamListeningServiceImpl implements ExamListeningService{
                 qWritingQuestionExample.createCriteria().andSubjectIdEqualTo(qWritingSubject.getId());
                 List<QuestionWritingVo> questionWritingVos = new ArrayList<>();
                 List<QWritingQuestion> qWritingQuestions = qWritingQuestionMapper.selectByExampleWithBLOBs(qWritingQuestionExample);
-                for (QWritingQuestion qWritingQuestion:qWritingQuestions) {
+                for (QWritingQuestion qWritingQuestion : qWritingQuestions) {
                     QuestionWritingVo questionWritingVo = new QuestionWritingVo();
                     questionWritingVo.setId(qWritingQuestion.getId());
                     questionWritingVo.setQuestion(qWritingQuestion.getQuestion());
@@ -228,5 +228,117 @@ public class ExamListeningServiceImpl implements ExamListeningService{
             result.add(examVo);
         }
         return result;
+    }
+
+    @Override
+    public PageInfo<SectionListeningVo> findByPage(Integer pageNo, Integer pageSize) {
+        pageNo = pageNo == null ? 1 : pageNo;
+        pageSize = pageSize == null ? 10 : pageSize;
+        PageHelper.startPage(pageNo, pageSize);
+        List<QListeningSection> qListeningSections = qListeningSectionMapper.selectByExample(null);
+        //用PageInfo对结果进行包装
+        PageInfo page = new PageInfo(qListeningSections);
+        List<SectionListeningVo> sectionListeningVos = new ArrayList<>();
+        for (QListeningSection qListeningSection : qListeningSections) {
+            SectionListeningVo sectionListeningVo = new SectionListeningVo();
+            sectionListeningVo.setId(qListeningSection.getId());
+            sectionListeningVo.setName(qListeningSection.getName());
+            QListeningSubjectExample qListeningSubjectExample = new QListeningSubjectExample();
+            qListeningSubjectExample.createCriteria().andSectionIdEqualTo(qListeningSection.getId());
+            List<QListeningSubject> qListeningSubjects = qListeningSubjectMapper.selectByExample(qListeningSubjectExample);
+            List<SubjectListeningVo> subjectListeningVos = new ArrayList<>();
+            for (QListeningSubject qListeningSubject : qListeningSubjects) {
+                SubjectListeningVo subjectListeningVo = new SubjectListeningVo();
+                subjectListeningVo.setId(qListeningSubject.getId());
+                Integer passageId = qListeningSubject.getPassageId();
+                QListeningPassage qListeningPassage = qListeningPassageMapper.selectByPrimaryKey(passageId);
+                subjectListeningVo.setAudioURL(qListeningPassage.getAudioUrl());
+                subjectListeningVo.setImageURL(qListeningPassage.getImageUrl());
+                subjectListeningVo.setTitle(qListeningPassage.getTitle());
+                subjectListeningVo.setTitleCn(qListeningPassage.getTitleCn());
+                QListeningQuestionExample qListeningQuestionExample = new QListeningQuestionExample();
+                qListeningQuestionExample.createCriteria().andSubjectIdEqualTo(qListeningSubject.getId());
+                List<QListeningQuestion> qListeningQuestions = qListeningQuestionMapper.selectByExampleWithBLOBs(qListeningQuestionExample);
+                List<QuestionListeningVo> questionListeningVos = new ArrayList<>();
+                for (QListeningQuestion qListeningQuestion : qListeningQuestions) {
+                    QuestionListeningVo questionListeningVo = new QuestionListeningVo();
+                    questionListeningVo.setId(qListeningQuestion.getId());
+                    questionListeningVo.setOrderNum(qListeningQuestion.getOrderNum());
+                    questionListeningVo.setQuestion(qListeningQuestion.getQuestion());
+                    questionListeningVo.setQuestionURL(qListeningQuestion.getQuestionUrl());
+                    questionListeningVo.setRightAnswer(qListeningQuestion.getRightAnswer());
+                    QListeningOptionExample qListeningOptionExample = new QListeningOptionExample();
+                    qListeningOptionExample.createCriteria().andQuestionIdEqualTo(qListeningQuestion.getId());
+                    List<QListeningOption> qListeningOptions = qListeningOptionMapper.selectByExample(qListeningOptionExample);
+                    List<OptionListeningVo> optionListeningVos = new ArrayList<>();
+                    for (QListeningOption qListeningOption : qListeningOptions) {
+                        OptionListeningVo optionListeningVo = new OptionListeningVo();
+                        optionListeningVo.setId(qListeningOption.getId());
+                        optionListeningVo.setItemCode(qListeningOption.getItemCode());
+                        optionListeningVo.setItemName(qListeningOption.getItemName());
+                        optionListeningVo.setOrderNum(qListeningOption.getOrderNum());
+                        optionListeningVos.add(optionListeningVo);
+                    }
+                    questionListeningVo.setOptionListeningVos(optionListeningVos);
+                    questionListeningVos.add(questionListeningVo);
+                }
+                subjectListeningVo.setQuestionListeningVos(questionListeningVos);
+                subjectListeningVos.add(subjectListeningVo);
+            }
+            sectionListeningVo.setSubjectListeningVos(subjectListeningVos);
+            sectionListeningVos.add(sectionListeningVo);
+        }
+        page.setList(sectionListeningVos);
+        return page;
+    }
+
+    @Override
+    public List<SubjectListeningVo> getListeningSubjectBySectionId(Integer sectionId) {
+        if (sectionId == null) {
+            return null;
+        }
+        QListeningSubjectExample qListeningSubjectExample = new QListeningSubjectExample();
+        qListeningSubjectExample.createCriteria().andSectionIdEqualTo(sectionId);
+        List<QListeningSubject> qListeningSubjects = qListeningSubjectMapper.selectByExample(qListeningSubjectExample);
+        List<SubjectListeningVo> subjectListeningVos = new ArrayList<>();
+        for (QListeningSubject qListeningSubject : qListeningSubjects) {
+            SubjectListeningVo subjectListeningVo = new SubjectListeningVo();
+            subjectListeningVo.setId(qListeningSubject.getId());
+            Integer passageId = qListeningSubject.getPassageId();
+            QListeningPassage qListeningPassage = qListeningPassageMapper.selectByPrimaryKey(passageId);
+            subjectListeningVo.setAudioURL(qListeningPassage.getAudioUrl());
+            subjectListeningVo.setImageURL(qListeningPassage.getImageUrl());
+            subjectListeningVo.setTitle(qListeningPassage.getTitle());
+            subjectListeningVo.setTitleCn(qListeningPassage.getTitleCn());
+            QListeningQuestionExample qListeningQuestionExample = new QListeningQuestionExample();
+            qListeningQuestionExample.createCriteria().andSubjectIdEqualTo(qListeningSubject.getId());
+            List<QListeningQuestion> qListeningQuestions = qListeningQuestionMapper.selectByExampleWithBLOBs(qListeningQuestionExample);
+            List<QuestionListeningVo> questionListeningVos = new ArrayList<>();
+            for (QListeningQuestion qListeningQuestion : qListeningQuestions) {
+                QuestionListeningVo questionListeningVo = new QuestionListeningVo();
+                questionListeningVo.setId(qListeningQuestion.getId());
+                questionListeningVo.setOrderNum(qListeningQuestion.getOrderNum());
+                questionListeningVo.setQuestion(qListeningQuestion.getQuestion());
+                questionListeningVo.setQuestionURL(qListeningQuestion.getQuestionUrl());
+                questionListeningVo.setRightAnswer(qListeningQuestion.getRightAnswer());
+                QListeningOptionExample qListeningOptionExample = new QListeningOptionExample();
+                qListeningOptionExample.createCriteria().andQuestionIdEqualTo(qListeningQuestion.getId());
+                List<QListeningOption> qListeningOptions = qListeningOptionMapper.selectByExample(qListeningOptionExample);
+                List<OptionListeningVo> optionListeningVos = new ArrayList<>();
+                for (QListeningOption qListeningOption : qListeningOptions) {
+                    OptionListeningVo optionListeningVo = new OptionListeningVo();
+                    optionListeningVo.setId(qListeningOption.getId());
+                    optionListeningVo.setItemCode(qListeningOption.getItemCode());
+                    optionListeningVo.setItemName(qListeningOption.getItemName());
+                    optionListeningVo.setOrderNum(qListeningOption.getOrderNum());
+                    optionListeningVos.add(optionListeningVo);
+                }
+                questionListeningVo.setOptionListeningVos(optionListeningVos);
+                questionListeningVos.add(questionListeningVo);
+            }
+            subjectListeningVo.setQuestionListeningVos(questionListeningVos);
+            subjectListeningVos.add(subjectListeningVo);
+        }
+        return subjectListeningVos;
     }
 }

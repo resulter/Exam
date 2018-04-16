@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+
 @Repository
 public interface QExamMapper {
     long countByExample(QExamExample example);
@@ -16,6 +17,8 @@ public interface QExamMapper {
     int deleteByPrimaryKey(Integer id);
 
     int insert(QExam record);
+
+    int insertAndGetId(QExam record);//返回主键
 
     int insertSelective(QExam record);
 

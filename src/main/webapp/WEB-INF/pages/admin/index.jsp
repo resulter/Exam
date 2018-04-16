@@ -45,12 +45,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     <li class="nav-info">
                     	<div class="nav-header"><a href="javascript:;" class="ue-clear"><span>题库管理</span><i class="icon"></i></a></div>
                         <ul class="subnav">
-                        	<li><a href="javascript:;" onclick="formSubmit('${ctx}/toQuestionPage.action','mframe');this.blur();">试题管理</a></li>
-                            <li><a href="javascript:;" onclick="formSubmit('${ctx}/toTypePage.action','mframe');this.blur();">题型管理</a></li>
+                        	<%--<li><a href="javascript:;" onclick="formSubmit('${ctx}/toQuestionPage.action','mframe');this.blur();">试题管理</a></li>
+                            <li><a href="javascript:;" onclick="formSubmit('${ctx}/toTypePage.action','mframe');this.blur();">题型管理</a></li>--%>
                             <li><a href="javascript:;" onclick="formSubmit('${ctx}/mock/toRepositoryReading.action','mframe');this.blur();">阅读管理</a></li>
                             <li><a href="javascript:;" onclick="formSubmit('${ctx}/mock/toRepositoryListening.action','mframe');this.blur();">听力管理</a></li>
-                            <li><a href="javascript:;" onclick="formSubmit('${ctx}/toTypePage.action','mframe');this.blur();">口语管理</a></li>
-                            <li><a href="javascript:;" onclick="formSubmit('${ctx}/toTypePage.action','mframe');this.blur();">写作管理</a></li>
+                            <li><a href="javascript:;" onclick="formSubmit('${ctx}/mock/toRepositorySpeaking.action','mframe');this.blur();">口语管理</a></li>
+                            <li><a href="javascript:;" onclick="formSubmit('${ctx}/mock/toRepositoryWriting.action','mframe');this.blur();">写作管理</a></li>
                         </ul>
                     </li>
                     <li class="konwledge">
@@ -70,12 +70,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     <li class="system"><div class="nav-header"><a href="javascript:;" class="ue-clear"><span>试卷管理</span><i class="icon"></i></a></div>
                     	<ul class="subnav">
                         	<li><a href="javascript:;" onclick="formSubmit('${ctx}/toPaperPage.action','mframe');this.blur();">试卷管理</a></li>
+                        	<li><a href="javascript:;" onclick="formSubmit('${ctx}/mock/toExamPaper.action','mframe');this.blur();">TPO试卷管理</a></li>
                         </ul>
                     </li>
                 </ul>
             </div>
+            <%--<div>
+                <h2 style="font-size: 25px"> 欢迎进入模考系统后台管理系统
+                </h2>
+            </div>--%>
             <div class="content">
-            	<iframe name="mframe" id="mframe" width="100%" height="100%" frameborder="0"></iframe>
+                <iframe name="mframe" id="mframe" width="100%" height="100%" frameborder="0"></iframe>
             </div>
         </div>
     </div>

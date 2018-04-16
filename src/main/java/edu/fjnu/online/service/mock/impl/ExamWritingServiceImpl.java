@@ -1,5 +1,7 @@
 package edu.fjnu.online.service.mock.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import edu.fjnu.online.bean.*;
 import edu.fjnu.online.bean.vo.*;
 import edu.fjnu.online.mapper.*;
@@ -123,7 +125,7 @@ public class ExamWritingServiceImpl implements ExamWritingService{
                 subjectListeningVo.setId(qListeningSubject.getId());
                 Integer passageId = qListeningSubject.getPassageId();
                 QListeningPassage qListeningPassage = qListeningPassageMapper.selectByPrimaryKey(passageId);
-                subjectListeningVo.setAutioURL(qListeningPassage.getAudioUrl());
+                subjectListeningVo.setAudioURL(qListeningPassage.getAudioUrl());
                 subjectListeningVo.setImageURL(qListeningPassage.getImageUrl());
                 subjectListeningVo.setTitle(qListeningPassage.getTitle());
                 subjectListeningVo.setTitleCn(qListeningPassage.getTitleCn());
@@ -228,5 +230,81 @@ public class ExamWritingServiceImpl implements ExamWritingService{
             result.add(examVo);
         }
         return result;
+    }
+
+    @Override
+    public PageInfo<SectionWritingVo> findByPage(Integer pageNo, Integer pageSize) {
+        pageNo = pageNo == null ? 1 : pageNo;
+        pageSize = pageSize == null ? 10 : pageSize;
+        PageHelper.startPage(pageNo, pageSize);
+        List<QWritingSection> qWritingSections = qWritingSectionMapper.selectByExample(null);
+        //用PageInfo对结果进行包装
+        PageInfo page = new PageInfo(qWritingSections);
+        List<SectionWritingVo> sectionWritingVos = new ArrayList<>();
+        for (QWritingSection qWritingSection: qWritingSections) {
+            SectionWritingVo sectionWritingVo = new SectionWritingVo();
+            sectionWritingVo.setId(qWritingSection.getId());
+            sectionWritingVo.setName(qWritingSection.getName());
+            QWritingSubjectExample qWritingSubjectExample = new QWritingSubjectExample();
+            qWritingSubjectExample.createCriteria().andSectionIdEqualTo(qWritingSection.getId());
+            List<SubjectWritingVo> subjectWritingVos = new ArrayList<>();
+            List<QWritingSubject> qWritingSubjects = qWritingSubjectMapper.selectByExample(qWritingSubjectExample);
+            for (QWritingSubject qWritingSubject:qWritingSubjects) {
+                SubjectWritingVo subjectWritingVo = new SubjectWritingVo();
+                subjectWritingVo.setId(qWritingSubject.getId());
+                subjectWritingVo.setOrderNum(qWritingSubject.getOrderNum());
+                QWritingQuestionExample qWritingQuestionExample = new QWritingQuestionExample();
+                qWritingQuestionExample.createCriteria().andSubjectIdEqualTo(qWritingSubject.getId());
+                List<QuestionWritingVo> questionWritingVos = new ArrayList<>();
+                List<QWritingQuestion> qWritingQuestions = qWritingQuestionMapper.selectByExampleWithBLOBs(qWritingQuestionExample);
+                for (QWritingQuestion qWritingQuestion:qWritingQuestions) {
+                    QuestionWritingVo questionWritingVo = new QuestionWritingVo();
+                    questionWritingVo.setId(qWritingQuestion.getId());
+                    questionWritingVo.setQuestion(qWritingQuestion.getQuestion());
+                    questionWritingVo.setRemark1(qWritingQuestion.getRemark1());
+                    questionWritingVo.setRemark2(qWritingQuestion.getRemark());
+                    questionWritingVo.setOrderNum(qWritingQuestion.getOrderNum());
+                    questionWritingVos.add(questionWritingVo);
+                }
+                subjectWritingVo.setQuestionWritingVos(questionWritingVos);
+                subjectWritingVos.add(subjectWritingVo);
+            }
+            sectionWritingVo.setSubjectWritingVos(subjectWritingVos);
+            sectionWritingVos.add(sectionWritingVo);
+        }
+        page.setList(sectionWritingVos);
+        return page;
+    }
+
+    @Override
+    public List<SubjectWritingVo> getWritingSubjectBySectionId(Integer sectionId) {
+        if (sectionId == null) {
+            return null;
+        }
+        QWritingSubjectExample qWritingSubjectExample = new QWritingSubjectExample();
+        qWritingSubjectExample.createCriteria().andSectionIdEqualTo(sectionId);
+        List<SubjectWritingVo> subjectWritingVos = new ArrayList<>();
+        List<QWritingSubject> qWritingSubjects = qWritingSubjectMapper.selectByExample(qWritingSubjectExample);
+        for (QWritingSubject qWritingSubject:qWritingSubjects) {
+            SubjectWritingVo subjectWritingVo = new SubjectWritingVo();
+            subjectWritingVo.setId(qWritingSubject.getId());
+            subjectWritingVo.setOrderNum(qWritingSubject.getOrderNum());
+            QWritingQuestionExample qWritingQuestionExample = new QWritingQuestionExample();
+            qWritingQuestionExample.createCriteria().andSubjectIdEqualTo(qWritingSubject.getId());
+            List<QuestionWritingVo> questionWritingVos = new ArrayList<>();
+            List<QWritingQuestion> qWritingQuestions = qWritingQuestionMapper.selectByExampleWithBLOBs(qWritingQuestionExample);
+            for (QWritingQuestion qWritingQuestion:qWritingQuestions) {
+                QuestionWritingVo questionWritingVo = new QuestionWritingVo();
+                questionWritingVo.setId(qWritingQuestion.getId());
+                questionWritingVo.setQuestion(qWritingQuestion.getQuestion());
+                questionWritingVo.setRemark1(qWritingQuestion.getRemark1());
+                questionWritingVo.setRemark2(qWritingQuestion.getRemark());
+                questionWritingVo.setOrderNum(qWritingQuestion.getOrderNum());
+                questionWritingVos.add(questionWritingVo);
+            }
+            subjectWritingVo.setQuestionWritingVos(questionWritingVos);
+            subjectWritingVos.add(subjectWritingVo);
+        }
+        return subjectWritingVos;
     }
 }

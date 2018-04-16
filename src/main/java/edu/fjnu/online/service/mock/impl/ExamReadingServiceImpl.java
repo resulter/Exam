@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ExamReadingServiceImpl implements ExamReadingService {
@@ -170,46 +172,52 @@ public class ExamReadingServiceImpl implements ExamReadingService {
     }
 
     @Override
-    public SubjectReadingVo getReadingSubjectBySubjectId(Integer subjectId) {
-        if(subjectId == null){
+    public List<SubjectReadingVo> getReadingSubjectBysectionId(Integer sectionId) {
+        if (sectionId == null) {
             return null;
         }
-        QReadingSubject qReadingSubject = qReadingSubjectMapper.selectByPrimaryKey(subjectId);
-        SubjectReadingVo subjectReadingVo = new SubjectReadingVo();
-        Integer passageId = qReadingSubject.getPassageId();
-        QReadingPassage qReadingPassage = qReadingPassageMapper.selectByPrimaryKey(passageId);
-        subjectReadingVo.setId(qReadingSubject.getId());
-        subjectReadingVo.setPassage(qReadingPassage.getContent());
-        subjectReadingVo.setPassageTitle(qReadingPassage.getTitle());
-        subjectReadingVo.setPassageTitleCn(qReadingPassage.getTitleCn());
-        subjectReadingVo.setOrderNum(qReadingSubject.getOrderNum());
-        QReadingQuestionExample qReadingQuestionExample = new QReadingQuestionExample();
-        qReadingQuestionExample.createCriteria().andSubjectIdEqualTo(qReadingSubject.getId());
-        List<QReadingQuestion> qReadingQuestions = qReadingQuestionMapper.selectByExampleWithBLOBs(qReadingQuestionExample);
-        List<QuestionReadingVo> questionReadingVos = new ArrayList<>();
-        for (QReadingQuestion qReadingQuestion : qReadingQuestions) {
-            QuestionReadingVo questionReadingVo = new QuestionReadingVo();
-            questionReadingVo.setId(qReadingQuestion.getId());
-            questionReadingVo.setQuestion(qReadingQuestion.getQuestion());
-            questionReadingVo.setRightAnswer(qReadingQuestion.getRightAnswer());
-            questionReadingVo.setOrderNum(qReadingQuestion.getOrderNum());
-            QReadingOptionExample qReadingOptionExample = new QReadingOptionExample();
-            qReadingOptionExample.createCriteria().andQuestionIdEqualTo(qReadingQuestion.getId());
-            List<QReadingOption> qReadingOptions = qReadingOptionMapper.selectByExample(qReadingOptionExample);
-            List<OptionReadingVo> optionReadingVos = new ArrayList<>();
-            for (QReadingOption qReadingOption : qReadingOptions) {
-                OptionReadingVo optionReadingVo = new OptionReadingVo();
-                optionReadingVo.setId(qReadingOption.getId());
-                optionReadingVo.setItemCode(qReadingOption.getItemCode());
-                optionReadingVo.setItemName(qReadingOption.getItemName());
-                optionReadingVo.setOrderNum(qReadingOption.getOrderNum());
-                optionReadingVos.add(optionReadingVo);
+        QReadingSubjectExample qReadingSubjectExample = new QReadingSubjectExample();
+        qReadingSubjectExample.createCriteria().andSectionIdEqualTo(sectionId);
+        List<QReadingSubject> qReadingSubjects = qReadingSubjectMapper.selectByExample(qReadingSubjectExample);
+        List<SubjectReadingVo> subjectReadingVos = new ArrayList<>();
+        for (QReadingSubject qReadingSubject : qReadingSubjects) {
+            SubjectReadingVo subjectReadingVo = new SubjectReadingVo();
+            Integer passageId = qReadingSubject.getPassageId();
+            QReadingPassage qReadingPassage = qReadingPassageMapper.selectByPrimaryKey(passageId);
+            subjectReadingVo.setId(qReadingSubject.getId());
+            subjectReadingVo.setPassage(qReadingPassage.getContent());
+            subjectReadingVo.setPassageTitle(qReadingPassage.getTitle());
+            subjectReadingVo.setPassageTitleCn(qReadingPassage.getTitleCn());
+            subjectReadingVo.setOrderNum(qReadingSubject.getOrderNum());
+            QReadingQuestionExample qReadingQuestionExample = new QReadingQuestionExample();
+            qReadingQuestionExample.createCriteria().andSubjectIdEqualTo(qReadingSubject.getId());
+            List<QReadingQuestion> qReadingQuestions = qReadingQuestionMapper.selectByExampleWithBLOBs(qReadingQuestionExample);
+            List<QuestionReadingVo> questionReadingVos = new ArrayList<>();
+            for (QReadingQuestion qReadingQuestion : qReadingQuestions) {
+                QuestionReadingVo questionReadingVo = new QuestionReadingVo();
+                questionReadingVo.setId(qReadingQuestion.getId());
+                questionReadingVo.setQuestion(qReadingQuestion.getQuestion());
+                questionReadingVo.setRightAnswer(qReadingQuestion.getRightAnswer());
+                questionReadingVo.setOrderNum(qReadingQuestion.getOrderNum());
+                QReadingOptionExample qReadingOptionExample = new QReadingOptionExample();
+                qReadingOptionExample.createCriteria().andQuestionIdEqualTo(qReadingQuestion.getId());
+                List<QReadingOption> qReadingOptions = qReadingOptionMapper.selectByExample(qReadingOptionExample);
+                List<OptionReadingVo> optionReadingVos = new ArrayList<>();
+                for (QReadingOption qReadingOption : qReadingOptions) {
+                    OptionReadingVo optionReadingVo = new OptionReadingVo();
+                    optionReadingVo.setId(qReadingOption.getId());
+                    optionReadingVo.setItemCode(qReadingOption.getItemCode());
+                    optionReadingVo.setItemName(qReadingOption.getItemName());
+                    optionReadingVo.setOrderNum(qReadingOption.getOrderNum());
+                    optionReadingVos.add(optionReadingVo);
+                }
+                questionReadingVo.setOptionReadingVos(optionReadingVos);
+                questionReadingVos.add(questionReadingVo);
             }
-            questionReadingVo.setOptionReadingVos(optionReadingVos);
-            questionReadingVos.add(questionReadingVo);
+            subjectReadingVo.setQuestionReadingVos(questionReadingVos);
+            subjectReadingVos.add(subjectReadingVo);
         }
-        subjectReadingVo.setQuestionReadingVos(questionReadingVos);
-        return subjectReadingVo;
+        return subjectReadingVos;
     }
 
 }

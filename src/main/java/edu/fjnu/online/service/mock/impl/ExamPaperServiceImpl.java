@@ -5,16 +5,20 @@ import com.github.pagehelper.PageInfo;
 import edu.fjnu.online.bean.*;
 import edu.fjnu.online.bean.vo.*;
 import edu.fjnu.online.mapper.*;
+import edu.fjnu.online.service.mock.ExamPaperService;
 import edu.fjnu.online.service.mock.ExamService;
-import edu.fjnu.online.service.mock.ExamSpeakingService;
+import edu.fjnu.online.util.BaseConstant;
+import edu.fjnu.online.util.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
-public class ExamSpeakingServiceImpl implements ExamSpeakingService{
+public class ExamPaperServiceImpl implements ExamPaperService{
     @Autowired
     QExamMapper qExamMapper;
     @Autowired
@@ -75,13 +79,14 @@ public class ExamSpeakingServiceImpl implements ExamSpeakingService{
                 SubjectReadingVo subjectReadingVo = new SubjectReadingVo();
                 Integer passageId = qReadingSubject.getPassageId();
                 QReadingPassage qReadingPassage = qReadingPassageMapper.selectByPrimaryKey(passageId);
+                subjectReadingVo.setId(qReadingSubject.getId());
                 subjectReadingVo.setPassage(qReadingPassage.getContent());
                 subjectReadingVo.setPassageTitle(qReadingPassage.getTitle());
                 subjectReadingVo.setPassageTitleCn(qReadingPassage.getTitleCn());
                 subjectReadingVo.setOrderNum(qReadingSubject.getOrderNum());
                 QReadingQuestionExample qReadingQuestionExample = new QReadingQuestionExample();
                 qReadingQuestionExample.createCriteria().andSubjectIdEqualTo(qReadingSubject.getId());
-                List<QReadingQuestion> qReadingQuestions = qReadingQuestionMapper.selectByExample(qReadingQuestionExample);
+                List<QReadingQuestion> qReadingQuestions = qReadingQuestionMapper.selectByExampleWithBLOBs(qReadingQuestionExample);
                 List<QuestionReadingVo> questionReadingVos = new ArrayList<>();
                 for (QReadingQuestion qReadingQuestion:  qReadingQuestions) {
                     QuestionReadingVo questionReadingVo = new QuestionReadingVo();
@@ -125,8 +130,8 @@ public class ExamSpeakingServiceImpl implements ExamSpeakingService{
                 subjectListeningVo.setId(qListeningSubject.getId());
                 Integer passageId = qListeningSubject.getPassageId();
                 QListeningPassage qListeningPassage = qListeningPassageMapper.selectByPrimaryKey(passageId);
-                subjectListeningVo.setAudioURL(qListeningPassage.getAudioUrl());
-                subjectListeningVo.setImageURL(qListeningPassage.getImageUrl());
+                subjectListeningVo.setAudioURL(BaseConstant.audioURL + qListeningPassage.getAudioUrl());
+                subjectListeningVo.setImageURL(BaseConstant.audioURL + qListeningPassage.getImageUrl());
                 subjectListeningVo.setTitle(qListeningPassage.getTitle());
                 subjectListeningVo.setTitleCn(qListeningPassage.getTitleCn());
                 QListeningQuestionExample qListeningQuestionExample = new QListeningQuestionExample();
@@ -138,7 +143,7 @@ public class ExamSpeakingServiceImpl implements ExamSpeakingService{
                     questionListeningVo.setId(qListeningQuestion.getId());
                     questionListeningVo.setOrderNum(qListeningQuestion.getOrderNum());
                     questionListeningVo.setQuestion(qListeningQuestion.getQuestion());
-                    questionListeningVo.setQuestionURL(qListeningQuestion.getQuestionUrl());
+                    questionListeningVo.setQuestionURL(BaseConstant.audioURL + qListeningQuestion.getQuestionUrl());
                     questionListeningVo.setRightAnswer(qListeningQuestion.getRightAnswer());
                     QListeningOptionExample qListeningOptionExample = new QListeningOptionExample();
                     qListeningOptionExample.createCriteria().andQuestionIdEqualTo(qListeningQuestion.getId());
@@ -183,7 +188,7 @@ public class ExamSpeakingServiceImpl implements ExamSpeakingService{
                     QuestionSpeakingVo questionSpeakingVo = new QuestionSpeakingVo();
                     questionSpeakingVo.setId(qSpeakingQuestion.getId());
                     questionSpeakingVo.setQuestionDescription(qSpeakingQuestion.getQuestionDescription());
-                    questionSpeakingVo.setQuestionURL(qSpeakingQuestion.getQuestionUrl());
+                    questionSpeakingVo.setQuestionURL(BaseConstant.audioURL + qSpeakingQuestion.getQuestionUrl());
                     questionSpeakingVo.setDemo1(qSpeakingQuestion.getDemo1());
                     questionSpeakingVo.setDemo2(qSpeakingQuestion.getDemo2());
                     questionSpeakingVo.setOrderNum(qSpeakingQuestion.getOrderNum());
@@ -233,81 +238,117 @@ public class ExamSpeakingServiceImpl implements ExamSpeakingService{
     }
 
     @Override
-    public PageInfo<SectionSpeakingVo> findByPage(Integer pageNo, Integer pageSize) {
-        pageNo = pageNo == null ? 1 : pageNo;
-        pageSize = pageSize == null ? 10 : pageSize;
-        PageHelper.startPage(pageNo, pageSize);
-        List<QSpeakingSection> qSpeakingSections = qSpeakingSectionMapper.selectByExample(null);
-        //用PageInfo对结果进行包装
-        PageInfo page = new PageInfo(qSpeakingSections);
-        List<SectionSpeakingVo> sectionListeningVos = new ArrayList<>();
-        for (QSpeakingSection qSpeakingSection:qSpeakingSections) {
-            SectionSpeakingVo sectionSpeakingVo = new SectionSpeakingVo();
-            sectionSpeakingVo.setId(qSpeakingSection.getId());
-            sectionSpeakingVo.setName(qSpeakingSection.getName());
-            sectionSpeakingVo.setOrderNum(qSpeakingSection.getOrderNum());
-            QSpeakingSubjectExample qSpeakingSubjectExample = new QSpeakingSubjectExample();
-            qSpeakingSubjectExample.createCriteria().andSectionIdEqualTo(qSpeakingSection.getId());
-            List<SubjectSpeakingVo> subjectSpeakingVos = new ArrayList<>();
-            List<QSpeakingSubject> qSpeakingSubjects = qSpeakingSubjectMapper.selectByExample(qSpeakingSubjectExample);
-            for (QSpeakingSubject qSpeakingSubject: qSpeakingSubjects) {
-                SubjectSpeakingVo subjectSpeakingVo = new SubjectSpeakingVo();
-                subjectSpeakingVo.setId(qSpeakingSubject.getId());
-                subjectSpeakingVo.setOrderNum(qSpeakingSubject.getOrderNum());
-                QSpeakingQuestionExample qSpeakingQuestionExample = new QSpeakingQuestionExample();
-                qSpeakingQuestionExample.createCriteria().andSubjectIdEqualTo(qSpeakingSubject.getId());
-                List<QSpeakingQuestionWithBLOBs> qSpeakingQuestionWithBLOBs = qSpeakingQuestionMapper.selectByExampleWithBLOBs(qSpeakingQuestionExample);
-                List<QuestionSpeakingVo> questionSpeakingVos = new ArrayList<>();
-                for (QSpeakingQuestionWithBLOBs qSpeakingQuestion: qSpeakingQuestionWithBLOBs) {
-                    QuestionSpeakingVo questionSpeakingVo = new QuestionSpeakingVo();
-                    questionSpeakingVo.setId(qSpeakingQuestion.getId());
-                    questionSpeakingVo.setQuestionDescription(qSpeakingQuestion.getQuestionDescription());
-                    questionSpeakingVo.setQuestionURL(qSpeakingQuestion.getQuestionUrl());
-                    questionSpeakingVo.setDemo1(qSpeakingQuestion.getDemo1());
-                    questionSpeakingVo.setDemo2(qSpeakingQuestion.getDemo2());
-                    questionSpeakingVo.setOrderNum(qSpeakingQuestion.getOrderNum());
-                    questionSpeakingVos.add(questionSpeakingVo);
-                }
-                subjectSpeakingVo.setQuestionSpeakingVos(questionSpeakingVos);
-                subjectSpeakingVos.add(subjectSpeakingVo);
-            }
-            sectionSpeakingVo.setSubjectSpeakingVos(subjectSpeakingVos);
-            sectionListeningVos.add(sectionSpeakingVo);
+    public List<ExamVo> getAllExam() {
+        List<ExamVo> examVolist = new ArrayList<>();
+        List<QExam> qExams = qExamMapper.selectByExample(null);
+        for (QExam qExam:qExams) {
+            ExamVo examVo = new ExamVo();
+            examVo.setId(qExam.getId());
+            examVo.setName(qExam.getName());
+            examVo.setRemark(qExam.getReamrk());
+            examVo.setCreateTime(DateUtils.changeDate(qExam.getCreateTime()));
+            examVo.setReadingName(qReadingSectionMapper.selectByPrimaryKey(qExam.getReadingSectionId()).getName());
+            examVo.setListeningName(qListeningSectionMapper.selectByPrimaryKey(qExam.getListeningSectionId()).getName());
+            examVo.setSpeakingName(qSpeakingSectionMapper.selectByPrimaryKey(qExam.getSpeakingSectionId()).getName());
+            examVo.setWritingName(qWritingSectionMapper.selectByPrimaryKey(qExam.getWritingSectionId()).getName());
+            examVo.setReadingId(qReadingSectionMapper.selectByPrimaryKey(qExam.getReadingSectionId()).getId());
+            examVo.setListeningId(qListeningSectionMapper.selectByPrimaryKey(qExam.getListeningSectionId()).getId());
+            examVo.setSpeakingId(qSpeakingSectionMapper.selectByPrimaryKey(qExam.getSpeakingSectionId()).getId());
+            examVo.setWritingId(qWritingSectionMapper.selectByPrimaryKey(qExam.getWritingSectionId()).getId());
+            examVolist.add(examVo);
         }
-        page.setList(sectionListeningVos);
-        return page;
+        return examVolist;
     }
 
     @Override
-    public List<SubjectSpeakingVo> getListeningSubjectBySectionId(Integer sectionId) {
-        if (sectionId == null) {
-            return null;
+    public PageInfo<ExamVo> getAllExamPage(Integer pageNo, Integer pageSize) {
+        pageNo = pageNo == null ? 1 : pageNo;
+        pageSize = pageSize == null ? 10 : pageSize;
+        PageHelper.startPage(pageNo, pageSize);
+        List<QExam> qExams = qExamMapper.selectByExample(null);
+        //用PageInfo对结果进行包装
+        PageInfo page = new PageInfo(qExams);
+        List<ExamVo> examVolist = new ArrayList<>();
+        for (QExam qExam:qExams) {
+            ExamVo examVo = new ExamVo();
+            examVo.setId(qExam.getId());
+            examVo.setName(qExam.getName());
+            examVo.setRemark(qExam.getReamrk());
+            examVo.setCreateTime(DateUtils.changeDate(qExam.getCreateTime()));
+            examVo.setReadingName(qReadingSectionMapper.selectByPrimaryKey(qExam.getReadingSectionId()).getName());
+            examVo.setListeningName(qListeningSectionMapper.selectByPrimaryKey(qExam.getListeningSectionId()).getName());
+            examVo.setSpeakingName(qSpeakingSectionMapper.selectByPrimaryKey(qExam.getSpeakingSectionId()).getName());
+            examVo.setWritingName(qWritingSectionMapper.selectByPrimaryKey(qExam.getWritingSectionId()).getName());
+            examVo.setReadingId(qReadingSectionMapper.selectByPrimaryKey(qExam.getReadingSectionId()).getId());
+            examVo.setListeningId(qListeningSectionMapper.selectByPrimaryKey(qExam.getListeningSectionId()).getId());
+            examVo.setSpeakingId(qSpeakingSectionMapper.selectByPrimaryKey(qExam.getSpeakingSectionId()).getId());
+            examVo.setWritingId(qWritingSectionMapper.selectByPrimaryKey(qExam.getWritingSectionId()).getId());
+            examVolist.add(examVo);
         }
-        QSpeakingSubjectExample qSpeakingSubjectExample = new QSpeakingSubjectExample();
-        qSpeakingSubjectExample.createCriteria().andSectionIdEqualTo(sectionId);
-        List<SubjectSpeakingVo> subjectSpeakingVos = new ArrayList<>();
-        List<QSpeakingSubject> qSpeakingSubjects = qSpeakingSubjectMapper.selectByExample(qSpeakingSubjectExample);
-        for (QSpeakingSubject qSpeakingSubject: qSpeakingSubjects) {
-            SubjectSpeakingVo subjectSpeakingVo = new SubjectSpeakingVo();
-            subjectSpeakingVo.setId(qSpeakingSubject.getId());
-            subjectSpeakingVo.setOrderNum(qSpeakingSubject.getOrderNum());
-            QSpeakingQuestionExample qSpeakingQuestionExample = new QSpeakingQuestionExample();
-            qSpeakingQuestionExample.createCriteria().andSubjectIdEqualTo(qSpeakingSubject.getId());
-            List<QSpeakingQuestionWithBLOBs> qSpeakingQuestionWithBLOBs = qSpeakingQuestionMapper.selectByExampleWithBLOBs(qSpeakingQuestionExample);
-            List<QuestionSpeakingVo> questionSpeakingVos = new ArrayList<>();
-            for (QSpeakingQuestionWithBLOBs qSpeakingQuestion: qSpeakingQuestionWithBLOBs) {
-                QuestionSpeakingVo questionSpeakingVo = new QuestionSpeakingVo();
-                questionSpeakingVo.setId(qSpeakingQuestion.getId());
-                questionSpeakingVo.setQuestionDescription(qSpeakingQuestion.getQuestionDescription());
-                questionSpeakingVo.setQuestionURL(qSpeakingQuestion.getQuestionUrl());
-                questionSpeakingVo.setDemo1(qSpeakingQuestion.getDemo1());
-                questionSpeakingVo.setDemo2(qSpeakingQuestion.getDemo2());
-                questionSpeakingVo.setOrderNum(qSpeakingQuestion.getOrderNum());
-                questionSpeakingVos.add(questionSpeakingVo);
-            }
-            subjectSpeakingVo.setQuestionSpeakingVos(questionSpeakingVos);
-            subjectSpeakingVos.add(subjectSpeakingVo);
+        page.setList(examVolist);
+        return page;
+    }
+
+
+
+    @Override
+    public Map<Integer, String> getAllReadingSection() {
+        Map<Integer, String> reading = new HashMap<>();
+        List<QReadingSection> qReadingSections = qReadingSectionMapper.selectByExample(null);
+        for (QReadingSection qReadingSection : qReadingSections) {
+            reading.put(qReadingSection.getId(), qReadingSection.getName());
         }
-        return subjectSpeakingVos;
+        return reading;
+    }
+
+    @Override
+    public Map<Integer, String> getAllListeningSection() {
+        Map<Integer, String> listening = new HashMap<>();
+        List<QListeningSection> qListeningSections = qListeningSectionMapper.selectByExample(null);
+        for (QListeningSection qListeningSection : qListeningSections) {
+            listening.put(qListeningSection.getId(), qListeningSection.getName());
+        }
+        return listening;
+    }
+
+    @Override
+    public Map<Integer, String> getAllSpeakingSection() {
+        Map<Integer,String> speaking = new HashMap<>();
+        List<QSpeakingSection> qSpeakingSections = qSpeakingSectionMapper.selectByExample(null);
+        for (QSpeakingSection qSpeakingSection:qSpeakingSections) {
+            speaking.put(qSpeakingSection.getId(),qSpeakingSection.getName());
+        }
+        return speaking;
+    }
+
+    @Override
+    public Map<Integer, String> getAllWritingSection() {
+        Map<Integer,String> writing = new HashMap<>();
+        List<QWritingSection> qWritingSections = qWritingSectionMapper.selectByExample(null);
+        for (QWritingSection qWritingSection:qWritingSections) {
+            writing.put(qWritingSection.getId(),qWritingSection.getName());
+        }
+        return writing;
+    }
+
+    @Override
+    public Integer insertExamPaper(QExam qExam) {
+        if(qExam.getId()==null) {
+            qExamMapper.insertAndGetId(qExam);
+            return qExam.getId();
+        }else {
+            qExamMapper.updateByPrimaryKey(qExam);
+            return 0;
+        }
+    }
+
+    @Override
+    public void deleteExamPaper(Integer papaerId) {
+        qExamMapper.deleteByPrimaryKey(papaerId);
+    }
+
+    @Override
+    public QExam getExamById(Integer paperId) {
+        return qExamMapper.selectByPrimaryKey(paperId);
     }
 }
