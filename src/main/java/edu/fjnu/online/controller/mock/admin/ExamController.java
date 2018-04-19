@@ -1,4 +1,4 @@
-package edu.fjnu.online.controller.mock;
+package edu.fjnu.online.controller.mock.admin;
 
 import com.alibaba.fastjson.JSON;
 import edu.fjnu.online.bean.vo.ExamVo;

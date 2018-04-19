@@ -1,4 +1,4 @@
-package edu.fjnu.online.controller.mock;
+package edu.fjnu.online.controller.mock.admin;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -208,7 +208,7 @@ public class RepositoryController extends BaseController {
     }
 
     /**
-     * 获取到题库管理-口语数据，与上一个方法一致
+     * 获取到题库管理-写作数据，与上一个方法一致
      *
      * @return
      */

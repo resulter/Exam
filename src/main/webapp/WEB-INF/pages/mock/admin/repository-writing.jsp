@@ -45,14 +45,6 @@
 					<td>${o.id}</td>
 					<td>${o.name}</td>
 					<td></td>
-						<%--<td><font color="blue">${o.courseId}</font></td>
-                        <td><font color="blue">${o.typeId}</font></td>
-                        <td><font color="blue">
-                            <c:if test="${o.difficulty==0}">简单</c:if>
-                            <c:if test="${o.difficulty==1}">中等</c:if>
-                            <c:if test="${o.difficulty==2}">较难</c:if></font>
-                        </td>
-                        <td>${o.remark}</td>--%>
 					<td class="operate">
 						<a href="${ctx}/deleteQuestion.action?questionId=${o.id}" class="del">删除</a>
 						<a href="${ctx}/toUpdQuestion.action?questionId=${o.id}" class="del">编辑</a>
@@ -84,8 +76,6 @@
 
     $('.pagination').pagination(${pageInfo.total},{
         callback: function(page){
-            /* 		document.myform.attributes["action"].value = "${ctx}/toQuestionPage.action?page="+(page+1);
-		$("form").submit(); */
             $.ajax({
                 url:"${ctx}/mock/toRepositoryWritingDate.action",
                 method:"post",
@@ -108,20 +98,6 @@
                         html += "<td>"+this.id+"</td>";
                         html += "<td>"+this.name+"</td>";
                         html += "<td></td>";
-                        /*html += "<td><font color='blue'>"+data[dataList].courseId+"</font></td>";
-                        html += "<td><font color='blue'>"+data[dataList].typeId+"</font></td>";
-                        if(data[dataList].difficulty == 0){
-                            html += "<td>简单</td>";
-                        }else if(data[dataList].difficulty == 1){
-                            html += "<td>中等</td>";
-                        }else{
-                            html += "<td>较难</td>";
-                        }
-                        if(data[dataList].remark==null){
-                            html += "<td>&nbsp;无&nbsp;</td>";
-                        }else{
-                            html += "<td>"+data[dataList].remark+"</td>";
-                        }*/
                         html += "<td class='operate'><a href='${ctx}/deleteQuestion.action?questionId="+this.id+"' class='del'>删除</a>&nbsp;";
                         html += "<a href='${ctx}/toUpdQuestion.action?questionId="+this.id+"' class='del'>编辑</a>&nbsp;";
                         html += "<a href='${ctx}/mock/toQueryRepositorSpeaking.action?sectionId="+this.id+"' class='del'>查看</a></td>";
@@ -170,8 +146,8 @@
     }
 
     $("tbody").find("tr:odd").css("backgroundColor","#eff6fa");
-    $("tbody td").css("text-align","center");
-    $("thead th").css("text-align","center");
+    // $("tbody td").css("text-align","center");
+    // $("thead th").css("text-align","center");
     showRemind('input[type=text], textarea','placeholder');
 </script>
 </html>

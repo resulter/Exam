@@ -171,8 +171,8 @@ function addUser(){
 }
 
 $("tbody").find("tr:odd").css("backgroundColor","#eff6fa");
-$("tbody td").css("text-align","center");
-$("thead th").css("text-align","center");
+// $("tbody td").css("text-align","center");
+// $("thead th").css("text-align","center");
 showRemind('input[type=text], textarea','placeholder');
 </script>
 </html>

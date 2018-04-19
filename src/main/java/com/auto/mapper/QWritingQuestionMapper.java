@@ -1,8 +1,9 @@
 package com.auto.mapper;
 
-import com.auto.bean.QWritingQuestion;
-import com.auto.bean.QWritingQuestionExample;
 import java.util.List;
+
+import edu.fjnu.online.bean.QWritingQuestion;
+import edu.fjnu.online.bean.QWritingQuestionExample;
 import org.apache.ibatis.annotations.Param;
 
 public interface QWritingQuestionMapper {

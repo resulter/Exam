@@ -1,4 +1,4 @@
-package edu.fjnu.online.controller.mock;
+package edu.fjnu.online.controller.mock.admin;
 
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
@@ -23,7 +23,7 @@ import java.util.Map;
 
 /**
  * 后台-题库管理controller，
- * 阅读-听力-口语-写作相关题库操作
+ * 阅读-听力-口语-写作相关试卷操作
  */
 @Controller
 @RequestMapping(value = "/mock")

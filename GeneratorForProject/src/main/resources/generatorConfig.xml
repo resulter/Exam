@@ -194,7 +194,7 @@
         <!--<table tableName="q_reading_question"/>-->
         <!--<table tableName="q_reading_section"/>-->
         <!--<table tableName="q_reading_subject"/>-->
-        <table tableName="q_writing_question">
+        <table tableName="q_description">
         </table>
         <!--<table tableName="q_speaking_section"/>-->
         <!--<table tableName="q_speaking_subject"/>-->

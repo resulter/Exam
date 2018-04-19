@@ -86,22 +86,21 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				  <th>开始时间</th>
 				  <th>结束时间</th>
                   <th>最后得分</th>
-                  <th>试卷状态</th>
+                  <th>试卷状态33</th>
                 </tr>
               </thead>
               <tbody>
-              	<c:forEach items="${paper}" var="paper">
+              	<c:forEach items="${allExam}" var="allExam">
               	  <tr>
-	                 <td><a href="${ctx}/qryPaperDetail.action?paperId=${paper.paperId}&userId=${paper.userId}"><font color="blue">${paper.paperName}</font></a></td>
-	                 <td>${paper.courseId}</td>
-	                 <td>${paper.beginTime}</td>
-				  	 <td>${paper.endTime}</td>
-					 <td>${paper.score}</td>
-					 <td><font color="blue">
+	                 <td><a href="${ctx}/mock/queryReadingExamPaperDetail.action?paperId=${allExam.id}&userId=${user.userId}"><font color="blue">${allExam.name}</font></a></td>
+	                 <td>${allExam.createTime}</td>
+	                 <td>${allExam.writingName}</td>
+	                 <td>${allExam.remark}</td>
+					<%-- <td><font color="blue">
 					 	<c:if test="${paper.paperstate==0}">准备考试</c:if>
 						<c:if test="${paper.paperstate==1}">尚未开始</c:if>
 						<c:if test="${paper.paperstate==2}">考试结束</c:if>
-					 </td>
+					 </td>--%>
 	              </tr>
 				</c:forEach>
               </tbody>
