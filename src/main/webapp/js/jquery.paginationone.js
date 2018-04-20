@@ -2,7 +2,7 @@ jQuery.fn.pagination = function(maxentries, opts) {
 	opts = jQuery.extend({
 				items_per_page : 1, // 每页显示多少条记录
 				current_page : 0,      //当前页码
-				num_display_entries : 4, // 中间显示页码的个数
+				num_display_entries : 10, // 中间显示页码的个数
 				num_edge_entries : 2, // 末尾显示页码的个数
 				link_to : "javascript:;",         //页码点击后的链接
 				prev_text : "&lt;&nbsp;上一题",   //上一页的文字

@@ -2,6 +2,7 @@ package edu.fjnu.online.controller.mock.user;
 
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
+import edu.fjnu.online.bean.QDescription;
 import edu.fjnu.online.bean.vo.*;
 import edu.fjnu.online.domain.*;
 import edu.fjnu.online.service.*;
@@ -245,6 +246,21 @@ public class ExaminationController {
         System.out.println(JSON.toJSONString(readingQueation));
         return Msg.success().add("readingQueation", readingQueation);
     }
+
+    @RequestMapping("/saveReadingRecord.action")
+    @ResponseBody //加上次注解才可以直接返回json等信息，否则只能返回web-inf下的页面
+    public Msg saveReadingRecord(String answer,@RequestParam(value = "subjectId", defaultValue = "1") String subjectId, Model model, HttpSession session) {
+        String[] answers = answer.split(",");
+        System.out.println("答案篇章：" + subjectId);
+        for(int i=0;i<answers.length;i++){
+            System.out.println("第"+(i+1)+"题的答案是" + answers[i]);
+        }
+        System.out.println("new subjectid  " + (Integer.parseInt(subjectId)+1));
+        return Msg.success().add("a",777).add("subjectId",(Integer.parseInt(subjectId)+1));
+    }
+
+
+
     /**
      * 考试页面-写作
      *
@@ -415,12 +431,15 @@ public class ExaminationController {
         Map map = new HashMap();
         map.put("paperId", paperId);
         map.put("userId", userId);
+        QDescription description = examPaperService.getDescription(BaseConstant.sectionDescriptionReading);
         PageInfo<ExamQuestionReadingVo> pageInfo = examPaperService.getReadingQuestionWithPassagePage(page, BaseConstant.examPageQueationCount, paperId, subjectOrder, null);
         List<ExamQuestionReadingVo> dataList = pageInfo.getList();
         model.addAttribute("userId", userId);
         model.addAttribute("paperId", paperId);
         model.addAttribute("dataList", dataList);
         model.addAttribute("pageInfo", pageInfo);
+        model.addAttribute("description", description);
+        model.addAttribute("subjectId", dataList.get(0).getId());//判断是哪一个subject
         System.out.println(JSON.toJSONString(dataList));
         return "/mock/user/exam-paper-detail.jsp";
     }
@@ -448,31 +467,35 @@ public class ExaminationController {
         model.addAttribute("userId", userId);
         model.addAttribute("dataList", JSON.toJSONString(dataList));
         System.out.println(JSON.toJSONString(dataList));
-        return Msg.success().add("dataList", dataList).add("userId", userId).add("pageInfo",pageInfo).add("paperId",paperId);
+        return Msg.success().add("dataList", dataList).add("userId", userId).add("pageInfo",pageInfo).add("paperId",paperId).add("subjectId", dataList.get(0).getId());
     }
 
     /**
-     * 考试页面- 暂时不用
-     *
+     * 加载某一题的信息，这里用来加载切换到第二篇阅读的第一题
      * @param paperId
      * @param userId
      * @param model
      * @param session
+     * @param questionOrder
+     * @param subjectOrder
      * @return
      */
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    @RequestMapping("/queryExamPaperDetail11.action")
-    public String qryPaperDetail(String paperId, String userId, Model model, HttpSession session) {
+    @RequestMapping("/queryReadingExamPaperDetailFirstData.action")
+    @ResponseBody //加上次注解才可以直接返回json等信息，否则只能返回web-inf下的页面
+    public Msg queryReadingExamPaperDetailFirstData(Integer paperId, String userId, Model model, HttpSession session,
+                                               @RequestParam(value = "questionOrder", defaultValue = "1") Integer questionOrder,
+                                               @RequestParam(value = "subjectOrder", defaultValue = "1") Integer subjectOrder) {
         Map map = new HashMap();
         map.put("paperId", paperId);
         map.put("userId", userId);
-        ExamVo examPaper = examPaperService.getExamPaperById(Integer.parseInt(paperId));
-
+        List<ExamQuestionReadingVo> dataList = examPaperService.getQuestionWithPassage(paperId, subjectOrder, questionOrder);
         model.addAttribute("userId", userId);
-        model.addAttribute("examPaper", examPaper);
-        System.out.println(JSON.toJSONString(examPaper));
-        return "/mock/user/exam-paper-detail9.jsp";
+        model.addAttribute("dataList", JSON.toJSONString(dataList));
+        System.out.println(JSON.toJSONString(dataList));
+        System.out.println("subject:   " +dataList.get(0).getId());
+        return Msg.success().add("dataList", dataList).add("userId", userId).add("paperId",paperId).add("subjectId", dataList.get(0).getId());
     }
+
 
     /**
      * 获取未考试试卷，并将为考试的试卷添加用户信息

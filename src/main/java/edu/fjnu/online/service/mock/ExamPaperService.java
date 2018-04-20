@@ -1,6 +1,7 @@
 package edu.fjnu.online.service.mock;
 
 import com.github.pagehelper.PageInfo;
+import edu.fjnu.online.bean.QDescription;
 import edu.fjnu.online.bean.QExam;
 import edu.fjnu.online.bean.vo.*;
 
@@ -39,4 +40,6 @@ public interface ExamPaperService {
     ExamQuestionSpeakingVo getSpeakingQuestionWithPassagePage(Integer paperId, Integer subjectOrder);
 
     ExamQuestionWritingVo getWritingQuestionWithPassagePage(Integer paperId, Integer subjectOrder);
+
+    QDescription getDescription(Integer sectionId);
 }

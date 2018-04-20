@@ -54,6 +54,9 @@ public class ExamPaperServiceImpl implements ExamPaperService {
     @Autowired
     QWritingQuestionMapper qWritingQuestionMapper;
 
+    @Autowired
+    QDescriptionMapper qDescriptionMapper;
+
     @Override
     public List<ExamVo> findAllExam() {
         List<ExamVo> result = new ArrayList<>();
@@ -110,7 +113,7 @@ public class ExamPaperServiceImpl implements ExamPaperService {
         List<ExamQuestionReadingVo> resultVo = new ArrayList<>();
         for (QReadingQuestion qReadingQuestion : qReadingQuestions) {
             ExamQuestionReadingVo examQuestionReadingVo = new ExamQuestionReadingVo();
-            examQuestionReadingVo.setId(qReadingQuestion.getId());//返回前端考试时需要展示的数据
+            examQuestionReadingVo.setId(qReadingSubject.getOrderNum());//返回前端考试时需要展示的数据
             examQuestionReadingVo.setQueation(qReadingQuestion.getQuestion());//返回前端考试时需要展示的数据
             examQuestionReadingVo.setPassageTitle(qReadingPassage.getTitle());//返回前端考试时需要展示的数据
             examQuestionReadingVo.setPassage(qReadingPassage.getContent());//返回前端考试时需要展示的数据
@@ -390,7 +393,7 @@ public class ExamPaperServiceImpl implements ExamPaperService {
         QReadingSubjectExample.Criteria criteria = qReadingSubjectExample.createCriteria();
         criteria.andSectionIdEqualTo(readingSectionId);
         if (readingSubjectOrder != null) {
-            criteria.andOrderNumEqualTo(readingQuestionOrder);
+            criteria.andOrderNumEqualTo(readingSubjectOrder);
         }
         List<QReadingSubject> qReadingSubjects = qReadingSubjectMapper.selectByExample(qReadingSubjectExample);
         List<SubjectReadingVo> subjectReadingVos = new ArrayList<>();
@@ -408,6 +411,7 @@ public class ExamPaperServiceImpl implements ExamPaperService {
             if (readingQuestionOrder != null) {
                 qReadingQuestionExampleCriteria.andOrderNumEqualTo(readingQuestionOrder);
             }
+            qReadingQuestionExampleCriteria.andSubjectIdEqualTo(qReadingSubject.getId());
             List<QReadingQuestion> qReadingQuestions = qReadingQuestionMapper.selectByExampleWithBLOBs(qReadingQuestionExample);
             List<QuestionReadingVo> questionReadingVos = new ArrayList<>();
             for (QReadingQuestion qReadingQuestion : qReadingQuestions) {
@@ -555,5 +559,10 @@ public class ExamPaperServiceImpl implements ExamPaperService {
         sectionWritingVo.setSubjectWritingVos(subjectWritingVos);
         examVo.setWriting(sectionWritingVo);
         return examVo;
+    }
+
+    @Override
+    public QDescription getDescription(Integer sectionId) {
+        return qDescriptionMapper.selectByPrimaryKey(sectionId);
     }
 }

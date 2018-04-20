@@ -5,4 +5,11 @@ public class BaseConstant {
 
     public static final Integer adminPageNum = 5;//管理员数据分页大小，默认为5
     public static final Integer examPageQueationCount = 1;//考试时每页显示的题目数，默认为1
+
+
+
+    public static final Integer sectionDescriptionReading = 1;//阅读
+    public static final Integer sectionDescriptionListening = 2;//听力
+    public static final Integer sectionDescriptionSpeaking = 3;//口语
+    public static final Integer sectionDescriptionWriting = 4;//写作
 }
