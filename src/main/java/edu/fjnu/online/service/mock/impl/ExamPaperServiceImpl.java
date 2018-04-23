@@ -69,7 +69,7 @@ public class ExamPaperServiceImpl implements ExamPaperService {
 
 
     @Override
-    public List<ExamQuestionReadingVo> getQuestionWithPassage(Integer paperId, Integer subjectOrder, Integer questionOrder) {
+    public List<ExamQuestionReadingVo> getQuestionWithPassageReading(Integer paperId, Integer subjectOrder, Integer questionOrder) {
         List<ExamQuestionReadingVo> resultVo = new ArrayList<>();
         ExamVo examVo = getExamVo(qExamMapper.selectByPrimaryKey(paperId), subjectOrder, questionOrder, null, null, null, null);
         SectionReadingVo sectionReadingVo = examVo.getReading();
@@ -82,6 +82,49 @@ public class ExamPaperServiceImpl implements ExamPaperService {
         examQuestionReadingVo.setQuestionNum(sectionReadingVo.getSubjectReadingVos().get(0).getQuestionReadingVos().get(0).getOrderNum());
         examQuestionReadingVo.setOptionReadingVos(sectionReadingVo.getSubjectReadingVos().get(0).getQuestionReadingVos().get(0).getOptionReadingVos());
         resultVo.add(examQuestionReadingVo);
+        return resultVo;
+    }
+    @Override
+    public List<ExamQuestionListeningVo> getQuestionWithPassageListening(Integer paperId, Integer subjectOrder, Integer questionOrder) {
+        List<ExamQuestionListeningVo> resultVo = new ArrayList<>();
+        ExamVo examVo = getExamVo(qExamMapper.selectByPrimaryKey(paperId),  null, null, subjectOrder, questionOrder,null, null);
+        SectionListeningVo sectionListeningVo = examVo.getListening();
+        ExamQuestionListeningVo examQuestionListeningVo = new ExamQuestionListeningVo();
+        examQuestionListeningVo.setId(sectionListeningVo.getSubjectListeningVos().get(0).getOrderNum());
+        examQuestionListeningVo.setAudioURL(sectionListeningVo.getSubjectListeningVos().get(0).getAudioURL());
+        examQuestionListeningVo.setImageURL(sectionListeningVo.getSubjectListeningVos().get(0).getImageURL());
+        examQuestionListeningVo.setTitle(sectionListeningVo.getSubjectListeningVos().get(0).getTitle());
+        examQuestionListeningVo.setQuestion(sectionListeningVo.getSubjectListeningVos().get(0).getQuestionListeningVos().get(0).getQuestion());
+        examQuestionListeningVo.setQuestionURL(sectionListeningVo.getSubjectListeningVos().get(0).getQuestionListeningVos().get(0).getQuestionURL());
+        examQuestionListeningVo.setOptionListeningVos(sectionListeningVo.getSubjectListeningVos().get(0).getQuestionListeningVos().get(0).getOptionListeningVos());
+        examQuestionListeningVo.setQuestionNum(sectionListeningVo.getSubjectListeningVos().get(0).getQuestionListeningVos().get(0).getOrderNum());
+
+        resultVo.add(examQuestionListeningVo);
+        return resultVo;
+    }
+    @Override
+    public List<ExamQuestionSpeakingVo> getQuestionWithPassageSpeaking(Integer paperId, Integer subjectOrder) {
+        List<ExamQuestionSpeakingVo> resultVo = new ArrayList<>();
+        ExamVo examVo = getExamVo(qExamMapper.selectByPrimaryKey(paperId), null, null, null, null, null, null);
+        SectionSpeakingVo sectionSpeakingVo = examVo.getSpeaking();
+        ExamQuestionSpeakingVo examQuestionSpeakingVo = new ExamQuestionSpeakingVo();
+        examQuestionSpeakingVo.setId(sectionSpeakingVo.getSubjectSpeakingVos().get(0).getOrderNum());
+        examQuestionSpeakingVo.setQuestion(sectionSpeakingVo.getSubjectSpeakingVos().get(0).getQuestionSpeakingVos().get(0).getQuestionDescription());
+        examQuestionSpeakingVo.setQuestionURL(sectionSpeakingVo.getSubjectSpeakingVos().get(0).getQuestionSpeakingVos().get(0).getQuestionURL());
+        resultVo.add(examQuestionSpeakingVo);
+        return resultVo;
+    }
+    @Override
+    public List<ExamQuestionWritingVo> getQuestionWithPassageWriting(Integer paperId, Integer subjectOrder) {
+        List<ExamQuestionWritingVo> resultVo = new ArrayList<>();
+        ExamVo examVo = getExamVo(qExamMapper.selectByPrimaryKey(paperId), null, null, null, null, null, null);
+        SectionWritingVo sectionWritingVo = examVo.getWriting();
+        ExamQuestionWritingVo examQuestionWritingVo = new ExamQuestionWritingVo();
+        examQuestionWritingVo.setId(sectionWritingVo.getSubjectWritingVos().get(0).getOrderNum());
+        examQuestionWritingVo.setQuestion(sectionWritingVo.getSubjectWritingVos().get(0).getQuestionWritingVos().get(0).getQuestion());
+        examQuestionWritingVo.setRemark1(sectionWritingVo.getSubjectWritingVos().get(0).getQuestionWritingVos().get(0).getRemark1());
+        examQuestionWritingVo.setRemark2(sectionWritingVo.getSubjectWritingVos().get(0).getQuestionWritingVos().get(0).getRemark2());
+        resultVo.add(examQuestionWritingVo);
         return resultVo;
     }
 
@@ -168,7 +211,7 @@ public class ExamPaperServiceImpl implements ExamPaperService {
         }
         listeningQuestionExampleCriteria.andSubjectIdEqualTo(qListeningSubject.getId());
         PageHelper.startPage(pageNo, pageSize);
-        List<QListeningQuestion> qListeningQuestions = qListeningQuestionMapper.selectByExample(qListeningQuestionExample);
+        List<QListeningQuestion> qListeningQuestions = qListeningQuestionMapper.selectByExampleWithBLOBs(qListeningQuestionExample);
         //用PageInfo对结果进行包装
         PageInfo page = new PageInfo(qListeningQuestions);
         List<ExamQuestionListeningVo> examQuestionListeningVos = new ArrayList<>();
@@ -181,6 +224,7 @@ public class ExamPaperServiceImpl implements ExamPaperService {
             examQuestionListeningVo.setQuestionNum(qListeningQuestion.getOrderNum());
             examQuestionListeningVo.setQuestionURL(BaseConstant.audioURL + qListeningQuestion.getQuestionUrl());
             examQuestionListeningVo.setQuestionCount(5);
+            examQuestionListeningVo.setQuestion(qListeningQuestion.getQuestion());
             QListeningOptionExample qListeningOptionExample = new QListeningOptionExample();
             qListeningOptionExample.createCriteria().andQuestionIdEqualTo(qListeningQuestion.getId());
             List<QListeningOption> qListeningOptions = qListeningOptionMapper.selectByExample(qListeningOptionExample);
@@ -223,7 +267,7 @@ public class ExamPaperServiceImpl implements ExamPaperService {
         QSpeakingQuestionWithBLOBs qSpeakingQuestion = qSpeakingQuestionMapper.selectByExampleWithBLOBs(qSpeakingQuestionExample).get(0);
 
         examQuestionSpeakingVo.setQuestion(qSpeakingQuestion.getQuestionDescription());
-        examQuestionSpeakingVo.setQuestionURL(qSpeakingQuestion.getQuestionUrl());
+        examQuestionSpeakingVo.setQuestionURL(BaseConstant.audioURL+qSpeakingQuestion.getQuestionUrl());
         examQuestionSpeakingVo.setQuestionCount(1);
         return examQuestionSpeakingVo;
     }
@@ -448,7 +492,13 @@ public class ExamPaperServiceImpl implements ExamPaperService {
         sectionListeningVo.setId(qListeningSection.getId());
         sectionListeningVo.setName(qListeningSection.getName());
         QListeningSubjectExample qListeningSubjectExample = new QListeningSubjectExample();
-        qListeningSubjectExample.createCriteria().andSectionIdEqualTo(listeningSectionId);
+        QListeningSubjectExample.Criteria qListeningSubjectExampleCriteria = qListeningSubjectExample.createCriteria();
+        if(listeningSubjectOrder !=null){
+            qListeningSubjectExampleCriteria.andOrderNumEqualTo(listeningSubjectOrder);
+        }
+        qListeningSubjectExampleCriteria.andSectionIdEqualTo(listeningSectionId);
+
+
         List<QListeningSubject> qListeningSubjects = qListeningSubjectMapper.selectByExample(qListeningSubjectExample);
         List<SubjectListeningVo> subjectListeningVos = new ArrayList<>();
         for (QListeningSubject qListeningSubject : qListeningSubjects) {
@@ -457,12 +507,17 @@ public class ExamPaperServiceImpl implements ExamPaperService {
             Integer passageId = qListeningSubject.getPassageId();
             QListeningPassage qListeningPassage = qListeningPassageMapper.selectByPrimaryKey(passageId);
             subjectListeningVo.setAudioURL(BaseConstant.audioURL + qListeningPassage.getAudioUrl());
-            subjectListeningVo.setImageURL(BaseConstant.audioURL + qListeningPassage.getImageUrl());
+            subjectListeningVo.setImageURL(qListeningPassage.getImageUrl());
             subjectListeningVo.setTitle(qListeningPassage.getTitle());
             subjectListeningVo.setTitleCn(qListeningPassage.getTitleCn());
             QListeningQuestionExample qListeningQuestionExample = new QListeningQuestionExample();
-            qListeningQuestionExample.createCriteria().andSubjectIdEqualTo(qListeningSubject.getId());
-            List<QListeningQuestion> qListeningQuestions = qListeningQuestionMapper.selectByExample(qListeningQuestionExample);
+            QListeningQuestionExample.Criteria qListeningQuestionExampleCriteria = qListeningQuestionExample.createCriteria();
+            if(listeningQuestionOrder !=null){
+                qListeningQuestionExampleCriteria.andOrderNumEqualTo(listeningQuestionOrder);
+            }
+            qListeningQuestionExampleCriteria.andSubjectIdEqualTo(qListeningSubject.getId());
+
+            List<QListeningQuestion> qListeningQuestions = qListeningQuestionMapper.selectByExampleWithBLOBs(qListeningQuestionExample);
             List<QuestionListeningVo> questionListeningVos = new ArrayList<>();
             for (QListeningQuestion qListeningQuestion : qListeningQuestions) {
                 QuestionListeningVo questionListeningVo = new QuestionListeningVo();
@@ -499,7 +554,11 @@ public class ExamPaperServiceImpl implements ExamPaperService {
         sectionSpeakingVo.setName(qSpeakingSection.getName());
         sectionSpeakingVo.setOrderNum(qSpeakingSection.getOrderNum());
         QSpeakingSubjectExample qSpeakingSubjectExample = new QSpeakingSubjectExample();
-        qSpeakingSubjectExample.createCriteria().andSectionIdEqualTo(speakingSectionId);
+        QSpeakingSubjectExample.Criteria qSpeakingSubjectExampleCriteria = qSpeakingSubjectExample.createCriteria();
+        if(speakingSubjectOrder !=null){
+            qSpeakingSubjectExampleCriteria.andOrderNumEqualTo(speakingSubjectOrder);
+        }
+        qSpeakingSubjectExampleCriteria.andSectionIdEqualTo(speakingSectionId);
         List<SubjectSpeakingVo> subjectSpeakingVos = new ArrayList<>();
         List<QSpeakingSubject> qSpeakingSubjects = qSpeakingSubjectMapper.selectByExample(qSpeakingSubjectExample);
         for (QSpeakingSubject qSpeakingSubject : qSpeakingSubjects) {
@@ -533,7 +592,11 @@ public class ExamPaperServiceImpl implements ExamPaperService {
         sectionWritingVo.setName(qWritingSection.getName());
 
         QWritingSubjectExample qWritingSubjectExample = new QWritingSubjectExample();
-        qWritingSubjectExample.createCriteria().andSectionIdEqualTo(writingSectionId);
+        QWritingSubjectExample.Criteria qWritingSubjectExampleCriteria = qWritingSubjectExample.createCriteria();
+        if(writingSubjectOrder!=null){
+            qWritingSubjectExampleCriteria.andOrderNumEqualTo(writingSubjectOrder);
+        }
+        qWritingSubjectExampleCriteria.andSectionIdEqualTo(writingSectionId);
         List<SubjectWritingVo> subjectWritingVos = new ArrayList<>();
         List<QWritingSubject> qWritingSubjects = qWritingSubjectMapper.selectByExample(qWritingSubjectExample);
         for (QWritingSubject qWritingSubject : qWritingSubjects) {

@@ -93,6 +93,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
               	<c:forEach items="${allExam}" var="allExam">
               	  <tr>
 	                 <td><a href="${ctx}/mock/queryReadingExamPaperDetail.action?paperId=${allExam.id}&userId=${user.userId}"><font color="blue">${allExam.name}</font></a></td>
+	                 <td><a href="${ctx}/mock/queryListeningExamPaperDetail.action?paperId=${allExam.id}&userId=${user.userId}"><font color="blue">${allExam.name}</font></a></td>
+	                 <td><a href="${ctx}/mock/querySpeakingExamPaperDetail.action?paperId=${allExam.id}&userId=${user.userId}"><font color="blue">${allExam.name}</font></a></td>
+	                 <td><a href="${ctx}/mock/queryWritingExamPaperDetail.action?paperId=${allExam.id}&userId=${user.userId}"><font color="blue">${allExam.name}</font></a></td>
 	                 <td>${allExam.createTime}</td>
 	                 <td>${allExam.writingName}</td>
 	                 <td>${allExam.remark}</td>

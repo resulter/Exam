@@ -33,11 +33,14 @@
     <link href="${ctx}/css/style.css" rel="stylesheet" type="text/css" media="all"/>
     <link href="${ctx}/css/time.css" rel="stylesheet" type="text/css" media="all"/>
     <link href="${ctx}/css/exam/ReadingQuestion.css" rel="stylesheet" type="text/css" media="all"/>
+    <link href="${ctx}/css/exam/writingSolo.css" rel="stylesheet" type="text/css" media="all"/>
     <script src="${ctx}/js/jquery-1.11.1.min.js"></script>
     <script src="${ctx}/js/modernizr.custom.js"></script>
     <script type="text/javascript" src="${ctx}/js/move-top.js"></script>
     <script type="text/javascript" src="${ctx}/js/easing.js"></script>
     <script type="text/javascript" src="${ctx}/js/jquery.paginationone.js"></script>
+    <script type="text/javascript" src="${ctx}/js/record/recorder.js"></script>
+    <script type="text/javascript" src="${ctx}/js/record/qiniu.min.js"></script>
     <%--<script type="text/javascript" src="${ctx}/js/audiojs/audio.min.js"></script>
     <script>
         audiojs.events.ready(function () {
@@ -110,18 +113,14 @@
 
         function doSubmitPassage() {
             $("#alertModalSubmit").modal("hide");
-            var userId = "${userId}"
-            savaOptionAnswer(${paperId},userId);
+            var userId = "${userId}";
+            savaWritingAnswer($("#textArea").val(),${paperId},userId);
             var sub = Number(localStorage.getItem("subject"));
-            if(sub == 1||sub==2){//第一篇或第二篇的时候，获取下一篇内容
+            if(sub == 1){//第一篇或第二篇的时候，获取下一篇内容
                 var order = Number(sub) +1;//下一篇 序号
-                alert("order"+order);
                 getSecondReading(order);
                 <%--alert("试卷id"+${paperId});--%>
 
-                $("#question-div").css("display","none");
-                $("#passage-div").css("display","inline");
-                $("#navigation").css("display","none");
 
 
                 // alert(localStorage.getItem("subject")+"   before");
@@ -354,25 +353,18 @@
 
         </div>
         <%--<span id="localCount">当前第${dataList[0].questionNum}/${dataList[0].questionCount}</span>--%>
-        <div class="content" id="myDiv">
-            <div id="passage-div">
-                <img src="${dataList[0].imageURL}" width="460px" height="232px" style="clear: both;display: block; margin:auto;padding-bottom: 5px">
-                <img src="../images/start-passage.png" width="50px" height="50px" style="clear: both;display: block; margin:auto;padding-bottom: 5px" id="audio-play">
-                <audio src="${dataList[0].questionURL}" controls="true" id="audio" style="display:none;"></audio>
+
+            <div class="content-text-l Scroll mCustomScrollbar _mCS_1">
+                  <span style="font-weight: bold">Question:</span> </spdn> <p>${dataInfo.remark1}</p>
+                <p style="font-weight: bold" id="question-writing"> ${dataInfo.question}</p>
+                <p>${dataInfo.remark2}</p>
             </div>
-            <div id="question-div" style="display: none">
-                <div style="margin-left: 35px" id="questionContent"><span id="questionNum">${dataList[0].questionNum}</span>.${dataList[0].question}
-                    <img src="../images/start-audio.png" style="cursor:pointer;margin-left: 5px; margin-top: -2px;" id="img${dataList[0].id}"></div>
-                <audio id="audio${dataList[0].id}" style="display:none;" src=" ${dataList[0].questionURL}" controls="controls"></audio>
-
-                <div id="questionOption">
-                    <c:forEach items="${dataList[0].optionListeningVos}" var="item">
-                        <div style="margin-left: 35px"><input id="answer${item.itemCode}" type="radio" name="answer" value="${item.itemCode}" style="z-index:-2">
-                            <label class="label-radio" for="answer${item.itemCode}">
-                                <span>${item.itemCode}.${item.itemName}</span> </label></div>
-                    </c:forEach>
+            <div class="content-text-r">
+                <div class="content-writing-text">
+                    <div class="text-container Scroll-one" style="min-height: initial;">
+                        <textarea id="textArea" class="writeText" name="content"  spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" style="height: calc(100% - 2px); overflow-y: auto; padding: initial;"></textarea>
+                    </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -393,102 +385,11 @@
 <script type="text/javascript">
     $("#btn_next").click(function () {
         var a = $("input[name='answer']:checked").val();
-        alert("选中的radio的值是：" + a);
-        alert($("#localCount"));
 
     });
 
 
-    $('.pagination').pagination(${pageInfo.total}, {
-        callback: function (page) {
-            $.ajax({
-                url: "/mock/queryListeningExamPaperDetailData.action",
-                method: "post",
-                // dataType: "json",
-                data: {page: page + 1, paperId: ${paperId}},
-                success: function (data) {
-                    var  a =${subjectId};
-                    if(a!=null){
-                        localStorage.setItem("subject",${subjectId});
-                    }
-                    var html = "";
-                    console.log("===>>"+data.extend.dataList);
 
-                    var i = 0;
-                    var id = new Array();
-                    var code = new Array();
-                    var name = new Array();
-                    $.each(data.extend.dataList, function () {
-                        html += "<div id='question-div' >";
-
-                        html += "<div style='margin-left: 35px' id='questionContent'><span id='questionNum'>"+this.questionNum+"</span>."+this.question;
-                        html += "<img src='../images/start-audio.png' style='cursor:pointer;margin-left: 5px; margin-top: -2px;' id='img"+this.questionNum+"'></div>";
-                        html += "<audio id='audio"+this.questionNum+"' style='display:none;' src='"+this.questionURL+"' controls='controls'></audio>";
-                        var anwserValue = localStorage.getItem(this.questionNum);
-                        for (i = 0; i < this.optionListeningVos.length; i++) {
-                            id[i] = this.optionListeningVos[i].id;
-                            code[i] = this.optionListeningVos[i].itemCode;
-                            name[i] = this.optionListeningVos[i].itemName;
-                            html += "<div style='margin-left: 35px'>"
-                            if (code[i] == anwserValue) {
-                                html += "<input id='answer" + code[i] + "' type='radio' name='answer' value='" + code[i] + "' style='z-index:-2' checked>"
-                            } else {
-                                html += "<input id='answer" + code[i] + "' type='radio' name='answer' value='" + code[i] + "' style='z-index:-2'>"
-                            }
-                            html += "<label class='label-radio' for='answer" + code[i] + "'>"
-                            html += "<span>" + code[i] + "." + name[i] + "</span>"
-                            html += "</label>"
-                            html += "</div>"
-                        }
-                        html += "</div>"
-
-                    })
-                    html += "</tbody>";
-                    html += "</table>";
-                    html += "</div>";
-                    $("#question-div").html("");
-                    $("#question-div").append(html);
-                    $('input[name=answer]').on('click', selectAnswer)
-
-                    $("#audio-play").click(function () {
-                        $("#audio")[0].play();
-                        $("#audio-play").css("display","none");
-                    });
-                    //点击图标播放音频，写在外边获取不到id
-                    $('#img1').click(function () {
-                        $("#audio1")[0].play();
-                        $("#img1").css("display", "none");
-                    });
-                    $('#img2').click(function () {
-                        $("#audio2")[0].play();
-                        $("#img2").css("display", "none");
-                    });
-                    $('#img2').on("click",function () {
-                        $("#audio2")[0].play();
-                        $("#img2").css("display", "none");
-                    });
-                    $('#img3').click(function () {
-                        $("#audio3")[0].play();
-                        $("#img3").css("display", "none");
-                    });
-                    $('#img4').click(function () {
-                        $("#audio4")[0].play();
-                        $("#img4").css("display", "none");
-                    });
-                    $('#img5').click(function () {
-                        $("#audio5")[0].play();
-                        $("#img5").css("display", "none");
-                    });
-                },
-                error: function (data) {
-                    alert("error");
-                }
-            });
-
-        },
-        display_msg: true,
-        setPageNo: false
-    });
     $('input[name=answer]').on('click', selectAnswer);
 
     function selectAnswer() {
@@ -506,221 +407,34 @@
     function getSecondReading(order) {
 
         $.ajax({//切换到第二题后加载第一题
-            url: "/mock/queryListeningExamPaperDetailFirstData.action",
+            url: "/mock/queryWritingPaperDetailData.action",
             method: "post",
             // dataType: "json",
             data: { paperId: ${paperId},subjectOrder:order},
             success: function (data) {
                 console.log(data);
-                // localStorage.removeItem("subject");
-             /*   var  a =${subjectId};
-                if(a!=null){
-                    localStorage.setItem("subject",${subjectId});
-                }*/
-                var html = "";
-                var html2="";
-                console.log("===>>"+data.extend.dataList);
 
                 var i = 0;
                 var id = new Array();
                 var code = new Array();
                 var name = new Array();
-                $.each(data.extend.dataList, function () {
 
-                    html2 +="<div id='passage-div'>"
-                    html2 +="<img src='"+this.imageURL+"' width='460px' height='232px' style='clear: both;display: block; margin:auto;padding-bottom: 5px'>"
-                    html2 +="<img src='../images/start-passage.png' width='50px' height='50px' style='clear: both;display: block; margin:auto;padding-bottom: 5px' id='audio-play'>"
-                    html2 +="<audio src='"+this.questionURL+"' style='display:none;' controls='true' id='audio' ></audio></div>"
+                $("#question-writing").html(data.extend.dataInfo.question);
+                $("#textArea").val("");
 
-                    html += "<div id='question-div' >";
 
-                    html += "<div style='margin-left: 35px' id='questionContent'><span id='questionNum'>"+this.questionNum+"</span>."+this.question;
-                    html += "<img src='../images/start-audio.png' style='cursor:pointer;margin-left: 5px; margin-top: -2px;' id='img"+this.questionNum+"'></div>";
-                    html += "<audio id='audio"+this.questionNum+"' style='display:none;' src='"+this.questionURL+"' controls='controls'></audio>";
-                    var anwserValue = localStorage.getItem(this.questionNum);
-                    for (i = 0; i < this.optionListeningVos.length; i++) {
-                        id[i] = this.optionListeningVos[i].id;
-                        code[i] = this.optionListeningVos[i].itemCode;
-                        name[i] = this.optionListeningVos[i].itemName;
-                        html += "<div style='margin-left: 35px'>"
-                        if (code[i] == anwserValue) {
-                            html += "<input id='answer" + code[i] + "' type='radio' name='answer' value='" + code[i] + "' style='z-index:-2' checked>"
-                        } else {
-                            html += "<input id='answer" + code[i] + "' type='radio' name='answer' value='" + code[i] + "' style='z-index:-2'>"
-                        }
-                        html += "<label class='label-radio' for='answer" + code[i] + "'>"
-                        html += "<span>" + code[i] + "." + name[i] + "</span>"
-                        html += "</label>"
-                        html += "</div>"
-                    }
-                    html += "</div>"
-
-                })
-                html += "</tbody>";
-                html += "</table>";
-                html += "</div>";
-                $("#question-div").html("");
-                $("#question-div").append(html);
-                 $("#passage-div").html("");
-                $("#passage-div").append(html2);
-                $('input[name=answer]').on('click', selectAnswer)
-
-                //监听音频播放完成后的事件  passage ==>> question1
-                var audioT = document.getElementById("audio");
-                $('#audio').on('play',function () {
-                    console.log('123123');
-                })
-                audioT.onended = function() {
-                    setTimeout(function () {
-                        $("#passage-div").css("display", "none");
-                        $("#question-div").css("display", "inline");
-                        $("#navigation").css("display","inline");
-
-                    }, 700);
-
-                    console.log('播放完成');
-                };
-                $("#audio-play").click(function () {
-                    $("#audio")[0].play();
-                    $("#audio-play").css("display","none");
-                });
-                //点击图标播放音频，写在外边获取不到id
-                $('#img1').click(function () {
-                    $("#audio1")[0].play();
-                    $("#img1").css("display", "none");
-                });
-                $('#img2').click(function () {
-                    $("#audio2")[0].play();
-                    $("#img2").css("display", "none");
-                });
-                $('#img2').on("click",function () {
-                    $("#audio2")[0].play();
-                    $("#img2").css("display", "none");
-                });
-                $('#img3').click(function () {
-                    $("#audio3")[0].play();
-                    $("#img3").css("display", "none");
-                });
-                $('#img4').click(function () {
-                    $("#audio4")[0].play();
-                    $("#img4").css("display", "none");
-                });
-                $('#img5').click(function () {
-                    $("#audio5")[0].play();
-                    $("#img5").css("display", "none");
-                });
             },
             error: function (data) {
                 alert("error");
             }
         });
-        $('.pagination').pagination(${pageInfo.total}, {//加载分页插件，第一条加载不到
-            callback: function (page) {
-                $.ajax({
-                    url: "/mock/queryListeningExamPaperDetailData.action",
-                    method: "post",
-                    // dataType: "json",
-                    data: {page: page + 1, paperId: ${paperId},subjectOrder:order},
-                    success: function (data) {
-                      /*  var  a =${subjectId};
-                        if(a!=null){
-                            localStorage.setItem("subject",${subjectId});
-                        }*/
-                        var html = "";
-                        console.log("===>>"+data.extend.dataList);
 
-                        var i = 0;
-                        var id = new Array();
-                        var code = new Array();
-                        var name = new Array();
-                        $.each(data.extend.dataList, function () {
-                            html += "<div id='question-div' >";
-
-                            html += "<div style='margin-left: 35px' id='questionContent'><span id='questionNum'>"+this.questionNum+"</span>."+this.question;
-                            html += "<img src='../images/start-audio.png' style='cursor:pointer;margin-left: 5px; margin-top: -2px;' id='img"+this.questionNum+"'></div>";
-                            html += "<audio id='audio"+this.questionNum+"' style='display:none;' src='"+this.questionURL+"' controls='controls'></audio>";
-                            var anwserValue = localStorage.getItem(this.questionNum);
-                            for (i = 0; i < this.optionListeningVos.length; i++) {
-                                id[i] = this.optionListeningVos[i].id;
-                                code[i] = this.optionListeningVos[i].itemCode;
-                                name[i] = this.optionListeningVos[i].itemName;
-                                html += "<div style='margin-left: 35px'>"
-                                if (code[i] == anwserValue) {
-                                    html += "<input id='answer" + code[i] + "' type='radio' name='answer' value='" + code[i] + "' style='z-index:-2' checked>"
-                                } else {
-                                    html += "<input id='answer" + code[i] + "' type='radio' name='answer' value='" + code[i] + "' style='z-index:-2'>"
-                                }
-                                html += "<label class='label-radio' for='answer" + code[i] + "'>"
-                                html += "<span>" + code[i] + "." + name[i] + "</span>"
-                                html += "</label>"
-                                html += "</div>"
-                            }
-                            html += "</div>"
-
-                        })
-                        html += "</tbody>";
-                        html += "</table>";
-                        html += "</div>";
-                        $("#question-div").html("");
-                        $("#question-div").append(html);
-                        $('input[name=answer]').on('click', selectAnswer)
-                        $("#audio-play").click(function () {
-                            $("#audio")[0].play();
-                            $("#audio-play").css("display","none");
-                        });
-                        //点击图标播放音频，写在外边获取不到id
-                        $('#img1').click(function () {
-                            $("#audio1")[0].play();
-                            $("#img1").css("display", "none");
-                        });
-                        $('#img2').click(function () {
-                            $("#audio2")[0].play();
-                            $("#img2").css("display", "none");
-                        });
-                        $('#img2').on("click",function () {
-                            $("#audio2")[0].play();
-                            $("#img2").css("display", "none");
-                        });
-                        $('#img3').click(function () {
-                            $("#audio3")[0].play();
-                            $("#img3").css("display", "none");
-                        });
-                        $('#img4').click(function () {
-                            $("#audio4")[0].play();
-                            $("#img4").css("display", "none");
-                        });
-                        $('#img5').click(function () {
-                            $("#audio5")[0].play();
-                            $("#img5").css("display", "none");
-                        });
-                    },
-                    error: function (data) {
-                        alert("error");
-                    }
-                });
-            },
-            display_msg: true,
-            setPageNo: false
-        });
 
     }
-    function savaOptionAnswer(paperId,userId) {
-        var answer = "";
-        answer +=  localStorage.getItem("1")+",";
-        answer +=  localStorage.getItem("2")+",";
-        answer +=  localStorage.getItem("3")+",";
-        answer +=  localStorage.getItem("4")+",";
-        answer +=  localStorage.getItem("5")+",";
-        // answer +=  localStorage.getItem("6")+",";
-        // answer +=  localStorage.getItem("7")+",";
-        // answer +=  localStorage.getItem("8")+",";
-        // answer +=  localStorage.getItem("9")+",";
-        // answer +=  localStorage.getItem("10");
-        alert(answer);
-        // alert( localStorage.getItem("subject")+"  提交前");
+    function savaWritingAnswer(answer,paperId,userId) {
         var subjectId =   localStorage.getItem("subject");
         $.ajax({
-            url: "/mock/saveListeningRecord.action",
+            url: "/mock/saveWritingRecord.action",
             method: "post",
             async:false,
             // dataType: "json",
@@ -731,16 +445,6 @@
 
             }
         });
-        localStorage.removeItem("1");
-        localStorage.removeItem("2");
-        localStorage.removeItem("3");
-        localStorage.removeItem("4");
-        localStorage.removeItem("5");
-        // localStorage.removeItem("6");
-        // localStorage.removeItem("7");
-        // localStorage.removeItem("8");
-        // localStorage.removeItem("9");
-        // localStorage.removeItem("10");
 
     }
 
@@ -750,19 +454,7 @@
 <script>
     //监听音频播放完成后的事件  passage ==>> question1
     var audioT = document.getElementById("audio");
-    $('#audio').on('play',function () {
-        console.log('123123');
-    })
-    audioT.onended = function() {
-        setTimeout(function () {
-            $("#passage-div").css("display", "none");
-            $("#question-div").css("display", "inline");
-            $("#navigation").css("display","inline");
 
-        }, 700);
-
-        console.log('播放完成');
-    };
     $("#audio-play").click(function () {
         $("#audio")[0].play();
         $("#audio-play").css("display","none");
@@ -792,6 +484,14 @@
         $("#audio5")[0].play();
         $("#img5").css("display", "none");
     });
+
+
+    function __log(e, data) {
+        log.innerHTML += "\n" + e + " " + (data || '');
+    }
+
+    var audio_context;
+    var recorder;
 
 
 </script>

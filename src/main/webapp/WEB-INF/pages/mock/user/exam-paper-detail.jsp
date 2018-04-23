@@ -103,10 +103,13 @@
 
         function doSubmitPassage() {
             $("#alertModalSubmit").modal("hide");
-            savaOptionAnswer();
+            var paperId = ${paperId}
+            var userId = "${userId}";
+            savaOptionAnswer(paperId,userId);
             var sub = Number(localStorage.getItem("subject"));
-            if(sub == 1){
-                getSecondReading();
+            if(sub == 1 ){//第一篇的时候
+                var order = Number(sub) +1;//下一篇 序号
+                getSecondReading(order);
                 <%--alert("试卷id"+${paperId});--%>
                 // alert(localStorage.getItem("subject")+"   before");
                 var subjectIdBefore = localStorage.getItem("subject");
@@ -384,7 +387,7 @@
 <script type="text/javascript">
     $("#btn_next").click(function () {
         var a = $("input[name='answer']:checked").val();
-        alert("选中的radio的值是：" + a);
+        // alert("选中的radio的值是：" + a);
         alert($("#localCount"));
 
     });
@@ -432,10 +435,6 @@
                         html += "</div></div><div class='content-text-r'>"
                         html += "<div class='passage-title'><h3>" + this.passageTitle + "</h3></div>"
                         html += "" + this.passage + "</div></div>"
-                        html += "<td class='operate'><a href='${ctx}/deleteQuestion.action?id=" + this.id + "' class='del'>删除</a>&nbsp;";
-                        html += "<a href='${ctx}/toUpdQuestion.action?id=" + this.id + "' class='del'>编辑</a>&nbsp;";
-                        html += "<a href='${ctx}/mock/toQueryRepositorReading.action?sectionId=" + this.id + "' class='del'>查看</a></td>";
-                        html += "</tr>";
 
                     })
                     html += "</tbody>";
@@ -467,13 +466,13 @@
             });
 
     })
-    function getSecondReading() {
+    function getSecondReading(order) {
 
         $.ajax({//切换到第二题后加载第一题
             url: "/mock/queryReadingExamPaperDetailFirstData.action",
             method: "post",
             // dataType: "json",
-            data: { paperId: ${paperId},subjectOrder:2},
+            data: { paperId: ${paperId},subjectOrder:order},
             success: function (data) {
                 console.log(data);
                 // localStorage.removeItem("subject");
@@ -507,10 +506,6 @@
                     html += "</div></div><div class='content-text-r'>"
                     html += "<div class='passage-title'><h3>" + this.passageTitle + "</h3></div>"
                     html += "" + this.passage + "</div></div>"
-                    html += "<td class='operate'><a href='${ctx}/deleteQuestion.action?id=" + this.id + "' class='del'>删除</a>&nbsp;";
-                    html += "<a href='${ctx}/toUpdQuestion.action?id=" + this.id + "' class='del'>编辑</a>&nbsp;";
-                    html += "<a href='${ctx}/mock/toQueryRepositorReading.action?sectionId=" + this.id + "' class='del'>查看</a></td>";
-                    html += "</tr>";
 
                 })
                 html += "</tbody>";
@@ -530,7 +525,7 @@
                     url: "/mock/queryReadingExamPaperDetailData.action",
                     method: "post",
                     // dataType: "json",
-                    data: {page: page + 1, paperId: ${paperId},subjectOrder:2},
+                    data: {page: page + 1, paperId: ${paperId},subjectOrder:order},
                     success: function (data) {
                         var html = "";
                         html += "<div class='content' id='myDiv'>";
@@ -562,10 +557,6 @@
                             html += "</div></div><div class='content-text-r'>"
                             html += "<div class='passage-title'><h3>" + this.passageTitle + "</h3></div>"
                             html += "" + this.passage + "</div></div>"
-                            html += "<td class='operate'><a href='${ctx}/deleteQuestion.action?id=" + this.id + "' class='del'>删除</a>&nbsp;";
-                            html += "<a href='${ctx}/toUpdQuestion.action?id=" + this.id + "' class='del'>编辑</a>&nbsp;";
-                            html += "<a href='${ctx}/mock/toQueryRepositorReading.action?sectionId=" + this.id + "' class='del'>查看</a></td>";
-                            html += "</tr>";
 
                         })
                         html += "</tbody>";
@@ -585,7 +576,7 @@
         });
 
     }
-    function savaOptionAnswer() {
+    function savaOptionAnswer(paperId,userId) {
         var answer = "";
         answer +=  localStorage.getItem("1")+",";
         answer +=  localStorage.getItem("2")+",";
@@ -597,7 +588,7 @@
         answer +=  localStorage.getItem("8")+",";
         answer +=  localStorage.getItem("9")+",";
         answer +=  localStorage.getItem("10");
-        alert(answer);
+        // alert(answer);
         // alert( localStorage.getItem("subject")+"  提交前");
         var subjectId =   localStorage.getItem("subject");
         $.ajax({
@@ -605,7 +596,7 @@
             method: "post",
             async:false,
             // dataType: "json",
-            data: {answer: answer, subjectId: subjectId},
+            data: {answer: answer, subjectId: subjectId,paperId:paperId,userId:userId},
             success:function (data) {
                // alert(data.extend.subjectId+"  返回值");
                 // localStorage.remov eItem("s ubject")

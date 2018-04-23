@@ -1,0 +1,97 @@
+.content {
+    padding-bottom: 10px
+}
+
+.content-text-l, .content-text-r {
+    box-sizing: border-box;
+    height: 100%;
+    margin: 5px 0;
+    padding: 0 16px;
+    overflow: auto
+}
+
+.content-text-l {
+    float: left;
+    width: 50%;
+    margin-right: 3px;
+}
+
+.content-text-l.mCustomScrollbar:not(.mCS_no_scrollbar) {
+    padding-right: 0;
+}
+
+.content-text-l p {
+    text-indent: 45px
+}
+
+.content-text-l p * {
+    text-indent: 0
+}
+
+.content-text-r {
+    position: relative;
+    height: 100%;
+    padding: 0;
+    overflow-x: hidden
+}
+
+.content-text-r .content-writing-edit {
+    position: absolute;
+    width: 100%;
+    height: 32px;
+    z-index: 2
+}
+
+.content-text-r .content-writing-edit li {
+    float: left;
+    height: 30px;
+    margin: 3px 0 3px 10px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 30px;
+}
+
+.content-text-r .content-writing-edit button{
+    padding: 2px 9px;
+    background-color: #eee;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.content-text-r .content-writing-edit .right-btn {
+    display: inline-block;
+    height: 30px;
+    margin: 4px 10px 0 0;
+    float: right;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 30px
+}
+
+.content-text-r .content-writing-text {
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    padding: 0px 3px 0;
+    overflow: hidden;
+}
+
+.content-text-r .text-container{
+    min-height: 100%;
+    border: 1px solid;
+}
+
+.content-text-r .content-writing-text textarea {
+    width: 100%;
+    height: 490px;
+    line-height: 28px;
+    padding: 5px 0 30px 5px;
+    border: none;
+    resize: none;
+    overflow: hidden;
+    box-sizing: border-box;
+    background: 0 0
+}

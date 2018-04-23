@@ -249,20 +249,48 @@ public class ExaminationController {
 
     @RequestMapping("/saveReadingRecord.action")
     @ResponseBody //加上次注解才可以直接返回json等信息，否则只能返回web-inf下的页面
-    public Msg saveReadingRecord(String answer,@RequestParam(value = "subjectId", defaultValue = "1") String subjectId, Model model, HttpSession session) {
+    public Msg saveReadingRecord(String answer, @RequestParam(value = "subjectId", defaultValue = "1") String subjectId, Model model, HttpSession session,String userId,Integer paperId) {
         String[] answers = answer.split(",");
+        System.out.println(".------------------------------------------->>>>");
+        System.out.println("userId" + userId);
+        System.out.println("paperId" + paperId);
         System.out.println("答案篇章：" + subjectId);
-        for(int i=0;i<answers.length;i++){
-            System.out.println("第"+(i+1)+"题的答案是" + answers[i]);
+        for (int i = 0; i < answers.length; i++) {
+            System.out.println("第" + (i + 1) + "题的答案是" + answers[i]);
         }
-        System.out.println("new subjectid  " + (Integer.parseInt(subjectId)+1));
-        return Msg.success().add("a",777).add("subjectId",(Integer.parseInt(subjectId)+1));
+        System.out.println("new subjectid  " + (Integer.parseInt(subjectId) + 1));
+        return Msg.success().add("a", 777).add("subjectId", (Integer.parseInt(subjectId) + 1));
+    }
+
+    @RequestMapping("/saveListeningRecord.action")
+    @ResponseBody //加上次注解才可以直接返回json等信息，否则只能返回web-inf下的页面
+    public Msg saveListeningRecord(String answer, @RequestParam(value = "subjectId", defaultValue = "1") String subjectId, Model model, HttpSession session,String userId,Integer paperId) {
+        String[] answers = answer.split(",");
+        System.out.println(".------------------------------------------->>>>");
+        System.out.println("userId" + userId);
+        System.out.println("paperId" + paperId);
+        System.out.println("答案篇章：" + subjectId);
+        for (int i = 0; i < answers.length; i++) {
+            System.out.println("第" + (i + 1) + "题的答案是" + answers[i]);
+        }
+        System.out.println("new subjectid  " + (Integer.parseInt(subjectId) + 1));
+        return Msg.success().add("a", 777).add("subjectId", (Integer.parseInt(subjectId) + 1));
+    }
+    @RequestMapping("/saveWritingRecord.action")
+    @ResponseBody //加上次注解才可以直接返回json等信息，否则只能返回web-inf下的页面
+    public Msg saveWritingRecord(String answer, @RequestParam(value = "subjectId", defaultValue = "1") String subjectId, Model model, HttpSession session,String userId,Integer paperId) {
+        System.out.println(".------------------------------------------->>>>");
+        System.out.println("userId" + userId);
+        System.out.println("paperId" + paperId);
+        System.out.println("第" + subjectId + "的答案是：");
+        System.out.println(answer);
+        return Msg.success().add("a", 777).add("subjectId", (Integer.parseInt(subjectId) + 1));
     }
 
 
 
     /**
-     * 考试页面-写作
+     * 考试页面-写作----------------------------------------------------------------------------------------------------
      *
      * @param paperId
      * @param userId
@@ -274,10 +302,15 @@ public class ExaminationController {
     @RequestMapping("/queryWritingExamPaperDetail.action")
     public String queryWritingPaperDetail(int paperId, String userId, Model model, HttpSession session,
                                            @RequestParam(value = "subjectOrder", defaultValue = "1") int subjectOrder) {
-        ExamQuestionWritingVo examQuestionWritingVo = examPaperService.getWritingQuestionWithPassagePage(paperId, subjectOrder);
+        QDescription description = examPaperService.getDescription(BaseConstant.sectionDescriptionWriting);
+        ExamQuestionWritingVo dataInfo = examPaperService.getWritingQuestionWithPassagePage( paperId, subjectOrder);
         model.addAttribute("userId", userId);
-        System.out.println(examQuestionWritingVo);
-        return "/mock/user/exam-paper-detail2.jsp";
+        model.addAttribute("subjectId", dataInfo.getId());//判断是哪一个subject
+        model.addAttribute("description", description);
+        model.addAttribute("paperId", paperId);
+        model.addAttribute("dataInfo", dataInfo);
+        System.out.println(JSON.toJSONString(dataInfo));
+        return "/mock/user/exam-paper-detail-writing.jsp";
     }
 
     /**
@@ -293,14 +326,18 @@ public class ExaminationController {
     @ResponseBody //加上次注解才可以直接返回json等信息，否则只能返回web-inf下的页面
     public Msg queryWritingPaperDetailData(int paperId, String userId, Model model, HttpSession session,
                                                 @RequestParam(value = "subjectOrder", defaultValue = "1") int subjectOrder) {
-        ExamQuestionWritingVo examQuestionSpeakingVo = examPaperService.getWritingQuestionWithPassagePage(paperId, subjectOrder);
+        QDescription description = examPaperService.getDescription(BaseConstant.sectionDescriptionWriting);
+        ExamQuestionWritingVo dataInfo = examPaperService.getWritingQuestionWithPassagePage( paperId, subjectOrder);
         model.addAttribute("userId", userId);
-        System.out.println(JSON.toJSONString(examQuestionSpeakingVo));
-        return Msg.success().add("dataVo", examQuestionSpeakingVo).add("userId", userId);
+        model.addAttribute("subjectId", dataInfo.getId());//判断是哪一个subject
+        model.addAttribute("description", description);
+        model.addAttribute("paperId", paperId);
+        model.addAttribute("dataInfo", dataInfo);
+        return Msg.success().add("dataInfo", dataInfo).add("userId", userId).add("paperId",paperId).add("description",description).add("subjectId",dataInfo.getId());
     }
 
     /**
-     * 考试页面-口语
+     * 考试页面-口语----------------------------------------------------------------------------------------------------
      *
      * @param paperId
      * @param userId
@@ -312,13 +349,15 @@ public class ExaminationController {
     @RequestMapping("/querySpeakingExamPaperDetail.action")
     public String querySpeakingExamPaperDetail(int paperId, String userId, Model model, HttpSession session,
                                             @RequestParam(value = "subjectOrder", defaultValue = "1") int subjectOrder) {
-        Map map = new HashMap();
-        map.put("paperId", paperId);
-        map.put("userId", userId);
-        ExamQuestionSpeakingVo examQuestionSpeakingVo = examPaperService.getSpeakingQuestionWithPassagePage(paperId, subjectOrder);
+        QDescription description = examPaperService.getDescription(BaseConstant.sectionDescriptionSpeaking);
+        ExamQuestionSpeakingVo dataInfo = examPaperService.getSpeakingQuestionWithPassagePage( paperId, subjectOrder);
         model.addAttribute("userId", userId);
-        System.out.println(examQuestionSpeakingVo);
-        return "/mock/user/exam-paper-detail7.jsp";
+        model.addAttribute("subjectId", dataInfo.getId());//判断是哪一个subject
+        model.addAttribute("description", description);
+        model.addAttribute("paperId", paperId);
+        model.addAttribute("dataInfo", dataInfo);
+        System.out.println(JSON.toJSONString(dataInfo));
+        return "/mock/user/exam-paper-detail-speaking.jsp";
     }
 
     /**
@@ -330,7 +369,7 @@ public class ExaminationController {
      * @param subjectOrder
      * @return
      */
-    @RequestMapping("/queryListeningExamPaperDetailData.action")
+    @RequestMapping("/query/SpeakingExamPaperDetailData.action")
     @ResponseBody //加上次注解才可以直接返回json等信息，否则只能返回web-inf下的页面
     public Msg querySpeakingExamPaperDetailData(int paperId, String userId, Model model, HttpSession session,
                                                 @RequestParam(value = "subjectOrder", defaultValue = "1") int subjectOrder) {
@@ -340,7 +379,7 @@ public class ExaminationController {
         return Msg.success().add("dataVo", examQuestionSpeakingVo).add("userId", userId);
     }
 
-    /**
+    /**--------------------------------------------------------------------------------------------------------------------------
      * 考试页面-听力
      *
      * @param paperId
@@ -354,13 +393,17 @@ public class ExaminationController {
     public String queryListeningExamPaperDetail(int paperId, String userId, Model model, HttpSession session,
                                    @RequestParam(value = "questionOrder", defaultValue = "1") int questionOrder,
                                    @RequestParam(value = "subjectOrder", defaultValue = "1") int subjectOrder) {
-        PageInfo<ExamQuestionListeningVo> pageInfo = examPaperService.getListeningQuestionWithPassagePage(1, BaseConstant.examPageQueationCount, paperId, subjectOrder, questionOrder);
+        QDescription description = examPaperService.getDescription(BaseConstant.sectionDescriptionListening);
+        PageInfo<ExamQuestionListeningVo> pageInfo = examPaperService.getListeningQuestionWithPassagePage(1, BaseConstant.examPageQueationCount, paperId, subjectOrder, null);
         List<ExamQuestionListeningVo> dataList = pageInfo.getList();
         model.addAttribute("userId", userId);
         model.addAttribute("dataList", dataList);
         model.addAttribute("pageInfo", pageInfo);
+        model.addAttribute("subjectId", dataList.get(0).getId());//判断是哪一个subject
+        model.addAttribute("description", description);
+        model.addAttribute("paperId", paperId);
         System.out.println(JSON.toJSONString(dataList));
-        return "/mock/user/exam-paper-detail8.jsp";
+        return "/mock/user/exam-paper-detail-listening.jsp";
     }
 
     /**
@@ -377,44 +420,45 @@ public class ExaminationController {
     @ResponseBody //加上次注解才可以直接返回json等信息，否则只能返回web-inf下的页面
     public Msg queryListeningExamPaperDetailData(int paperId, String userId, Model model, HttpSession session,
                                                 @RequestParam(value = "questionOrder", defaultValue = "1") int questionOrder,
-                                                @RequestParam(value = "subjectOrder", defaultValue = "1") int subjectOrder) {
+                                                @RequestParam(value = "subjectOrder", defaultValue = "1") int subjectOrder,@RequestParam(value = "page", defaultValue = "1") int page) {
         Map map = new HashMap();
         map.put("paperId", paperId);
         map.put("userId", userId);
-        PageInfo<ExamQuestionListeningVo> pageInfo = examPaperService.getListeningQuestionWithPassagePage(1, BaseConstant.examPageQueationCount, paperId, subjectOrder, questionOrder);
+        PageInfo<ExamQuestionListeningVo> pageInfo = examPaperService.getListeningQuestionWithPassagePage(page, BaseConstant.examPageQueationCount, paperId, subjectOrder, null);
         List<ExamQuestionListeningVo> dataList = pageInfo.getList();
         model.addAttribute("userId", userId);
         model.addAttribute("dataList", JSON.toJSONString(dataList));
         System.out.println(JSON.toJSONString(dataList));
-        return Msg.success().add("dataList", dataList).add("userId", userId).add("pageInfo",pageInfo);
+        return Msg.success().add("dataList", dataList).add("userId", userId).add("pageInfo",pageInfo).add("subjectId", dataList.get(0).getId());
     }
-
     /**
-     * 考试页面,这里进入的是阅读的第一题
-     *
+     * 加载某一题的信息，这里用来加载切换到第二、三篇听力的第一题
      * @param paperId
      * @param userId
      * @param model
      * @param session
+     * @param questionOrder
+     * @param subjectOrder
      * @return
      */
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    @RequestMapping("/queryReadingExamPaperDetail2.action")
-    public String queryReadingExamPaperDetail2(Integer paperId, String userId, Model model, HttpSession session,
-                                              @RequestParam(value = "questionOrder", defaultValue = "1") Integer questionOrder,
-                                              @RequestParam(value = "subjectOrder", defaultValue = "1") Integer subjectOrder,@RequestParam(value = "page", defaultValue = "1") int page) {
+    @RequestMapping("/queryListeningExamPaperDetailFirstData.action")
+    @ResponseBody //加上次注解才可以直接返回json等信息，否则只能返回web-inf下的页面
+    public Msg queryListeningExamPaperDetailFirstData(Integer paperId, String userId, Model model, HttpSession session,
+                                                    @RequestParam(value = "questionOrder", defaultValue = "1") Integer questionOrder,
+                                                    @RequestParam(value = "subjectOrder", defaultValue = "1") Integer subjectOrder) {
         Map map = new HashMap();
         map.put("paperId", paperId);
         map.put("userId", userId);
-        PageInfo<ExamQuestionReadingVo> pageInfo = examPaperService.getReadingQuestionWithPassagePage(page, BaseConstant.examPageQueationCount, paperId, subjectOrder, null);
-        List<ExamQuestionReadingVo> dataList = pageInfo.getList();
+        List<ExamQuestionListeningVo> dataList = examPaperService.getQuestionWithPassageListening(paperId, subjectOrder, questionOrder);
         model.addAttribute("userId", userId);
-        model.addAttribute("dataList", dataList);
-        model.addAttribute("pageInfo", pageInfo);
+        model.addAttribute("dataList", JSON.toJSONString(dataList));
         System.out.println(JSON.toJSONString(dataList));
-        return "/mock/user/exam-paper-detail2.jsp";
+        System.out.println("subject:   " +dataList.get(0).getId());
+        return Msg.success().add("dataList", dataList).add("userId", userId).add("paperId",paperId).add("subjectId", dataList.get(0).getId());
     }
-    /**
+
+
+    /**--------------------------------------------------------------------------------------------------------------------
      * 考试页面,这里进入的是阅读的第一题
      *
      * @param paperId
@@ -488,7 +532,7 @@ public class ExaminationController {
         Map map = new HashMap();
         map.put("paperId", paperId);
         map.put("userId", userId);
-        List<ExamQuestionReadingVo> dataList = examPaperService.getQuestionWithPassage(paperId, subjectOrder, questionOrder);
+        List<ExamQuestionReadingVo> dataList = examPaperService.getQuestionWithPassageReading(paperId, subjectOrder, questionOrder);
         model.addAttribute("userId", userId);
         model.addAttribute("dataList", JSON.toJSONString(dataList));
         System.out.println(JSON.toJSONString(dataList));
