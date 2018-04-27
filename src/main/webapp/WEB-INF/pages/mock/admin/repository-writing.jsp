@@ -18,7 +18,7 @@
 </head>
 
 <body>
-<div class="title"><h2>题目管理</h2></div>
+<div class="title"><h2>写作管理</h2></div>
 <form action="${ctx}/deleteQuestion.action" method="post" name="myform" id="myform">
 	<div class="table-operate ue-clear">
 		<a href="#" class="add" onclick="addUser()">添加</a>

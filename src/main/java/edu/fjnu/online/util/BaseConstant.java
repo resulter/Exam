@@ -16,4 +16,10 @@ public class BaseConstant {
     public static  String accessKey  = "buA0f3WIQnMFQ_AUAth1i0Z77Vi5DbjCr6l8v6zo";//
     public static  String secretKey   = "Rg2_QP3yqSK_k3-U1lbMNEd_7qxzlE4auuOet0Dt";//
     public static  String bucket  = "772173722";//
+
+    public  static final Integer examTypeReading = 1;//考试类型：阅读
+    public  static final Integer examTypelistening = 2;//考试类型：听力
+
+    public static final float readingValue=2.0f;
+    public static final float listeningValue=2.0f;
 }

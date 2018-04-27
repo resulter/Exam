@@ -2,6 +2,10 @@ package edu.fjnu.online.util;
 
 import com.qiniu.util.Auth;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
 import com.qiniu.storage.Configuration;
@@ -59,7 +63,7 @@ public class QiNiuFileUpUtil {
 
     public static void main(String args[]) throws IOException{
 
-        String ACCESS_KEY = "buA0f3WIQnMFQ_AUAth1i0Z77Vi5DbjCr6l8v6zo";
+       /* String ACCESS_KEY = "buA0f3WIQnMFQ_AUAth1i0Z77Vi5DbjCr6l8v6zo";
         String SECRET_KEY = "Rg2_QP3yqSK_k3-U1lbMNEd_7qxzlE4auuOet0Dt";
         //要上传的空间名--
         String bucketname = "772173722";
@@ -68,7 +72,10 @@ public class QiNiuFileUpUtil {
         String bucket = "bucket name";
         Auth auth = Auth.create(ACCESS_KEY, SECRET_KEY);
         String upToken = auth.uploadToken(bucketname);
-        System.out.println(upToken);
+        System.out.println(upToken);*/
+        Date date = new Date();
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        System.out.println(df.format(date));
     }
 
 }

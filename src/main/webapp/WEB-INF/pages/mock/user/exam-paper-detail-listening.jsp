@@ -113,6 +113,7 @@
             var userId = "${userId}"
             savaOptionAnswer(${paperId},userId);
             var sub = Number(localStorage.getItem("subject"));
+            alert(sub + "--");
             if(sub == 1||sub==2){//第一篇或第二篇的时候，获取下一篇内容
                 var order = Number(sub) +1;//下一篇 序号
                 alert("order"+order);
@@ -125,8 +126,11 @@
 
 
                 // alert(localStorage.getItem("subject")+"   before");
+                console.log("<<<<<<--" + localStorage.getItem("subject"));
+
                 var subjectIdBefore = localStorage.getItem("subject");
                 localStorage.setItem("subject",(Number(subjectIdBefore)+1));
+                console.log("---->" + localStorage.getItem("subject"));
             }
             else {
                 $("#alertModalNext").modal({
@@ -139,7 +143,9 @@
         function doSubmitNext() {
 
             $("#alertModalNext").modal("hide");
-           alert("跳转到听力了");
+            localStorage.removeItem("subject");
+
+            window.location.href="${ctx}/mock/queryWritingExamPaperDetail.action?paperId=${paperId}&userId=${userId}&timeStr=${timeStr}"
         }
 
         function CurentTime() {
@@ -214,7 +220,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title">提示：将跳转到听力部分</h4>
+                <h4 class="modal-title">提示：将跳转到写作部分</h4>
             </div>
            <%-- <div class="modal-body">
                 <form class="form-horizontal">
@@ -362,8 +368,8 @@
             </div>
             <div id="question-div" style="display: none">
                 <div style="margin-left: 35px" id="questionContent"><span id="questionNum">${dataList[0].questionNum}</span>.${dataList[0].question}
-                    <img src="../images/start-audio.png" style="cursor:pointer;margin-left: 5px; margin-top: -2px;" id="img${dataList[0].id}"></div>
-                <audio id="audio${dataList[0].id}" style="display:none;" src=" ${dataList[0].questionURL}" controls="controls"></audio>
+                    <img src="../images/start-audio.png" style="cursor:pointer;margin-left: 5px; margin-top: -2px;" id="img${dataList[0].questionNum}"></div>
+                <audio id="audio${dataList[0].questionNum}" style="display:none;" src=" ${dataList[0].questionURL}" controls="controls"></audio>
 
                 <div id="questionOption">
                     <c:forEach items="${dataList[0].optionListeningVos}" var="item">
@@ -391,10 +397,11 @@
     });
 </script>
 <script type="text/javascript">
+    $(function (){
+        $("#sp_start").trigger("click");
+    })
     $("#btn_next").click(function () {
         var a = $("input[name='answer']:checked").val();
-        alert("选中的radio的值是：" + a);
-        alert($("#localCount"));
 
     });
 
@@ -724,7 +731,7 @@
             method: "post",
             async:false,
             // dataType: "json",
-            data: {answer: answer, subjectId: subjectId,paperId:paperId,userId:userId},
+            data: {answer: answer, subjectId: subjectId,paperId:paperId,userId:userId,timeStr:"${timeStr}"},
             success:function (data) {
             },
             error:function () {

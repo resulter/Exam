@@ -126,8 +126,12 @@
         function doSubmitNext() {
 
             $("#alertModalNext").modal("hide");
-           alert("跳转到听力了");
+            var timeStr = "${timeStr}";
+            // alert(timeStr);
+            localStorage.removeItem("subject");
+            window.location.href="${ctx}/mock/queryListeningExamPaperDetail.action?paperId=${paperId}&userId=${userId}&timeStr="+timeStr;
         }
+
 
         function CurentTime() {
             var now = new Date();
@@ -388,7 +392,6 @@
     $("#btn_next").click(function () {
         var a = $("input[name='answer']:checked").val();
         // alert("选中的radio的值是：" + a);
-        alert($("#localCount"));
 
     });
 
@@ -596,7 +599,7 @@
             method: "post",
             async:false,
             // dataType: "json",
-            data: {answer: answer, subjectId: subjectId,paperId:paperId,userId:userId},
+            data: {answer: answer, subjectId: subjectId,paperId:paperId,userId:userId,timeStr:"${timeStr}"},
             success:function (data) {
                // alert(data.extend.subjectId+"  返回值");
                 // localStorage.remov eItem("s ubject")

@@ -118,7 +118,8 @@
             var sub = Number(localStorage.getItem("subject"));
             if(sub == 1){//第一篇或第二篇的时候，获取下一篇内容
                 var order = Number(sub) +1;//下一篇 序号
-                getSecondReading(order);
+                var userId = "${userId};"
+                getSecondReading(order,userId);
                 <%--alert("试卷id"+${paperId});--%>
 
 
@@ -138,7 +139,8 @@
         function doSubmitNext() {
 
             $("#alertModalNext").modal("hide");
-           alert("跳转到听力了");
+            localStorage.removeItem("subject");
+            window.location.href="${ctx}/mock/querySpeakingExamPaperDetail.action?paperId=${paperId}&userId=${userId}&timeStr=${timeStr}"
         }
 
         function CurentTime() {
@@ -213,7 +215,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title">提示：将跳转到听力部分</h4>
+                <h4 class="modal-title">提示：将跳转到口语部分</h4>
             </div>
            <%-- <div class="modal-body">
                 <form class="form-horizontal">
@@ -404,13 +406,13 @@
             });
 
     })
-    function getSecondReading(order) {
+    function getSecondReading(order,userId) {
 
         $.ajax({//切换到第二题后加载第一题
             url: "/mock/queryWritingPaperDetailData.action",
             method: "post",
             // dataType: "json",
-            data: { paperId: ${paperId},subjectOrder:order},
+            data: { paperId: ${paperId},subjectOrder:order,userId:userId},
             success: function (data) {
                 console.log(data);
 
@@ -438,7 +440,7 @@
             method: "post",
             async:false,
             // dataType: "json",
-            data: {answer: answer, subjectId: subjectId,paperId:paperId,userId:userId},
+            data: {answer: answer, subjectId: subjectId,paperId:paperId,userId:userId,timeStr:"${timeStr}"},
             success:function (data) {
             },
             error:function () {
@@ -452,6 +454,9 @@
 
 </script>
 <script>
+    $(function (){
+        $("#sp_start").trigger("click");
+    })
     //监听音频播放完成后的事件  passage ==>> question1
     var audioT = document.getElementById("audio");
 

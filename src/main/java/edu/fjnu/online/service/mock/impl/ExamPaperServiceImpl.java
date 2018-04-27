@@ -4,18 +4,18 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import edu.fjnu.online.bean.*;
 import edu.fjnu.online.bean.vo.*;
+import edu.fjnu.online.domain.User;
 import edu.fjnu.online.mapper.*;
+import edu.fjnu.online.service.UserService;
 import edu.fjnu.online.service.mock.ExamPaperService;
 import edu.fjnu.online.service.mock.ExamService;
 import edu.fjnu.online.util.BaseConstant;
 import edu.fjnu.online.util.DateUtils;
+import edu.fjnu.online.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ExamPaperServiceImpl implements ExamPaperService {
@@ -56,6 +56,15 @@ public class ExamPaperServiceImpl implements ExamPaperService {
 
     @Autowired
     QDescriptionMapper qDescriptionMapper;
+
+    @Autowired
+    RRecordReadingAndListeningMapper rRecordReadingAndListeningMapper;
+    @Autowired
+    RRecordWritingMapper rRecordWritingMapper;
+    @Autowired
+    RRecordScoreMapper rRecordScoreMapper;
+    @Autowired
+    UserService userService;
 
     @Override
     public List<ExamVo> findAllExam() {
@@ -217,7 +226,7 @@ public class ExamPaperServiceImpl implements ExamPaperService {
         List<ExamQuestionListeningVo> examQuestionListeningVos = new ArrayList<>();
         for (QListeningQuestion qListeningQuestion : qListeningQuestions) {
             ExamQuestionListeningVo examQuestionListeningVo = new ExamQuestionListeningVo();
-            examQuestionListeningVo.setId(qListeningQuestion.getId());
+            examQuestionListeningVo.setId(qListeningSubject.getOrderNum());
             examQuestionListeningVo.setAudioURL(BaseConstant.audioURL + qListeningPassage.getAudioUrl());
             examQuestionListeningVo.setImageURL(qListeningPassage.getImageUrl());
             examQuestionListeningVo.setTitle(qListeningPassage.getTitle());
@@ -265,7 +274,7 @@ public class ExamPaperServiceImpl implements ExamPaperService {
         QSpeakingQuestionExample qSpeakingQuestionExample = new QSpeakingQuestionExample();
         qSpeakingQuestionExample.createCriteria().andSubjectIdEqualTo(qSpeakingSubject.getId());
         QSpeakingQuestionWithBLOBs qSpeakingQuestion = qSpeakingQuestionMapper.selectByExampleWithBLOBs(qSpeakingQuestionExample).get(0);
-
+        examQuestionSpeakingVo.setId(qSpeakingSubject.getOrderNum());
         examQuestionSpeakingVo.setQuestion(qSpeakingQuestion.getQuestionDescription());
         examQuestionSpeakingVo.setQuestionURL(BaseConstant.audioURL+qSpeakingQuestion.getQuestionUrl());
         examQuestionSpeakingVo.setQuestionCount(1);
@@ -285,7 +294,7 @@ public class ExamPaperServiceImpl implements ExamPaperService {
         writingSubjectExampleCriteria.andSectionIdEqualTo(writingSectionId);
         QWritingSubject qWritingSubject = qWritingSubjectMapper.selectByExample(qWritingSubjectExample).get(0);
         ExamQuestionWritingVo examQuestionWritingVo = new ExamQuestionWritingVo();
-        examQuestionWritingVo.setId(qWritingSubject.getId());
+        examQuestionWritingVo.setId(qWritingSubject.getOrderNum());
         examQuestionWritingVo.setOrderNum(qWritingSubject.getOrderNum());
 
         QWritingQuestionExample qWritingQuestionExample = new QWritingQuestionExample();
@@ -324,6 +333,87 @@ public class ExamPaperServiceImpl implements ExamPaperService {
             examVolist.add(examVo);
         }
         return examVolist;
+    }
+
+    @Override
+    public PageInfo<JudgmentWritingVo> getAllWritingRecord(Integer pageNo, Integer pageSize) {
+        pageNo = pageNo == null ? 1 : pageNo;
+        pageSize = pageSize == null ? 10 : pageSize;
+        PageHelper.startPage(pageNo, pageSize);
+        List<RRecordWritingWithBLOBs> rRecordWritings = rRecordWritingMapper.selectByExampleWithBLOBs(null);
+        //用PageInfo对结果进行包装
+        PageInfo page = new PageInfo(rRecordWritings);
+        List<JudgmentWritingVo> judgmentWritingVos = new ArrayList<>();
+        for (RRecordWritingWithBLOBs rRecordWriting:rRecordWritings) {
+            JudgmentWritingVo judgmentWritingVo = new JudgmentWritingVo();
+            judgmentWritingVo.setId(rRecordWriting.getId());
+            judgmentWritingVo.setTimeStr(rRecordWriting.getTimeStr());
+            judgmentWritingVo.setSubmitTime(DateUtils.formatDateTime(rRecordWriting.getSubmitTime()));
+            judgmentWritingVo.setCreateTime(DateUtils.formatDateTime(rRecordWriting.getStartTime()));
+            judgmentWritingVo.setAnswer(rRecordWriting.getAnswer());
+            judgmentWritingVo.setWordCount(rRecordWriting.getWordCount());
+            if(rRecordWriting.getRemark()==null){
+                judgmentWritingVo.setRemark("");
+            }else {
+                judgmentWritingVo.setRemark(rRecordWriting.getRemark());
+
+            }
+            judgmentWritingVo.setQuestionId(rRecordWriting.getSubjectId());
+            judgmentWritingVo.setUserId(rRecordWriting.getUserId());
+            if(rRecordWriting.getScore()==null){
+                judgmentWritingVo.setJudgementStatus("否");
+            }else {
+                judgmentWritingVo.setJudgementStatus("是");
+            }
+            User user = userService.get(rRecordWriting.getUserId());
+            judgmentWritingVo.setUserName(user.getUserName());
+            judgmentWritingVo.setExamId(rRecordWriting.getExamId());
+            judgmentWritingVo.setExamName(qExamMapper.selectByPrimaryKey(rRecordWriting.getExamId()).getName());
+            QWritingQuestion qWritingQuestion = qWritingQuestionMapper.selectByPrimaryKey(rRecordWriting.getSubjectId());
+            judgmentWritingVo.setQuestion(qWritingQuestion.getQuestion());
+            if(rRecordWriting.getScore()!=null) {
+                judgmentWritingVo.setScore(rRecordWriting.getScore());
+            }
+            judgmentWritingVos.add(judgmentWritingVo);
+        }
+        page.setList(judgmentWritingVos);
+
+        return page;
+    }
+
+    @Override
+    public JudgmentWritingVo getOneWritingRecord(Integer id) {
+        RRecordWritingWithBLOBs rRecordWriting = rRecordWritingMapper.selectByPrimaryKey(id);
+        JudgmentWritingVo judgmentWritingVo = new JudgmentWritingVo();
+        judgmentWritingVo.setId(rRecordWriting.getId());
+        judgmentWritingVo.setTimeStr(rRecordWriting.getTimeStr());
+        judgmentWritingVo.setSubmitTime(DateUtils.formatDateTime(rRecordWriting.getSubmitTime()));
+        judgmentWritingVo.setCreateTime(DateUtils.formatDateTime(rRecordWriting.getStartTime()));
+        judgmentWritingVo.setAnswer("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + rRecordWriting.getAnswer().replaceAll("\n","<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"));
+        judgmentWritingVo.setWordCount(rRecordWriting.getWordCount());
+        if(rRecordWriting.getRemark()==null){
+            judgmentWritingVo.setRemark("");
+        }else {
+            judgmentWritingVo.setRemark(rRecordWriting.getRemark());
+
+        }
+        judgmentWritingVo.setQuestionId(rRecordWriting.getSubjectId());
+        judgmentWritingVo.setUserId(rRecordWriting.getUserId());
+        if(rRecordWriting.getScore()==null){
+            judgmentWritingVo.setJudgementStatus("否");
+        }else {
+            judgmentWritingVo.setJudgementStatus("是");
+        }
+        User user = userService.get(rRecordWriting.getUserId());
+        judgmentWritingVo.setUserName(user.getUserName());
+        judgmentWritingVo.setExamId(rRecordWriting.getExamId());
+        judgmentWritingVo.setExamName(qExamMapper.selectByPrimaryKey(rRecordWriting.getExamId()).getName());
+        QWritingQuestion qWritingQuestion = qWritingQuestionMapper.selectByPrimaryKey(rRecordWriting.getSubjectId());
+        judgmentWritingVo.setQuestion(qWritingQuestion.getQuestion());
+        if(rRecordWriting.getScore()!=null) {
+            judgmentWritingVo.setScore(rRecordWriting.getScore());
+        }
+        return judgmentWritingVo;
     }
 
     @Override
@@ -627,5 +717,175 @@ public class ExamPaperServiceImpl implements ExamPaperService {
     @Override
     public QDescription getDescription(Integer sectionId) {
         return qDescriptionMapper.selectByPrimaryKey(sectionId);
+    }
+
+
+    @Override
+    public void saveReadingOption(String userId, Integer paperId, String timeStr, String subjectOrder, String answer, Integer examType) {
+        String[] split = timeStr.split("@");
+        String tStr = split[0];
+        Date createDate = DateUtils.parseDate(split[1]);
+
+
+        QExam qExam = qExamMapper.selectByPrimaryKey(paperId);//getExamPaper
+        QReadingSubjectExample qReadingSubjectExample = new QReadingSubjectExample();
+        qReadingSubjectExample.createCriteria().andSectionIdEqualTo(qExam.getReadingSectionId()).andOrderNumEqualTo(Integer.parseInt(subjectOrder));
+        QReadingSubject qReadingSubject = qReadingSubjectMapper.selectByExample(qReadingSubjectExample).get(0);
+        String[] answers = answer.split(",");
+        int rightCount = 0;
+        for (int i = 0; i < answers.length; i++) {
+            System.out.println("第" + (i + 1) + "题的答案是" + answers[i]);
+            RRecordReadingAndListening rRecordReadingAndListening = new RRecordReadingAndListening();
+            rRecordReadingAndListening.setExamId(paperId);
+            rRecordReadingAndListening.setUserId(userId);
+            rRecordReadingAndListening.setSubjectId(qReadingSubject.getId());
+
+            QReadingQuestionExample qReadingQuestionExample = new QReadingQuestionExample();
+            qReadingQuestionExample.createCriteria().andSubjectIdEqualTo(qReadingSubject.getId()).andOrderNumEqualTo((i+1));
+            QReadingQuestion qReadingQuestion = qReadingQuestionMapper.selectByExample(qReadingQuestionExample).get(0);
+
+            rRecordReadingAndListening.setQuestionId(qReadingQuestion.getId());
+            rRecordReadingAndListening.setAnswer(answers[i]);
+
+            if(answers[i].equals(qReadingQuestion.getRightAnswer())){
+                rRecordReadingAndListening.setIsRight(1);
+                rightCount++;
+            }else {
+                rRecordReadingAndListening.setIsRight(0);
+            }
+            rRecordReadingAndListening.setType(examType);
+            rRecordReadingAndListening.setSubmitTime(new Date());
+            rRecordReadingAndListening.setStartTime(createDate);
+            rRecordReadingAndListening.setTimeStr(tStr);
+            rRecordReadingAndListeningMapper.insert(rRecordReadingAndListening);
+        }
+
+        //根据时间戳来计算分数
+        RRecordScoreExample rRecordScoreExample = new RRecordScoreExample();
+        rRecordScoreExample.createCriteria().andTimeStrEqualTo(tStr);
+        List<RRecordScore> rRecordScores = rRecordScoreMapper.selectByExample(rRecordScoreExample);
+        if(rRecordScores.size()==0){
+            RRecordScore rRecordScore = new RRecordScore();
+            rRecordScore.setUserId(userId);
+            rRecordScore.setTimeStr(tStr);
+            rRecordScore.setCreateTime(createDate);
+            rRecordScore.setSubmitTime(new Date());
+            rRecordScore.setReadingScore(rightCount * BaseConstant.readingValue);
+            rRecordScore.setSumScore(rightCount * BaseConstant.readingValue);
+            rRecordScoreMapper.insert(rRecordScore);
+        }else {
+            RRecordScore oldScore = rRecordScores.get(0);//这里只获取了通过时间戳拿到的第一条数据，暂未考虑多余错误数据
+            RRecordScore rRecordScore = new RRecordScore();
+            rRecordScore.setId(oldScore.getId());
+            rRecordScore.setUserId(userId);
+            rRecordScore.setTimeStr(tStr);
+            rRecordScore.setCreateTime(createDate);
+            rRecordScore.setSubmitTime(new Date());
+            rRecordScore.setReadingScore(rightCount * BaseConstant.readingValue+oldScore.getReadingScore());
+            rRecordScore.setSumScore(rightCount * BaseConstant.readingValue + oldScore.getSumScore());
+            rRecordScoreMapper.updateByPrimaryKey(rRecordScore);
+        }
+    }
+
+    @Override
+    public void saveListeningOption(String userId, Integer paperId, String timeStr, String subjectOrder, String answer, Integer examType) {
+        String[] split = timeStr.split("@");
+        String tStr = split[0];
+        Date createDate = DateUtils.parseDate(split[1]);
+
+
+        QExam qExam = qExamMapper.selectByPrimaryKey(paperId);//getExamPaper
+        QListeningSubjectExample qListeningSubjectExample = new QListeningSubjectExample();
+        qListeningSubjectExample.createCriteria().andSectionIdEqualTo(qExam.getReadingSectionId()).andOrderNumEqualTo(Integer.parseInt(subjectOrder));
+        QListeningSubject qListeningSubject = qListeningSubjectMapper.selectByExample(qListeningSubjectExample).get(0);
+        String[] answers = answer.split(",");
+        int rightCount = 0;
+        for (int i = 0; i < answers.length; i++) {
+            System.out.println("第" + (i + 1) + "题的答案是" + answers[i]);
+            RRecordReadingAndListening rRecordReadingAndListening = new RRecordReadingAndListening();
+            rRecordReadingAndListening.setExamId(paperId);
+            rRecordReadingAndListening.setUserId(userId);
+            rRecordReadingAndListening.setSubjectId(qListeningSubject.getId());
+
+            QListeningQuestionExample qListeningQuestionExample = new QListeningQuestionExample();
+            qListeningQuestionExample.createCriteria().andSubjectIdEqualTo(qListeningSubject.getId()).andOrderNumEqualTo((i+1));
+            QListeningQuestion qListeningQuestion = qListeningQuestionMapper.selectByExample(qListeningQuestionExample).get(0);
+
+            rRecordReadingAndListening.setQuestionId(qListeningQuestion.getId());
+            rRecordReadingAndListening.setAnswer(answers[i]);
+
+            if(answers[i].equals(qListeningQuestion.getRightAnswer())){
+                rRecordReadingAndListening.setIsRight(1);
+                rightCount++;
+            }else {
+                rRecordReadingAndListening.setIsRight(0);
+            }
+            rRecordReadingAndListening.setType(examType);
+            rRecordReadingAndListening.setSubmitTime(new Date());
+            rRecordReadingAndListening.setStartTime(createDate);
+            rRecordReadingAndListening.setTimeStr(tStr);
+            rRecordReadingAndListeningMapper.insert(rRecordReadingAndListening);
+        }
+        //根据时间戳来计算分数
+        RRecordScoreExample rRecordScoreExample = new RRecordScoreExample();
+        rRecordScoreExample.createCriteria().andTimeStrEqualTo(tStr);
+        List<RRecordScore> rRecordScores = rRecordScoreMapper.selectByExample(rRecordScoreExample);
+        if(rRecordScores.size()==0){
+            RRecordScore rRecordScore = new RRecordScore();
+            rRecordScore.setUserId(userId);
+            rRecordScore.setTimeStr(tStr);
+            rRecordScore.setCreateTime(createDate);
+            rRecordScore.setSubmitTime(new Date());
+            rRecordScore.setListeningScore(rightCount * BaseConstant.listeningValue);
+            rRecordScore.setSumScore(rightCount * BaseConstant.listeningValue);
+            rRecordScoreMapper.insert(rRecordScore);
+        }else {
+            RRecordScore oldScore = rRecordScores.get(0);//这里只获取了通过时间戳拿到的第一条数据，暂未考虑多余错误数据
+            RRecordScore rRecordScore = new RRecordScore();
+            rRecordScore.setId(oldScore.getId());
+            rRecordScore.setUserId(userId);
+            rRecordScore.setTimeStr(tStr);
+            rRecordScore.setCreateTime(createDate);
+            rRecordScore.setSubmitTime(new Date());
+            rRecordScore.setReadingScore(oldScore.getReadingScore());
+            float oldListening = oldScore.getListeningScore()==null?0.0f:oldScore.getListeningScore();
+            rRecordScore.setListeningScore(rightCount * BaseConstant.listeningValue+oldListening);
+            rRecordScore.setSumScore(rightCount * BaseConstant.listeningValue + oldScore.getSumScore());
+            rRecordScoreMapper.updateByPrimaryKey(rRecordScore);
+        }
+    }
+
+    @Override
+    public void saveWriting(String userId, Integer paperId, String timeStr, String subjectOrder, String answer) {
+        String[] split = timeStr.split("@");
+        String tStr = split[0];
+        Date createDate = DateUtils.parseDate(split[1]);
+
+
+        QExam qExam = qExamMapper.selectByPrimaryKey(paperId);//getExamPaper
+        QWritingSubjectExample qWritingSubjectExample = new QWritingSubjectExample();
+        qWritingSubjectExample.createCriteria().andSectionIdEqualTo(qExam.getReadingSectionId()).andOrderNumEqualTo(Integer.parseInt(subjectOrder));
+        QWritingSubject qWritingSubject = qWritingSubjectMapper.selectByExample(qWritingSubjectExample).get(0);
+        String[] answers = answer.split(",");
+
+        RRecordWritingWithBLOBs rRecordWriting = new RRecordWritingWithBLOBs();
+
+        rRecordWriting.setUserId(userId);
+        rRecordWriting.setExamId(paperId);
+        rRecordWriting.setSubjectId(qWritingSubject.getId());
+        rRecordWriting.setAnswer(answer);
+        rRecordWriting.setWordCount(StringUtils.getWordCount(answer));
+        rRecordWriting.setSubmitTime(new Date());
+        rRecordWriting.setStartTime(createDate);
+        rRecordWriting.setTimeStr(tStr);
+        rRecordWritingMapper.insert(rRecordWriting);
+    }
+
+    @Override
+    public void saveWritingScore(Integer id, float score, String annotation) {
+        RRecordWritingWithBLOBs rRecordWritingWithBLOBs = rRecordWritingMapper.selectByPrimaryKey(id);
+        rRecordWritingWithBLOBs.setScore(score);
+        rRecordWritingWithBLOBs.setAnnotation(annotation);
+        rRecordWritingMapper.updateByPrimaryKeyWithBLOBs(rRecordWritingWithBLOBs);
     }
 }

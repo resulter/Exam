@@ -73,6 +73,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         	<li><a href="javascript:;" onclick="formSubmit('${ctx}/mock/toExamPaper.action','mframe');this.blur();">TPO试卷管理</a></li>
                         </ul>
                     </li>
+                    <li class="gongwen">
+                        <div class="nav-header"><a href="javascript:;" class="ue-clear"><span>判分管理</span><i class="icon"></i></a></div>
+                    	<ul class="subnav">
+                        	<li><a href="javascript:;" onclick="formSubmit('${ctx}/mock/toWritingJudgmentPage.action','mframe');this.blur();">写作判分</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
             <%--<div>

@@ -40,6 +40,62 @@ public class ExamPaperController extends BaseController {
     ExamPaperService examPaperService;
 
 
+
+    /**
+     * 跳转到写作判分页面过程页（正经判分~~）
+     * @param model
+     * @param session
+     * @return
+     */
+    @RequestMapping("/toWritingJudgmentSaveScore.action")
+    @ResponseBody //加上次注解才可以直接返回json等信息，否则只能返回web-inf下的页面
+    public Msg toWritingJudgmentSaveScore(Model model, HttpSession session,Integer id,String score,String anno) {
+        System.out.println("----->>>-id:" + id + "     score:" + score + "    anno:" + anno);
+        examPaperService.saveWritingScore(id,Float.parseFloat(score),anno);
+        return Msg.success();
+    }
+    /**
+     * 跳转到写作判分页面
+     * @param model
+     * @param session
+     * @return
+     */
+    @RequestMapping("/toWritingJudgmentDetailPage.action")
+    public String toWritingJudgmentDetailPage(Model model, HttpSession session,Integer id) {
+        JudgmentWritingVo dataInfo = examPaperService.getOneWritingRecord(id);
+        model.addAttribute("dataInfo", dataInfo);
+        return "/mock/admin/judgment-writing-detail.jsp";
+    }
+    /**
+     * 跳转到写作判分页面
+     *
+     * @param model
+     * @param session
+     * @return
+     */
+    @RequestMapping("/toWritingJudgmentPage.action")
+    public String toWritingJudgmentPage(@RequestParam(value = "page", defaultValue = "1") int page,
+                                        Model model, HttpSession session) {
+        PageInfo<JudgmentWritingVo> pageInfo = examPaperService.getAllWritingRecord(page, BaseConstant.adminPageNum);
+        List<JudgmentWritingVo> dataList = pageInfo.getList();
+        System.out.println(JSON.toJSONString(dataList));
+        model.addAttribute("dataList", dataList);
+        model.addAttribute("pageInfo", pageInfo);
+        return "/mock/admin/judgment-writing.jsp";
+    }
+    /**
+     * 获取到题库管理-阅读数据，与上一个方法一致
+     *
+     * @return
+     */
+    @RequestMapping("/toWritingJudgmentPageData.action")
+    @ResponseBody //加上次注解才可以直接返回json等信息，否则只能返回web-inf下的页面
+    public Msg toWritingJudgmentPageData(@RequestParam(value = "page", defaultValue = "1") int page) {
+        PageInfo<JudgmentWritingVo> pageInfo = examPaperService.getAllWritingRecord(page, BaseConstant.adminPageNum);
+        List<JudgmentWritingVo> dataList = pageInfo.getList();
+        System.out.println(JSON.toJSONString(dataList));
+        return Msg.success().add("dataList", dataList).add("pageInfo", pageInfo);
+    }
     /**
      * 跳转到试卷管理页面
      *
@@ -49,7 +105,7 @@ public class ExamPaperController extends BaseController {
      */
     @RequestMapping("/toExamPaper.action")
     public String toExamPaperPage(@RequestParam(value = "page", defaultValue = "1") int page,
-                                          Model model, HttpSession session) {
+                                  Model model, HttpSession session) {
         PageInfo<ExamVo> pageInfo = examPaperService.getAllExamPage(page, BaseConstant.adminPageNum);
         List<ExamVo> dataList = pageInfo.getList();
         System.out.println(JSON.toJSONString(dataList));
@@ -57,6 +113,8 @@ public class ExamPaperController extends BaseController {
         model.addAttribute("pageInfo", pageInfo);
         return "/mock/admin/exam-paper.jsp";
     }
+
+
 
     /**
      * 获取到题库管理-阅读数据，与上一个方法一致

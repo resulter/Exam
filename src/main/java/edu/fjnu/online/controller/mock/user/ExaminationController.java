@@ -9,6 +9,7 @@ import edu.fjnu.online.service.*;
 import edu.fjnu.online.service.mock.*;
 import edu.fjnu.online.util.BaseConstant;
 import edu.fjnu.online.util.Computeclass;
+import edu.fjnu.online.util.DateUtils;
 import edu.fjnu.online.util.Msg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -249,7 +250,7 @@ public class ExaminationController {
 
     @RequestMapping("/saveReadingRecord.action")
     @ResponseBody //加上次注解才可以直接返回json等信息，否则只能返回web-inf下的页面
-    public Msg saveReadingRecord(String answer, @RequestParam(value = "subjectId", defaultValue = "1") String subjectId, Model model, HttpSession session,String userId,Integer paperId) {
+    public Msg saveReadingRecord(String answer, @RequestParam(value = "subjectId", defaultValue = "1") String subjectId, Model model, HttpSession session,String userId,Integer paperId,String timeStr) {
         String[] answers = answer.split(",");
         System.out.println(".------------------------------------------->>>>");
         System.out.println("userId" + userId);
@@ -258,13 +259,13 @@ public class ExaminationController {
         for (int i = 0; i < answers.length; i++) {
             System.out.println("第" + (i + 1) + "题的答案是" + answers[i]);
         }
-        System.out.println("new subjectid  " + (Integer.parseInt(subjectId) + 1));
+        examPaperService.saveReadingOption(userId,paperId,timeStr,subjectId,answer,BaseConstant.examTypeReading);
         return Msg.success().add("a", 777).add("subjectId", (Integer.parseInt(subjectId) + 1));
     }
 
     @RequestMapping("/saveListeningRecord.action")
     @ResponseBody //加上次注解才可以直接返回json等信息，否则只能返回web-inf下的页面
-    public Msg saveListeningRecord(String answer, @RequestParam(value = "subjectId", defaultValue = "1") String subjectId, Model model, HttpSession session,String userId,Integer paperId) {
+    public Msg saveListeningRecord(String answer, @RequestParam(value = "subjectId", defaultValue = "1") String subjectId, Model model, HttpSession session,String userId,Integer paperId,String timeStr) {
         String[] answers = answer.split(",");
         System.out.println(".------------------------------------------->>>>");
         System.out.println("userId" + userId);
@@ -274,16 +275,18 @@ public class ExaminationController {
             System.out.println("第" + (i + 1) + "题的答案是" + answers[i]);
         }
         System.out.println("new subjectid  " + (Integer.parseInt(subjectId) + 1));
+        examPaperService.saveListeningOption(userId,paperId,timeStr,subjectId,answer,BaseConstant.examTypelistening);
         return Msg.success().add("a", 777).add("subjectId", (Integer.parseInt(subjectId) + 1));
     }
     @RequestMapping("/saveWritingRecord.action")
     @ResponseBody //加上次注解才可以直接返回json等信息，否则只能返回web-inf下的页面
-    public Msg saveWritingRecord(String answer, @RequestParam(value = "subjectId", defaultValue = "1") String subjectId, Model model, HttpSession session,String userId,Integer paperId) {
+    public Msg saveWritingRecord(String answer, @RequestParam(value = "subjectId", defaultValue = "1") String subjectId, Model model, HttpSession session,String userId,Integer paperId,String timeStr) {
         System.out.println(".------------------------------------------->>>>");
         System.out.println("userId" + userId);
         System.out.println("paperId" + paperId);
         System.out.println("第" + subjectId + "的答案是：");
         System.out.println(answer);
+        examPaperService.saveWriting(userId,paperId,timeStr,subjectId,answer);
         return Msg.success().add("a", 777).add("subjectId", (Integer.parseInt(subjectId) + 1));
     }
 
@@ -300,7 +303,7 @@ public class ExaminationController {
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
     @RequestMapping("/queryWritingExamPaperDetail.action")
-    public String queryWritingPaperDetail(int paperId, String userId, Model model, HttpSession session,
+    public String queryWritingPaperDetail(int paperId, String userId, Model model, HttpSession session,String timeStr,
                                            @RequestParam(value = "subjectOrder", defaultValue = "1") int subjectOrder) {
         QDescription description = examPaperService.getDescription(BaseConstant.sectionDescriptionWriting);
         ExamQuestionWritingVo dataInfo = examPaperService.getWritingQuestionWithPassagePage( paperId, subjectOrder);
@@ -309,6 +312,8 @@ public class ExaminationController {
         model.addAttribute("description", description);
         model.addAttribute("paperId", paperId);
         model.addAttribute("dataInfo", dataInfo);
+        model.addAttribute("timeStr", timeStr);
+        System.out.println("写作接收到的时间戳： " + timeStr);
         System.out.println(JSON.toJSONString(dataInfo));
         return "/mock/user/exam-paper-detail-writing.jsp";
     }
@@ -347,7 +352,7 @@ public class ExaminationController {
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
     @RequestMapping("/querySpeakingExamPaperDetail.action")
-    public String querySpeakingExamPaperDetail(int paperId, String userId, Model model, HttpSession session,
+    public String querySpeakingExamPaperDetail(int paperId, String userId, Model model, HttpSession session,String timeStr,
                                             @RequestParam(value = "subjectOrder", defaultValue = "1") int subjectOrder) {
         QDescription description = examPaperService.getDescription(BaseConstant.sectionDescriptionSpeaking);
         ExamQuestionSpeakingVo dataInfo = examPaperService.getSpeakingQuestionWithPassagePage( paperId, subjectOrder);
@@ -356,6 +361,8 @@ public class ExaminationController {
         model.addAttribute("description", description);
         model.addAttribute("paperId", paperId);
         model.addAttribute("dataInfo", dataInfo);
+        model.addAttribute("timeStr", timeStr);
+        System.out.println("口语接收到的时间戳：  " + timeStr);
         System.out.println(JSON.toJSONString(dataInfo));
         return "/mock/user/exam-paper-detail-speaking.jsp";
     }
@@ -369,14 +376,13 @@ public class ExaminationController {
      * @param subjectOrder
      * @return
      */
-    @RequestMapping("/query/SpeakingExamPaperDetailData.action")
+    @RequestMapping("/querySpeakingExamPaperDetailData.action")
     @ResponseBody //加上次注解才可以直接返回json等信息，否则只能返回web-inf下的页面
     public Msg querySpeakingExamPaperDetailData(int paperId, String userId, Model model, HttpSession session,
                                                 @RequestParam(value = "subjectOrder", defaultValue = "1") int subjectOrder) {
-        ExamQuestionSpeakingVo examQuestionSpeakingVo = examPaperService.getSpeakingQuestionWithPassagePage(paperId, subjectOrder);
-        model.addAttribute("userId", userId);
-        System.out.println(JSON.toJSONString(examQuestionSpeakingVo));
-        return Msg.success().add("dataVo", examQuestionSpeakingVo).add("userId", userId);
+        QDescription description = examPaperService.getDescription(BaseConstant.sectionDescriptionSpeaking);
+        ExamQuestionSpeakingVo dataInfo = examPaperService.getSpeakingQuestionWithPassagePage( paperId, subjectOrder);
+        return Msg.success().add("dataInfo", dataInfo).add("userId", userId).add("paperId",paperId).add("description",description).add("subjectId",dataInfo.getId());
     }
 
     /**--------------------------------------------------------------------------------------------------------------------------
@@ -390,7 +396,7 @@ public class ExaminationController {
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
     @RequestMapping("/queryListeningExamPaperDetail.action")
-    public String queryListeningExamPaperDetail(int paperId, String userId, Model model, HttpSession session,
+    public String queryListeningExamPaperDetail(int paperId, String userId, Model model, HttpSession session,String timeStr,
                                    @RequestParam(value = "questionOrder", defaultValue = "1") int questionOrder,
                                    @RequestParam(value = "subjectOrder", defaultValue = "1") int subjectOrder) {
         QDescription description = examPaperService.getDescription(BaseConstant.sectionDescriptionListening);
@@ -402,6 +408,8 @@ public class ExaminationController {
         model.addAttribute("subjectId", dataList.get(0).getId());//判断是哪一个subject
         model.addAttribute("description", description);
         model.addAttribute("paperId", paperId);
+        model.addAttribute("timeStr", timeStr);
+        System.out.println("听力接收到的时间戳" + timeStr);
         System.out.println(JSON.toJSONString(dataList));
         return "/mock/user/exam-paper-detail-listening.jsp";
     }
@@ -472,6 +480,9 @@ public class ExaminationController {
     public String queryReadingExamPaperDetail(Integer paperId, String userId, Model model, HttpSession session,
                                    @RequestParam(value = "questionOrder", defaultValue = "1") Integer questionOrder,
                                    @RequestParam(value = "subjectOrder", defaultValue = "1") Integer subjectOrder,@RequestParam(value = "page", defaultValue = "1") int page) {
+        String createDate = DateUtils.getDateFormatter();
+        String timeStr = UUID.randomUUID().toString().replace("-", "");
+        timeStr = timeStr + "@"+createDate;
         Map map = new HashMap();
         map.put("paperId", paperId);
         map.put("userId", userId);
@@ -483,6 +494,8 @@ public class ExaminationController {
         model.addAttribute("dataList", dataList);
         model.addAttribute("pageInfo", pageInfo);
         model.addAttribute("description", description);
+        model.addAttribute("timeStr",timeStr);
+        System.out.println("阅读生成的时间戳：  " + timeStr);
         model.addAttribute("subjectId", dataList.get(0).getId());//判断是哪一个subject
         System.out.println(JSON.toJSONString(dataList));
         return "/mock/user/exam-paper-detail.jsp";

@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.fjnu.online.mapper.RRecordScoreMapper">
+  <resultMap id="BaseResultMap" type="edu.fjnu.online.bean.RRecordScore">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="time_str" jdbcType="VARCHAR" property="timeStr" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="submit_time" jdbcType="TIMESTAMP" property="submitTime" />
+    <result column="reading_score" jdbcType="REAL" property="readingScore" />
+    <result column="listening_score" jdbcType="REAL" property="listeningScore" />
+    <result column="writing_score" jdbcType="REAL" property="writingScore" />
+    <result column="speaking_score" jdbcType="REAL" property="speakingScore" />
+    <result column="sum_score" jdbcType="REAL" property="sumScore" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, user_id, time_str, create_time, submit_time, reading_score, listening_score, 
+    writing_score, speaking_score, sum_score, remark
+  </sql>
+  <select id="selectByExample" parameterType="edu.fjnu.online.bean.RRecordScoreExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from r_record_score
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from r_record_score
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from r_record_score
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="edu.fjnu.online.bean.RRecordScoreExample">
+    delete from r_record_score
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="edu.fjnu.online.bean.RRecordScore">
+    insert into r_record_score (id, user_id, time_str, 
+      create_time, submit_time, reading_score, 
+      listening_score, writing_score, speaking_score, 
+      sum_score, remark)
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{timeStr,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{submitTime,jdbcType=TIMESTAMP}, #{readingScore,jdbcType=REAL}, 
+      #{listeningScore,jdbcType=REAL}, #{writingScore,jdbcType=REAL}, #{speakingScore,jdbcType=REAL}, 
+      #{sumScore,jdbcType=REAL}, #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="edu.fjnu.online.bean.RRecordScore">
+    insert into r_record_score
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="timeStr != null">
+        time_str,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="submitTime != null">
+        submit_time,
+      </if>
+      <if test="readingScore != null">
+        reading_score,
+      </if>
+      <if test="listeningScore != null">
+        listening_score,
+      </if>
+      <if test="writingScore != null">
+        writing_score,
+      </if>
+      <if test="speakingScore != null">
+        speaking_score,
+      </if>
+      <if test="sumScore != null">
+        sum_score,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="timeStr != null">
+        #{timeStr,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="submitTime != null">
+        #{submitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="readingScore != null">
+        #{readingScore,jdbcType=REAL},
+      </if>
+      <if test="listeningScore != null">
+        #{listeningScore,jdbcType=REAL},
+      </if>
+      <if test="writingScore != null">
+        #{writingScore,jdbcType=REAL},
+      </if>
+      <if test="speakingScore != null">
+        #{speakingScore,jdbcType=REAL},
+      </if>
+      <if test="sumScore != null">
+        #{sumScore,jdbcType=REAL},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="edu.fjnu.online.bean.RRecordScoreExample" resultType="java.lang.Long">
+    select count(*) from r_record_score
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update r_record_score
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.timeStr != null">
+        time_str = #{record.timeStr,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.submitTime != null">
+        submit_time = #{record.submitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.readingScore != null">
+        reading_score = #{record.readingScore,jdbcType=REAL},
+      </if>
+      <if test="record.listeningScore != null">
+        listening_score = #{record.listeningScore,jdbcType=REAL},
+      </if>
+      <if test="record.writingScore != null">
+        writing_score = #{record.writingScore,jdbcType=REAL},
+      </if>
+      <if test="record.speakingScore != null">
+        speaking_score = #{record.speakingScore,jdbcType=REAL},
+      </if>
+      <if test="record.sumScore != null">
+        sum_score = #{record.sumScore,jdbcType=REAL},
+      </if>
+      <if test="record.remark != null">
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update r_record_score
+    set id = #{record.id,jdbcType=INTEGER},
+      user_id = #{record.userId,jdbcType=VARCHAR},
+      time_str = #{record.timeStr,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      submit_time = #{record.submitTime,jdbcType=TIMESTAMP},
+      reading_score = #{record.readingScore,jdbcType=REAL},
+      listening_score = #{record.listeningScore,jdbcType=REAL},
+      writing_score = #{record.writingScore,jdbcType=REAL},
+      speaking_score = #{record.speakingScore,jdbcType=REAL},
+      sum_score = #{record.sumScore,jdbcType=REAL},
+      remark = #{record.remark,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="edu.fjnu.online.bean.RRecordScore">
+    update r_record_score
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="timeStr != null">
+        time_str = #{timeStr,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="submitTime != null">
+        submit_time = #{submitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="readingScore != null">
+        reading_score = #{readingScore,jdbcType=REAL},
+      </if>
+      <if test="listeningScore != null">
+        listening_score = #{listeningScore,jdbcType=REAL},
+      </if>
+      <if test="writingScore != null">
+        writing_score = #{writingScore,jdbcType=REAL},
+      </if>
+      <if test="speakingScore != null">
+        speaking_score = #{speakingScore,jdbcType=REAL},
+      </if>
+      <if test="sumScore != null">
+        sum_score = #{sumScore,jdbcType=REAL},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="edu.fjnu.online.bean.RRecordScore">
+    update r_record_score
+    set user_id = #{userId,jdbcType=VARCHAR},
+      time_str = #{timeStr,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      submit_time = #{submitTime,jdbcType=TIMESTAMP},
+      reading_score = #{readingScore,jdbcType=REAL},
+      listening_score = #{listeningScore,jdbcType=REAL},
+      writing_score = #{writingScore,jdbcType=REAL},
+      speaking_score = #{speakingScore,jdbcType=REAL},
+      sum_score = #{sumScore,jdbcType=REAL},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
