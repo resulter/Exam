@@ -66,6 +66,9 @@ public class ExamPaperServiceImpl implements ExamPaperService {
     @Autowired
     UserService userService;
 
+    @Autowired
+    TUserMapper tUserMapper;
+
     @Override
     public List<ExamVo> findAllExam() {
         List<ExamVo> result = new ArrayList<>();
@@ -382,6 +385,95 @@ public class ExamPaperServiceImpl implements ExamPaperService {
     }
 
     @Override
+    public PageInfo<JudgmentWritingVo> getAllWritingRecordWithCondition(Integer pageNo, Integer pageSize, String userName, String examName, String startDate, String endDate, Integer type) {
+        pageNo = pageNo == null ? 1 : pageNo;
+        pageSize = pageSize == null ? 10 : pageSize;
+        RRecordWritingExample rRecordWritingExample = new RRecordWritingExample();
+        RRecordWritingExample.Criteria rRecordWritingExampleCriteria = rRecordWritingExample.createCriteria();
+        if(startDate!=null &&!("".equals(startDate))){
+            rRecordWritingExampleCriteria.andStartTimeGreaterThanOrEqualTo(DateUtils.translateStringToDateFull(startDate));
+        }
+        if(endDate!=null &&!("".equals(endDate))){
+            rRecordWritingExampleCriteria.andStartTimeLessThanOrEqualTo(DateUtils.translateStringToDateFull(endDate));
+        }
+        if(type!=null) {
+            if (type == 2) {
+                rRecordWritingExampleCriteria.andScoreIsNull();
+                System.out.println("====>>>待判");
+            } else if (type == 3) {
+                rRecordWritingExampleCriteria.andScoreIsNotNull();
+                System.out.println("====>>>已判");
+            }
+        }
+        if(!"".equals(examName)&&examName!=null){
+            QExamExample qExamExample = new QExamExample();
+            qExamExample.createCriteria().andNameLike("%"+examName+"%");
+            List<QExam> qExams = qExamMapper.selectByExample(qExamExample);
+            List<Integer> ids = new ArrayList<>();
+            for (int i = 0; i < qExams.size(); i++) {
+                ids.add(qExams.get(i).getId());
+            }
+            rRecordWritingExampleCriteria.andExamIdIn(ids);
+
+        }
+        if(!"".equals(userName)&&userName!=null){
+          TUserExample tUserExample = new TUserExample();
+          tUserExample.createCriteria().andUsernameLike("%"+userName+"%");
+            List<TUser> tUsers = tUserMapper.selectByExample(tUserExample);
+            for (int i = 0; i < tUsers.size(); i++) {
+                rRecordWritingExampleCriteria.andUserIdEqualTo(tUsers.get(i).getUserid());
+            }
+        }
+        PageHelper.startPage(pageNo, pageSize);
+        List<RRecordWritingWithBLOBs> rRecordWritings = rRecordWritingMapper.selectByExampleWithBLOBs(rRecordWritingExample);
+        //用PageInfo对结果进行包装
+        PageInfo page = new PageInfo(rRecordWritings);
+        List<JudgmentWritingVo> judgmentWritingVos = new ArrayList<>();
+        for (RRecordWritingWithBLOBs rRecordWriting:rRecordWritings) {
+            JudgmentWritingVo judgmentWritingVo = new JudgmentWritingVo();
+            judgmentWritingVo.setId(rRecordWriting.getId());
+            judgmentWritingVo.setTimeStr(rRecordWriting.getTimeStr());
+            judgmentWritingVo.setSubmitTime(DateUtils.formatDateTime(rRecordWriting.getSubmitTime()));
+            judgmentWritingVo.setCreateTime(DateUtils.formatDateTime(rRecordWriting.getStartTime()));
+            judgmentWritingVo.setAnswer(rRecordWriting.getAnswer());
+            judgmentWritingVo.setWordCount(rRecordWriting.getWordCount());
+            if(rRecordWriting.getRemark()==null){
+                judgmentWritingVo.setRemark("");
+            }else {
+                judgmentWritingVo.setRemark(rRecordWriting.getRemark());
+
+            }
+            judgmentWritingVo.setQuestionId(rRecordWriting.getSubjectId());
+            judgmentWritingVo.setUserId(rRecordWriting.getUserId());
+            if(rRecordWriting.getScore()==null){
+                judgmentWritingVo.setJudgementStatus("否");
+            }else {
+                judgmentWritingVo.setJudgementStatus("是");
+            }
+            User user = userService.get(rRecordWriting.getUserId());
+            judgmentWritingVo.setUserName(user.getUserName());
+            judgmentWritingVo.setExamId(rRecordWriting.getExamId());
+            judgmentWritingVo.setExamName(qExamMapper.selectByPrimaryKey(rRecordWriting.getExamId()).getName());
+            QWritingQuestion qWritingQuestion = qWritingQuestionMapper.selectByPrimaryKey(rRecordWriting.getSubjectId());
+            judgmentWritingVo.setQuestion(qWritingQuestion.getQuestion());
+            if(rRecordWriting.getScore()!=null) {
+                judgmentWritingVo.setScore(rRecordWriting.getScore());
+            }
+            judgmentWritingVos.add(judgmentWritingVo);
+        }
+        if(!"".equals(userName)&&userName!=null){
+            for (int i = 0;i<judgmentWritingVos.size();i++) {
+                if(!(judgmentWritingVos.get(i).getUserName().contains(userName))){
+                    judgmentWritingVos.remove(i);
+                }
+            }
+        }
+        page.setList(judgmentWritingVos);
+
+        return page;
+    }
+
+    @Override
     public JudgmentWritingVo getOneWritingRecord(Integer id) {
         RRecordWritingWithBLOBs rRecordWriting = rRecordWritingMapper.selectByPrimaryKey(id);
         JudgmentWritingVo judgmentWritingVo = new JudgmentWritingVo();
@@ -407,6 +499,7 @@ public class ExamPaperServiceImpl implements ExamPaperService {
         User user = userService.get(rRecordWriting.getUserId());
         judgmentWritingVo.setUserName(user.getUserName());
         judgmentWritingVo.setExamId(rRecordWriting.getExamId());
+        judgmentWritingVo.setAnnotation(rRecordWriting.getAnnotation());
         judgmentWritingVo.setExamName(qExamMapper.selectByPrimaryKey(rRecordWriting.getExamId()).getName());
         QWritingQuestion qWritingQuestion = qWritingQuestionMapper.selectByPrimaryKey(rRecordWriting.getSubjectId());
         judgmentWritingVo.setQuestion(qWritingQuestion.getQuestion());

@@ -11,7 +11,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <head>
 <meta charset="utf-8">
 <link rel="stylesheet" href="${ctx}/css/base.css" />
-<link rel="stylesheet" href="${ctx}/css/info-mgt.css" />
+<link rel="stylesheet" href="${ctx}/css/judgment-writing.css" />
 <link rel="stylesheet" href="${ctx}/css/WdatePicker.css" />
 <title>移动办公自动化系统</title>
 </head>
@@ -20,17 +20,81 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <div class="title"><h2>写作判分</h2></div>
 <form action="${ctx}/mock/deleteExamPaper.action" method="post" name="myform" id="myform">
 <div class="table-operate ue-clear">
-	<a href="#" class="add" onclick="addUser()">添加</a>
-    <a href="javascript:;" class="del" onclick="deleteUser()">删除</a>
+
+    <div class="row">
+        <div class="col-md-2">
+            <label for="userName">用户名称</label>
+            <input type="text" id="userName" name="userName" value="${userName}"
+                   style="width: 160px">
+        </div>
+
+        <div class="col-md-2">
+            <label for="examName">试卷名称</label>
+            <input type="text" id="examName" name="examName" value="${examName}"
+                   style="width: 160px">
+        </div>
+        <div class="col-md-2">
+            <label for="startTime">开始时间</label>
+            <input id="startTime" type="text" onclick="WdatePicker({el:$dp.$('start_time'),dateFmt:'yyyy-MM-dd HH:mm:ss'})" style="width: 160px" value="${startDate}"/>
+            <img onclick="WdatePicker({el:$dp.$('start_time')})" src="../js/skin/datePicker.gif" width="16" height="22"
+                 align="absmiddle">
+        </div>
+        <div class="col-md-2">
+
+            <label for="endTime">结束时间</label>
+            <input id="endTime" type="text" onclick="WdatePicker({el:$dp.$('end_time'),dateFmt:'yyyy-MM-dd HH:mm:ss'})" style="width: 160px" value="${endDate}"/>
+            <img onclick="WdatePicker({el:$dp.$('end_time')})" src="../js/skin/datePicker.gif" width="16" height="22"
+                 align="absmiddle">
+        </div>
+        <div class="col-md-2" style="padding-left: 10px">
+                    <%--<label for="typeSelector" class="control-label">状态</label>--%>
+            <div class="row">
+                <div class="col-sm-3"> <span style="display: inline-block;max-width: 100%;margin-bottom: 5px;font-weight: 700;margin-right: ">状态</span></div>
+                    <div class="col-sm-9">
+                        <select class="form-control" id="typeSelector" style="width: 130px;padding-left:40px">
+                            <c:choose>
+                                <c:when test="${type eq '1'}">
+                                    <option value="1" selected>全部</option>
+                                    <option value="2">待判</option>
+                                    <option value="3">已判</option>
+                                </c:when>
+                                <c:when test="${type eq '2'}">
+                                    <option value="1" >全部</option>
+                                    <option value="2" selected>待判</option>
+                                    <option value="3">已判</option>
+                                </c:when>
+                                <c:when test="${type eq '3'}">
+                                    <option value="1" >全部</option>
+                                    <option value="2">待判</option>
+                                    <option value="3" selected>已判</option>
+                                </c:when>
+                                <c:otherwise>
+                                    <option value="1">全部</option>
+                                    <option value="2">待判</option>
+                                    <option value="3">已判</option>
+                                </c:otherwise>
+                            </c:choose>
+
+                        </select>
+                    </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <button type="button" class="btn btn-primary" id="search">查询</button>
+            <button type="button" class="btn btn-primary"> 重置</button>
+        </div>
+    </div>
+
+
 </div>
 <div class="table-box"  id='myDiv'>
 	<table border="1" cellspacing="1">
     	<thead>
         	<tr>
         		<th class="num"></th>
-        		<th class="name">试卷名称</th>
-                <th class="section">用户ID</th>
-                <th class="section">用户名称</th>
+        		<th class="write">试卷名称</th>
+                <th class="write">用户ID</th>
+                <th class="write">用户名称</th>
 				<th class="section">题目</th>
 				<th class="section">提交时间</th>
 				<th class="section">是否判分</th>
@@ -51,12 +115,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					<td><font color="blue">${o.remark}</font></td>
 					<td class="operate">
 						<c:if test="${o.judgementStatus eq'否'}">
-							<a href="${ctx}/mock/toEditExamPaperPage.action?paperId=${o.id}" class="del">判分</a>
+							<a href="${ctx}/mock/toWritingJudgmentDetailPage.action?id=${o.id}" class="del">判分</a>
 						</c:if>
 						<c:if test="${o.judgementStatus eq'是'}">
-							<a href="${ctx}/mock/toEditExamPaperPage.action?paperId=${o.id}" class="del">修改</a>
+							<a href="${ctx}/mock/toWritingJudgmentDetailPage.action?id=${o.id}" class="del">修改</a>
 						</c:if>
-						<a href="${ctx}/mock/toWritingJudgmentDetailPage.action?id=${o.id}" class="del">查看</a>
+						<%--<a href="${ctx}/mock/toWritingJudgmentDetailPage.action?id=${o.id}" class="del">查看</a>--%>
 					</td>
 				</tr>
 			</c:forEach>
@@ -67,9 +131,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </form>
 </body>
 <script type="text/javascript" src="${ctx}/js/jquery.js"></script>
+<script type="text/javascript" src="${ctx}/js/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="${ctx}/js/common.js"></script>
 <script type="text/javascript" src="${ctx}/js/WdatePicker.js"></script>
 <script type="text/javascript" src="${ctx}/js/jquery.pagination.js"></script>
+<script type="text/javascript" src="${ctx}/js/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="${ctx}/js/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="${ctx}/js/bootstrap-3.3.7-dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="${ctx}/js/bootstrap-3.3.7-dist/css/bootstrap.min.css" />
 <script type="text/javascript">
 $(".select-title").on("click",function(){
 	$(".select-list").hide();
@@ -87,15 +156,20 @@ $('.pagination').pagination(${pageInfo.total},{
 			url:"${ctx}/mock/toWritingJudgmentPageData.action",
 			method:"post",
 			// dataType: "json",
-			data:{page:page+1},
+			data:{page:page+1,userName:$("#userName").val(),examName:$("#examName").val(),startDate:$("#startTime").val(),endDate:$("#endTime").val(),type:$("#typeSelector").val()},
 			success: function(data){
+                $("#userName").val(data.extend.userName);
+                $("#examName").val(data.extend.examName);
+                $("#startTime").val(data.extend.startTime);
+                $("#endTime").val(data.extend.endTime);
+                $("#type").val(data.extend.type);
 				var html = "";
 				html += "<div class='table-box' id='myDiv'>";
 				html += "<table border='1' cellspacing='1'>";
 				html += "<thead>";
 				html += "<th class='num'></th>";
-				html += "<th class='name'>试卷名称</th><th class='section'>试卷ID</th>";
-				html += "<th class='section'>试卷名称</th><th class='section'>题目</th>";
+				html += "<th class='write'>试卷名称</th><th class='write'>用户ID</th>";
+				html += "<th class='write'>用户名称</th><th class='section'>题目</th>";
 				html += "<th class='section'>提交时间</th><th class='section'>是否判分</th><th class='section'>备注</th>";
 				html += "<th class='operate'>操作</th>";
 				html += "</thead>";
@@ -110,8 +184,12 @@ $('.pagination').pagination(${pageInfo.total},{
 					html += "<td><font color='blue'>"+this.submitTime+"</font></td>";
 					html += "<td><font color='blue'>"+this.judgementStatus+"</font></td>";
 					html += "<td><font color='blue'>"+this.remark+"</font></td>";
-					html += "<td class='operate'><a href='${ctx}/mock/toEditExamPaperPage.action?paperId="+this.id+"' class='del'>编辑</a>&nbsp;";
-					html += "<a href='${ctx}/mock/deleteExamPaper.action?paperId="+this.id+"' class='del'>删除</a>&nbsp; </td>";
+					if(this.judgementStatus == "否"){
+                        html += "<td class='operate'><a href='${ctx}/mock/toWritingJudgmentDetailPage.action?id="+this.id+"' class='del'>判分</a>&nbsp; </td>";
+                    }else {
+                        html += "<td class='operate'><a href='${ctx}/mock/toWritingJudgmentDetailPage.action?id="+this.id+"' class='del'>修改</a>&nbsp; </td>";
+
+                    }
 					html += "</tr>";
 				})
 				html += "</tbody>"; 
@@ -153,7 +231,16 @@ $("tbody").find("tr:odd").css("backgroundColor","#eff6fa");
 
 showRemind('input[type=text], textarea','placeholder');
 </script>
-<
+<script>
+   $("#search").on("click",function () {
+      var userName =  $("#userName").val();
+       var examName = $("#examName").val();
+       var startTime = $("#startTime").val();
+       var endTime = $("#endTime").val();
+       var type = $("#typeSelector").val();
+       window.location.href="${ctx}/mock/toWritingJudgmentPage.action?examName=" + examName+ "&userName=" +userName + "&startDate=" +startTime+ "&endDate=" +endTime + "&type=" +type;
+   })
+</script>
 <style type="text/css">
 	/*设定表格最大显示宽度，超出显示... 鼠标悬浮显示全部*/
 	table td{
@@ -174,5 +261,8 @@ showRemind('input[type=text], textarea','placeholder');
 		overflow:auto;
 		color: red;
 	}
+    thead table th{
+        font-size: 20px;
+    }
 </style>
 </html>

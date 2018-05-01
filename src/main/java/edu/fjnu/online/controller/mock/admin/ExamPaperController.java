@@ -9,6 +9,7 @@ import edu.fjnu.online.service.mock.*;
 import edu.fjnu.online.util.BaseConstant;
 import edu.fjnu.online.util.Msg;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -75,12 +76,23 @@ public class ExamPaperController extends BaseController {
      */
     @RequestMapping("/toWritingJudgmentPage.action")
     public String toWritingJudgmentPage(@RequestParam(value = "page", defaultValue = "1") int page,
-                                        Model model, HttpSession session) {
+                                        Model model, HttpSession session,
+                                        @RequestParam(value="examName",defaultValue = "") String examName,
+                                        @RequestParam(value = "userName",defaultValue = "") String userName,
+                                        @RequestParam(value = "startDate",defaultValue = "") String startDate,
+                                        @RequestParam(value = "endDate",defaultValue = "") String endDate,
+                                        @RequestParam(value = "type",defaultValue = "") Integer type) {
         PageInfo<JudgmentWritingVo> pageInfo = examPaperService.getAllWritingRecord(page, BaseConstant.adminPageNum);
-        List<JudgmentWritingVo> dataList = pageInfo.getList();
+        PageInfo<JudgmentWritingVo> pageInfo2 = examPaperService.getAllWritingRecordWithCondition(page, BaseConstant.adminPageNum,userName.trim(),examName.trim(),startDate,endDate,type);
+        List<JudgmentWritingVo> dataList = pageInfo2.getList();
         System.out.println(JSON.toJSONString(dataList));
         model.addAttribute("dataList", dataList);
-        model.addAttribute("pageInfo", pageInfo);
+        model.addAttribute("pageInfo", pageInfo2);
+        model.addAttribute("examName", examName);
+        model.addAttribute("userName", userName);
+        model.addAttribute("startDate", startDate);
+        model.addAttribute("endDate", endDate);
+        model.addAttribute("type", type);
         return "/mock/admin/judgment-writing.jsp";
     }
     /**
@@ -90,12 +102,20 @@ public class ExamPaperController extends BaseController {
      */
     @RequestMapping("/toWritingJudgmentPageData.action")
     @ResponseBody //加上次注解才可以直接返回json等信息，否则只能返回web-inf下的页面
-    public Msg toWritingJudgmentPageData(@RequestParam(value = "page", defaultValue = "1") int page) {
+    public Msg toWritingJudgmentPageData(@RequestParam(value = "page", defaultValue = "1") int page,
+                                         @RequestParam(value="examName",defaultValue = "") String examName,
+                                         @RequestParam(value = "userName",defaultValue = "") String userName,
+                                         @RequestParam(value = "startDate",defaultValue = "2000-00-00 00:00:00") String startDate,
+                                         @RequestParam(value = "endDate",defaultValue = "2000-00-00 00:00:00") String endDate,
+                                         @RequestParam(value = "type",defaultValue = "") Integer type) {
         PageInfo<JudgmentWritingVo> pageInfo = examPaperService.getAllWritingRecord(page, BaseConstant.adminPageNum);
-        List<JudgmentWritingVo> dataList = pageInfo.getList();
+        PageInfo<JudgmentWritingVo> pageInfo2 = examPaperService.getAllWritingRecordWithCondition(page, BaseConstant.adminPageNum,userName.trim(),examName.trim(),startDate,endDate,type);
+        List<JudgmentWritingVo> dataList = pageInfo2.getList();
+        System.out.println("===>>>> start:" + startDate + "endtime: "+ endDate);
         System.out.println(JSON.toJSONString(dataList));
-        return Msg.success().add("dataList", dataList).add("pageInfo", pageInfo);
+        return Msg.success().add("dataList", dataList).add("pageInfo", pageInfo2).add("examName",examName).add("userName",userName).add("startDate",startDate).add("endDate",endDate).add("type",type);
     }
+
     /**
      * 跳转到试卷管理页面
      *

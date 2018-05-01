@@ -182,7 +182,7 @@
             注意，table里面很多参数都是对javaModelGenerator，context等元素的默认属性的一个复写；
          -->
         <!--<table tableName="r_record_reading_and_listening"/>-->
-        <table tableName="r_record_writing"/>
+        <table tableName="t_user"/>
         <!--<table tableName="q_exam"/>-->
         <!--<table tableName="q_exam_record"/>-->
         <!--<table tableName="q_listening_option"/>-->

@@ -79,7 +79,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<div class="row">
 				<div class="col-md-6" style="padding: 20px">
 					<div class="row">
-						<div style="font-weight: bold;font-size: 25px" class="col-md-7">answer</div>
+						<div style="font-weight: bold;font-size: 25px" class="col-md-7">question:</div>
 						<div class="col-md-4" style="padding-top: 7px">学生姓名：${dataInfo.userName}</div>
 					</div>
 					<div style="font-size: 18px;padding-left: 20px">
@@ -89,22 +89,38 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					</div>
 
 					<div style="padding-top: 35px;padding-left: 20px">
-						<label for="ex6">请拖动打分：</label>
-						<input id="ex6" type="text" data-slider-min="0" data-slider-max="15" data-slider-step="0.5" data-slider-value="0"/>
-						<span id="ex6CurrentSliderValLabel" style="padding-left: 25px">分数: <span id="ex6SliderVal">0</span></span>
-						<div style="padding-top: 7px">
-							<label for="annotation">请输入批注：</label>
-							<textarea class="form-control" rows="3" id="annotation"></textarea>
+                        <c:choose>
+                            <c:when test="${dataInfo.score  == 0.0}">
+                                <label for="ex6">请拖动打分：</label>
+                                <input id="ex6" type="text" data-slider-min="0" data-slider-max="15" data-slider-step="0.5" data-slider-value="${dataInfo.score}"/>
+						        <span id="ex6CurrentSliderValLabel" style="padding-left: 25px">分数: <span id="ex6SliderVal">0</span></span>
+                                <div style="padding-top: 7px">
+                                    <label for="annotation">请输入批注：</label>
+                                    <textarea class="form-control" rows="3" id="annotation"></textarea>
+                                </div>
+                            </c:when>
+                            <c:otherwise>
+                                <label for="ex6">请拖动打分：</label>
+                                <input id="ex6" type="text" data-slider-min="0" data-slider-max="15" data-slider-step="0.5" data-slider-value="${dataInfo.score}"/>
+						        <span id="ex6CurrentSliderValLabel" style="padding-left: 25px">分数: <span id="ex6SliderVal">${dataInfo.score}</span></span>
+                                <div style="padding-top: 7px">
+                                    <label for="annotation">请输入批注：</label>
+                                    <textarea class="form-control" rows="3" id="annotation" >${dataInfo.annotation}</textarea>
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
+                            <%--<input id="ex6" type="text" data-slider-min="0" data-slider-max="15" data-slider-step="0.5" data-slider-value="0"/>
+                            <span id="ex6CurrentSliderValLabel" style="padding-left: 25px">分数: <span id="ex6SliderVal">0</span></span>--%>
 
-						</div>
-
+						<%--<input id="ex8" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="1"/>
+						<span id="ex8SliderVal">1</span>--%>
 						<!-- Standard button -->
 						<button type="button" class="btn btn-default" onclick="saveWritingScore()">确认</button>
 					</div>
 				</div>
 				<div class="col-md-6" style="padding: 20px">
 					<div class="row">
-						<div class="col-md-9" style="font-weight: bold;font-size: 25px;padding-bottom: 20px"> question:</div>
+						<div class="col-md-9" style="font-weight: bold;font-size: 25px;padding-bottom: 20px">answer:</div>
 						<div class="col-md-3" style="margin-top: 7px;">word count：${dataInfo.wordCount}</div>
 					</div>
 					<p>
@@ -165,7 +181,18 @@ showRemind('input[type=text], textarea','placeholder');
     // With JQuery
     $("#ex6").slider();
     $("#ex6").on("slide", function(slideEvt) {
+        tooltip: 'always'
         $("#ex6SliderVal").text(slideEvt.value);
+    });
+    $("#ex6").on("click", function() {
+        $("#ex6SliderVal").text($("#ex6").attr("data-value"));
+    });
+    $("#ex8").slider({
+        tooltip: 'always'
+    });
+    $("#ex8").on("slide", function() {
+        tooltip: 'always'
+        $("#ex8SliderVal").text($(".tooltip-inner").text());
     });
 
     function  saveWritingScore() {

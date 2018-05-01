@@ -18,6 +18,8 @@ public interface ExamPaperService {
     PageInfo<ExamVo> getAllExamPage(Integer pageNo, Integer pageSize);
 
     PageInfo<JudgmentWritingVo> getAllWritingRecord(Integer pageNo, Integer pageSize);
+    PageInfo<JudgmentWritingVo> getAllWritingRecordWithCondition(Integer pageNo, Integer pageSize, String userName, String examName, String startDate, String endDate, Integer type);
+
     JudgmentWritingVo getOneWritingRecord(Integer id);
 
     Map<Integer, String> getAllReadingSection();
@@ -56,4 +58,5 @@ public interface ExamPaperService {
     void saveListeningOption(String userId,Integer paperId,String timeStr,String subjectOrder,String answer,Integer examType);//保存听力答题记录
     void saveWriting(String userId,Integer paperId,String timeStr,String subjectOrder,String answer);//保存写作记录
     void saveWritingScore(Integer id,float score,String annotation);//保存写作分数
+
 }

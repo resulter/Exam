@@ -249,6 +249,21 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils{
         }
         return date;
     }
+    /**
+     * 将字符串格式的时间转换成Date类型
+     * @param dateStr
+     * @return
+     */
+    public static Date translateStringToDateFull(String dateStr){
+        Date date = null ;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            date = format.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
 
     /**
      * 秒转换成两位的时间，格式：HH:mm:ss

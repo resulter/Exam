@@ -82,22 +82,26 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
               <thead>
                 <tr>
                   <th>试卷名称</th>
-                  <th>试卷科目</th>
-				  <th>开始时间</th>
-				  <th>结束时间</th>
-                  <th>最后得分</th>
-                  <th>试卷状态33</th>
+                  <th>阅读</th>
+				  <th>听力</th>
+				  <th>写作</th>
+                  <th>口语</th>
+                  <th>创建时间</th>
+                  <th>备注</th>
                 </tr>
               </thead>
               <tbody>
               	<c:forEach items="${allExam}" var="allExam">
               	  <tr>
 	                 <td><a href="${ctx}/mock/queryReadingExamPaperDetail.action?paperId=${allExam.id}&userId=${user.userId}"><font color="blue">${allExam.name}</font></a></td>
-	                 <td><a href="${ctx}/mock/queryListeningExamPaperDetail.action?paperId=${allExam.id}&userId=${user.userId}"><font color="blue">${allExam.name}</font></a></td>
+	                <%-- <td><a href="${ctx}/mock/queryListeningExamPaperDetail.action?paperId=${allExam.id}&userId=${user.userId}"><font color="blue">${allExam.name}</font></a></td>
 	                 <td><a href="${ctx}/mock/querySpeakingExamPaperDetail.action?paperId=${allExam.id}&userId=${user.userId}"><font color="blue">${allExam.name}</font></a></td>
-	                 <td><a href="${ctx}/mock/queryWritingExamPaperDetail.action?paperId=${allExam.id}&userId=${user.userId}"><font color="blue">${allExam.name}</font></a></td>
-	                 <td>${allExam.createTime}</td>
-	                 <td>${allExam.writingName}</td>
+	                 <td><a href="${ctx}/mock/queryWritingExamPaperDetail.action?paperId=${allExam.id}&userId=${user.userId}"><font color="blue">${allExam.name}</font></a></td>--%>
+					  <td>${allExam.readingName}</td>
+					  <td>${allExam.listeningName}</td>
+					  <td>${allExam.writingName}</td>
+					  <td>${allExam.speakingName}</td>
+					  <td>${allExam.createTime}</td>
 	                 <td>${allExam.remark}</td>
 					<%-- <td><font color="blue">
 					 	<c:if test="${paper.paperstate==0}">准备考试</c:if>

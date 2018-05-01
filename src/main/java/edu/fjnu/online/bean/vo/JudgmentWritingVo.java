@@ -22,6 +22,8 @@ public class JudgmentWritingVo {
     private float scoreOne;
     private float scoreTwo;
 
+    private String annotation;
+
     private String remark;
     private  String judgementStatus;
 
