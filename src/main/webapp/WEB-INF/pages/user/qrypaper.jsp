@@ -110,7 +110,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				},
 		function(data){
 			alert(data.errorInfo);
-			document.myForm.attributes["action"].value = "${ctx}/toScoreQry.action?userId=${user.userId}"; 
+			document.myForm.attributes["action"].value = "${ctx}/mock/toScoreQry.action?userId=${user.userId}";
 			$("form").submit(); 
 		},"json");
 	}
@@ -137,8 +137,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							<li><a class="hvr-overline-from-center button2" href="${ctx}/user/toIndex.action">首页</a></li>
 							<li><a class="hvr-overline-from-center button2" href="${ctx}/toUserInfo.action">个人中心</a></li>
 							<!-- <li><a class="hvr-overline-from-center button2" href="onlinecheck.html">在线考试</a></li> -->
-							<li><a class="hvr-overline-from-center button2" href="${ctx}/toScoreQry.action?userId=${user.userId}">成绩查询</a></li>
-							<li><a class="hvr-overline-from-center button2" href="${ctx}/toMyBooksPage.action">我的错题本</a></li>
+							<li><a class="hvr-overline-from-center button2" href="${ctx}/mock/toScoreQry.action?userId=${user.userId}">成绩查询</a></li>
+							<li><a class="hvr-overline-from-center button2" href="${ctx}/mock/toMyBooksPage.action">我的答题记录</a></li>
 							<li><a class="hvr-overline-from-center button2  active" href="${ctx}/mock/toMyExamPaperPage.action">我的试卷</a></li>
 							<li><a class="hvr-overline-from-center button2" href="${ctx}/toAbout.action">关于</a></li>
 						</ul>
@@ -220,7 +220,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		<div class="grid_3 grid_5" align="center">
 		  <h3 class="t-button">
 			<!-- <a href="javascript:;" onclick="submitPaper()"><span class="label label-success">提交试卷</span></a>&nbsp;&nbsp; -->
-			<a href="${ctx}/toScoreQry.action?userId=${user.userId}"><span class="label label-info">返回上一页</span></a>
+			<a href="${ctx}/mock/toScoreQry.action?userId=${user.userId}"><span class="label label-info">返回上一页</span></a>
 		  </h3>
       </div>
 	</div>

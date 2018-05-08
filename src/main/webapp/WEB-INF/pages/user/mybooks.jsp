@@ -59,8 +59,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							<li><a class="hvr-overline-from-center button2" href="${ctx}/user/toIndex.action">首页</a></li>
 							<li><a class="hvr-overline-from-center button2" href="${ctx}/toUserInfo.action?userId=${user.userId}">个人中心</a></li>
 <!-- 							<li><a class="hvr-overline-from-center button2" href="onlinecheck.html">在线考试</a></li> -->
-							<li><a class="hvr-overline-from-center button2" href="${ctx}/toScoreQry.action?userId=${user.userId}">成绩查询</a></li>
-							<li><a class="hvr-overline-from-center button2  active" href="${ctx}/toMyBooksPage.action?userId=${user.userId}">我的错题本</a></li>
+							<li><a class="hvr-overline-from-center button2" href="${ctx}/mock/toScoreQry.action?userId=${user.userId}">成绩查询</a></li>
+							<li><a class="hvr-overline-from-center button2  active" href="${ctx}/mock/toMyBooksPage.action?userId=${user.userId}">我的答题记录</a></li>
 							<li><a class="hvr-overline-from-center button2" href="${ctx}/mock/toMyExamPaperPage.action?userId=${user.userId}">我的试卷</a></li>
 							<li><a class="hvr-overline-from-center button2" href="${ctx}/toAbout.action">关于</a></li>
 						</ul>

@@ -12,4 +12,7 @@ public class QuestionListeningVo {
     private String rightAnswer;
     private List<OptionListeningVo> optionListeningVos;
     private Integer orderNum;
+
+    private String myAnswer;//我的答案，查看我的答题记录是用
+    private Integer myAnswerIsRight;
 }

@@ -88,10 +88,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             <input type="text" name="userName" id="userName" placeholder="用户昵称">
             <input type="password" name="Pwd" id="Pwd" class="password" placeholder="登录密码">
             <input type="password" name="userPwd" id="userPwd" class="password" placeholder="确认密码" onblur="checkPwd()"><br/>
-            <c:forEach items="${grade}" var="grade">
+           <%-- <c:forEach items="${grade}" var="grade">
 				<input type="radio" checked="checked" name="grade" value="${grade.gradeId }" 
 					class="radio" />${grade.gradeName } &nbsp;
-			</c:forEach>
+			</c:forEach>--%>
             <input type="text" name="email" id="email" class="username" placeholder="邮箱">
             <input type="text" name="telphone" id="telphone" placeholder="联系电话">
             <input type="text" name="address" id="address" placeholder="联系地址">

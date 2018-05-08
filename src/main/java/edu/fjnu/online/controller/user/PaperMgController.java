@@ -54,8 +54,8 @@ public class PaperMgController {
 	@Autowired
 	ErrorBookService bookService;
 	
-	//跳转到成绩查询页面
-	@RequestMapping("/toScoreQry.action")
+	//跳转到成绩查询页面   备份
+	@RequestMapping("/toScoreQry1.action")
 	public String toScoreQry(User user, Model model, HttpSession session){
 		if("".equals(user.getUserId()) || user==null){
 			user = (User) session.getAttribute("user");

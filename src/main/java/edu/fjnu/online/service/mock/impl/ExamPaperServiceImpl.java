@@ -980,5 +980,37 @@ public class ExamPaperServiceImpl implements ExamPaperService {
         rRecordWritingWithBLOBs.setScore(score);
         rRecordWritingWithBLOBs.setAnnotation(annotation);
         rRecordWritingMapper.updateByPrimaryKeyWithBLOBs(rRecordWritingWithBLOBs);
+
+        String timeStr = rRecordWritingWithBLOBs.getTimeStr();
+        RRecordScoreExample rRecordScoreExample = new RRecordScoreExample();
+        rRecordScoreExample.createCriteria().andTimeStrEqualTo(timeStr);
+        List<RRecordScore> rRecordScores = rRecordScoreMapper.selectByExample(rRecordScoreExample);
+        if(rRecordScores.size()==0){
+        }else {
+            RRecordScore oldScore = rRecordScores.get(0);//这里只获取了通过时间戳拿到的第一条数据
+            RRecordScore rRecordScore = new RRecordScore();
+            rRecordScore.setId(oldScore.getId());
+            rRecordScore.setUserId(oldScore.getUserId());
+            rRecordScore.setTimeStr(oldScore.getTimeStr());
+            rRecordScore.setCreateTime(oldScore.getCreateTime());
+            rRecordScore.setSubmitTime(new Date());
+            rRecordScore.setReadingScore(oldScore.getReadingScore());
+            rRecordScore.setListeningScore(oldScore.getListeningScore());
+            RRecordWritingExample rRecordWritingExample = new RRecordWritingExample();
+            rRecordWritingExample.createCriteria().andTimeStrEqualTo(rRecordWritingWithBLOBs.getTimeStr());
+            List<RRecordWritingWithBLOBs> bloBs = rRecordWritingMapper.selectByExampleWithBLOBs(rRecordWritingExample);
+            float writingScore = 0.0f;
+            for (RRecordWritingWithBLOBs rrwwb:bloBs) {
+                float a = rrwwb.getScore()==null?0.0f:rrwwb.getScore();
+                writingScore += a;
+            }
+
+            float oldWriting = oldScore.getWritingScore()==null?0.0f:oldScore.getWritingScore();
+            rRecordScore.setWritingScore(writingScore);
+            rRecordScore.setSumScore(writingScore + oldScore.getListeningScore() + oldScore.getReadingScore());
+            rRecordScoreMapper.updateByPrimaryKey(rRecordScore);
+        }
+
+
     }
 }

@@ -166,14 +166,14 @@ $("#passage-one").on("click",function () {
 	$("#passage-two").removeClass("active");
 	$("#content-one").show();
 	$("#content-two").hide();
-	alert(1);
+	// alert(1);
 })
 $("#passage-one").on("click",function () {
     $("#passage-one").removeClass("active");
     $("#passage-two").addClass("active");
     $("#content-one").hide();
     $("#content-two").show();
-    alert(2);
+    // alert(2);
 
 })
 showRemind('input[type=text], textarea','placeholder');
@@ -203,7 +203,7 @@ showRemind('input[type=text], textarea','placeholder');
             // dataType: "json",
             data:{id:${dataInfo.id},score:sco,anno:$("#annotation").val()},
             success: function(data){
-               alert("保存成功")
+                window.location.href="${ctx}/mock/toWritingJudgmentPage.action";
 
             }
         });

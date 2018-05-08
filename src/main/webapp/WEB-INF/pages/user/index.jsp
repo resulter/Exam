@@ -64,8 +64,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 							<li><a class="hvr-overline-from-center button2  active" href="${ctx}/user/toIndex.action">首页</a></li>
 							<li><a class="hvr-overline-from-center button2" href="${ctx}/toUserInfo.action?userId=${user.userId}">个人中心</a></li>
 <!-- 							<li><a class="hvr-overline-from-center button2" href="onlinecheck.html">在线考试</a></li> -->
-							<li><a class="hvr-overline-from-center button2" href="${ctx}/toScoreQry.action?userId=${user.userId}">成绩查询</a></li>
-							<li><a class="hvr-overline-from-center button2" href="${ctx}/toMyBooksPage.action?userId=${user.userId}">我的错题本</a></li>
+							<li><a class="hvr-overline-from-center button2" href="${ctx}/mock/toScoreQry.action?userId=${user.userId}">成绩查询</a></li>
+							<li><a class="hvr-overline-from-center button2" href="${ctx}/mock/toMyBooksPage.action?userId=${user.userId}">我的答题记录</a></li>
 							<li><a class="hvr-overline-from-center button2" href="${ctx}/mock/toMyExamPaperPage.action?userId=${user.userId}">我的试卷</a></li>
 							<li><a class="hvr-overline-from-center button2" href="${ctx}/toAbout.action">关于</a></li>
 						</ul>
@@ -133,43 +133,31 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 		<div class="bottom-grids">
 			<div class="col-md-3 bottom-grid">
 				<div class="bottom-text">
-					<h3>OUR INSTRUCTIONS</h3>
-					<p>Sed ut perspiciatis unde
-					omnis iste natus error sit 
-					voluptatem accusantium doloremque
-					explicabo.</p>
+					<h3>LISTENING</h3>
+					<p>Listen to an article and answer questions according to what you hear.</p>
 				</div>
-				<div class="bottom-spa"><span class="glyphicon glyphicon-education" aria-hidden="true"></span></div>
+				<div class="bottom-spa"><span class="glyphicon glyphicon-headphones" aria-hidden="true"></span></div>
 			</div>
 			<div class="col-md-3 bottom-grid">
 				<div class="bottom-text">
-					<h3>OUR SUPPORT</h3>
-					<p>Sed ut perspiciatis unde
-					omnis iste natus error sit 
-					voluptatem accusantium doloremque
-					explicabo.</p>
+					<h3>SPEAKING</h3>
+					<p>According to the requirements of the topic, prepare the answers and read them out.                     </p>
+				</div>
+				<div class="bottom-spa"><span class="glyphicon glyphicon-volume-up" aria-hidden="true"></span></div>
+			</div>
+			<div class="col-md-3 bottom-grid">
+				<div class="bottom-text">
+					<h3>READING</h3>
+					<p>Read an article and choose the right answer according to the title.</p>
+				</div>
+				<div class="bottom-spa"><span class="glyphicon glyphicon-book" aria-hidden="true"></span></div>
+			</div>
+			<div class="col-md-3 bottom-grid">
+				<div class="bottom-text">
+					<h3>WRITING</h3>
+					<p>Read an article and complete a composition according to the title.</p>
 				</div>
 				<div class="bottom-spa"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></div>
-			</div>
-			<div class="col-md-3 bottom-grid">
-				<div class="bottom-text">
-					<h3>OUR GUARANTEE</h3>
-					<p>Sed ut perspiciatis unde
-					omnis iste natus error sit 
-					voluptatem accusantium doloremque
-					explicabo.</p>
-				</div>
-				<div class="bottom-spa"><span class="glyphicon glyphicon-star" aria-hidden="true"></span></div>
-			</div>
-			<div class="col-md-3 bottom-grid">
-				<div class="bottom-text">
-					<h3>OUR RELIABILITY</h3>
-					<p>Sed ut perspiciatis unde
-					omnis iste natus error sit 
-					voluptatem accusantium doloremque
-					explicabo.</p>
-				</div>
-				<div class="bottom-spa"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span></div>
 			</div>
 			<div class="clearfix"></div>
 		</div>
@@ -177,7 +165,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 </div>
 <!-- //banner-bottom -->
 <!-- team -->
-<div class="teachers">
+<%--<div class="teachers">
 	<div class="container">
 		<div class="teach-head">
 			<h3>OUR TEACHERS</h3>
@@ -252,7 +240,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			<div class="clearfix"></div>
 		</div>
 	</div>
-</div>
+</div>--%>
 <script src="${ctx}/js/bootstrap.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {

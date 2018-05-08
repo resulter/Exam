@@ -97,6 +97,7 @@ public class StuController {
 	 */
 	@RequestMapping("/addUserInfo.action")
 	public String addUserInfo(User user, Model model, HttpSession session){
+		user.setGrade("1");
 		userService.insert(user);
 		return "redirect:/toLogin.action";			
 	}
@@ -122,7 +123,7 @@ public class StuController {
 	@RequestMapping("/updateUserInfo.action")
 	public String updateUserInfo(String newPwd,User user, Model model, HttpSession session){
 		if(newPwd!= null && newPwd.trim().length()>0){
-			user.setUserPwd(newPwd);
+			user.setUserPwd(MD5Util.getData(newPwd));
 		}
 		userService.update(user);
 		user = userService.get(user.getUserId());

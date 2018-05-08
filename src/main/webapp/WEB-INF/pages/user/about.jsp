@@ -56,8 +56,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							<li><a class="hvr-overline-from-center button2" href="${ctx}/user/toIndex.action">首页</a></li>
 							<li><a class="hvr-overline-from-center button2" href="${ctx}/toUserInfo.action?userId=${user.userId}">个人中心</a></li>
 <!-- 							<li><a class="hvr-overline-from-center button2" href="onlinecheck.html">在线考试</a></li> -->
-							<li><a class="hvr-overline-from-center button2" href="${ctx}/toScoreQry.action?userId=${user.userId}">成绩查询</a></li>
-							<li><a class="hvr-overline-from-center button2" href="${ctx}/toMyBooksPage.action?userId=${user.userId}">我的错题本</a></li>
+							<li><a class="hvr-overline-from-center button2" href="${ctx}/mock/toScoreQry.action?userId=${user.userId}">成绩查询</a></li>
+							<li><a class="hvr-overline-from-center button2" href="${ctx}/mock/toMyBooksPage.action?userId=${user.userId}">我的答题记录</a></li>
 							<li><a class="hvr-overline-from-center button2" href="${ctx}/mock/toMyExamPaperPage.action?userId=${user.userId}">我的试卷</a></li>
 							<li><a class="hvr-overline-from-center button2  active" href="${ctx}/toAbout.action">关于</a></li>
 						</ul>
@@ -74,20 +74,28 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 <div class="about-bottom-last">
 	<div class="container">
-				<div class="help-info">
+				<%--<div class="help-info">
 					<h3 class="tittle">在线考试系统</h3>
-				</div>
-				<div class="client-say-grids">
-					<div class="col-md-3 client-say-grid">
-						<p>At vero eos et accusamus 
-						et iusto odio dignissimos ducimus 
-						qui blanditiis praesentium voluptatum 
-						deleniti atque corrupti quos dolores 
+				</div>--%>
+				<div class="client-say-grids" style="height: 00px">
+					<div class="col-md-10 col-md-offset-1" style="padding-top: 160px">
+						<ul style="font-size: 27px">
+						<li >本系统提供进行模拟考试的环境</li>
+						<li>更多功能完善中...</li>
+						<li>题库内容逐步增加...</li>
+						</ul>
+						<h4 style="padding-top: 50px">如有问题请联系我们</h4>
+					</div>
+					<%--<div class="col-md-3 client-say-grid">
+						<p>At vero eos et accusamus
+						et iusto odio dignissimos ducimus
+						qui blanditiis praesentium voluptatum
+						deleniti atque corrupti quos dolores
 						et quas molestias excepturi sint </p>
 						<h4>界面简洁</h4>
 					</div>
 					<div class="col-md-3 client-say-grid">
-						<p>At vero eos et accusamus 
+						<p>At vero eos et accusamus
 						et iusto odio dignissimos ducimus 
 						qui blanditiis praesentium voluptatum 
 						deleniti atque corrupti quos dolores 
@@ -95,7 +103,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						<h4>操作简单</h4>
 					</div>
 					<div class="col-md-3 client-say-grid">
-						<p>At vero eos et accusamus 
+						<p>At vero eos et accusamus
 						et iusto odio dignissimos ducimus 
 						qui blanditiis praesentium voluptatum 
 						deleniti atque corrupti quos dolores 
@@ -103,13 +111,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						<h4>响应速度快</h4>
 					</div>
 					<div class="col-md-3 client-say-grid">
-						<p>At vero eos et accusamus 
+						<p>At vero eos et accusamus
 						et iusto odio dignissimos ducimus 
 						qui blanditiis praesentium voluptatum 
 						deleniti atque corrupti quos dolores 
 						et quas molestias excepturi sint </p>
 						<h4>可扩展性高</h4>
-					</div>
+					</div>--%>
 					<div class="clearfix"></div>
 				</div>
 	</div>
@@ -119,33 +127,34 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <div class="footer">
 	<div class="container">
 		<div class="footer-grids">
-			<div class="col-md-3 footer-grid">
+			<%--<div class="col-md-3 footer-grid">
 				<h3>简洁美观</h3>
 				<ul>
 					<li><a href="#">SUMMER CAMPS</a></li>
 					<li><a href="#">CELEBRATIONS</a></li>
 				</ul>
-			</div>
+			</div>--%>
 			<div class="col-md-3 footer-grid">
 				<h3>联系地址</h3>
 				<ul>
-					<li><a href="#">福州闽侯上街</a></li>
+					<li><a href="#">吉林省长春市</a></li>
 				</ul>
 			</div>
 			<div class="col-md-3 footer-grid">
 				<h3>联系电话</h3>
 				<ul>
 					<li><a href="#">+86 183****1234</a></li>
-					<li><a href="#">0591 55555555</a></li>
+					<li><a href="#">0431 12345678</a></li>
 				</ul>
 			</div>
 			<div class="col-md-3 footer-grid">
-				<h3>响应速度快</h3>
+				<h3>邮箱</h3>
 				<ul>
-					<li><a href="#">PRESENTATIONS</a></li>
-					<li><a href="#">SEMINARS</a></li>
+					<li><a href="#">tiamo55387@163.com</a></li>
+					<li><a href="#">1641082085@qq.com</a></li>
 				</ul>
 			</div>
+				<div class="col-md-3 footer-grid"></div>
 
 
 		</div>

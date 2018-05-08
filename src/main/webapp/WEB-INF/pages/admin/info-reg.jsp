@@ -33,7 +33,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     	<label><span style="color:red">*</span>密码：</label>
         <input type="password" placeholder="登录密码" name="userPwd" id="userPwd"/>
     </p>
-    <div class="long-input select ue-clear">
+    <%--<div class="long-input select ue-clear">
     	<label><span style="color:red">*</span>年级：</label>
     	<c:forEach items="${grade}" var="cs">
 			<input name="grade" type="radio" value="${cs.gradeId}" checked="checked"/>${cs.gradeName}
@@ -45,7 +45,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     	<input name="userType" type="radio" value="0" checked="checked"/>学生
     	<input name="userType" type="radio" value="1"/>老师
     	<input name="userType" type="radio" value="2"/>管理员
-    </div>
+    </div>--%>
     <p class="short-input ue-clear">
     	<label><span style="color:red">*</span>邮箱：</label>
         <input type="text" onblur="checkEmail()" id="email" name="email"/>

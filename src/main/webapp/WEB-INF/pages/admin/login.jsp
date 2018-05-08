@@ -13,7 +13,21 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<link rel="stylesheet" href="${ctx}/css/base.css" />
 	<link rel="stylesheet" href="${ctx}/css/login.css" />
 	<title>在线考试后台管理系统</title>
+    <style type="text/css">
+        .div_foot{
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 40px;
+            color: #10486b;
+            text-align: center;
+            z-index: 2;
+        }
+
+    </style>
 </head>
+
+
 <body>
 	<div id="container">
 		<div id="bd">
@@ -42,8 +56,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 </form>
             </div>
 		</div>
-	</div>
-    <div id="ft">CopyRight&nbsp;2018&nbsp;&nbsp;<!-- 版权所有&nbsp;&nbsp;uimaker.com专注于ui设计&nbsp;&nbsp;苏ICP备09003079号 --></div>
+
+    </div>
+
+    <div id="ft"class="div_foot"><a href="${ctx}/toLogin.action">用户登录</a></div>
 </body>
 <script type="text/javascript" src="${ctx}/js/jquery.js"></script>
 <script type="text/javascript" src="${ctx}/js/common.js"></script>
@@ -88,4 +104,5 @@ function userLogin(){
 }
 
 </script>
+
 </html>

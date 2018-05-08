@@ -20,10 +20,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <body>
 <div class="title"><h2>听力管理</h2></div>
 <form action="${ctx}/deleteQuestion.action" method="post" name="myform" id="myform">
-<div class="table-operate ue-clear">
+<%--<div class="table-operate ue-clear">
 	<a href="#" class="add" onclick="addUser()">添加</a>
     <a href="javascript:;" class="del" onclick="deleteUser()">删除</a>
-</div>
+</div>--%>
 <div class="table-box" id="myDiv">
 	<table border="1" cellspacing="1">
     	<thead>
@@ -52,8 +52,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     <td>${fn:length(o.subjectListeningVos)} </td>
                     <td></td>
                     <td class="operate">
-                        <a href="${ctx}/deleteQuestion.action?questionId=${o.id}" class="del">删除</a>
-                        <a href="${ctx}/toUpdQuestion.action?questionId=${o.id}" class="del">编辑</a>
+                       <%-- <a href="${ctx}/deleteQuestion.action?questionId=${o.id}" class="del">删除</a>
+                        <a href="${ctx}/toUpdQuestion.action?questionId=${o.id}" class="del">编辑</a>--%>
                         <a href="${ctx}/mock/toQueryRepositorListening.action?sectionId=${o.id}" class="del">查看</a>
                     </td>
 				</tr>
@@ -123,9 +123,9 @@ $('.pagination').pagination(${pageInfo.total},{
                     }
                     html += "<td>"+this.subjectListeningVos.length+"</td>";
                     html += "<td></td>";
-					html += "<td class='operate'><a href='${ctx}/deleteQuestion.action?questionId="+this.id+"' class='del'>删除</a>&nbsp;";
-					html += "<a href='${ctx}/toUpdQuestion.action?questionId="+this.id+"' class='del'>编辑</a>&nbsp;";
-					html += "<a href='${ctx}/mock/toQueryRepositorListening.action?sectionId="+this.id+"' class='del'>查看</a></td>";
+					/*html += "<td class='operate'><a href='${ctx}/deleteQuestion.action?questionId="+this.id+"' class='del'>删除</a>&nbsp;";
+					html += "<a href='${ctx}/toUpdQuestion.action?questionId="+this.id+"' class='del'>编辑</a>&nbsp;";*/
+					html += "<td class='operate'><a href='${ctx}/mock/toQueryRepositorListening.action?sectionId="+this.id+"' class='del'>查看</a></td>";
 					html += "</tr>";
 				})
 				html += "</tbody>"; 

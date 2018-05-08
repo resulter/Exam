@@ -34,7 +34,7 @@ public class ErrorBookController {
 	TypeService typeService;
 	@Autowired
 	UserService userService;
-	//跳转到我的错题本页面
+	//跳转到我的答题记录页面
 	@RequestMapping("/toMyBooksPage.action")
 	public String toMyBooksPage(User user, Model model, HttpSession session){
 		if(session.getAttribute("user")== null){

@@ -25,31 +25,29 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         <div class="col-md-2">
             <label for="userName">用户名称</label>
             <input type="text" id="userName" name="userName" value="${userName}"
-                   style="width: 160px">
+                   style="width: 130px">
         </div>
 
         <div class="col-md-2">
             <label for="examName">试卷名称</label>
             <input type="text" id="examName" name="examName" value="${examName}"
-                   style="width: 160px">
+                   style="width: 130px">
         </div>
         <div class="col-md-2">
             <label for="startTime">开始时间</label>
-            <input id="startTime" type="text" onclick="WdatePicker({el:$dp.$('start_time'),dateFmt:'yyyy-MM-dd HH:mm:ss'})" style="width: 160px" value="${startDate}"/>
-            <img onclick="WdatePicker({el:$dp.$('start_time')})" src="../js/skin/datePicker.gif" width="16" height="22"
-                 align="absmiddle">
+            <input id="startTime" type="text" onclick="WdatePicker({el:$dp.$('start_time'),dateFmt:'yyyy-MM-dd HH:mm:ss'})" style="width: 132px" value="${startDate}"/>
+            <%--<img onclick="WdatePicker({el:$dp.$('start_time')})" src="../js/skin/datePicker.gif" width="16" height="22" align="absmiddle">--%>
         </div>
         <div class="col-md-2">
 
             <label for="endTime">结束时间</label>
-            <input id="endTime" type="text" onclick="WdatePicker({el:$dp.$('end_time'),dateFmt:'yyyy-MM-dd HH:mm:ss'})" style="width: 160px" value="${endDate}"/>
-            <img onclick="WdatePicker({el:$dp.$('end_time')})" src="../js/skin/datePicker.gif" width="16" height="22"
-                 align="absmiddle">
+            <input id="endTime" type="text" onclick="WdatePicker({el:$dp.$('end_time'),dateFmt:'yyyy-MM-dd HH:mm:ss'})" style="width: 132px" value="${endDate}"/>
+            <%--<img onclick="WdatePicker({el:$dp.$('end_time')})" src="../js/skin/datePicker.gif" width="16" height="22" align="absmiddle">--%>
         </div>
         <div class="col-md-2" style="padding-left: 10px">
                     <%--<label for="typeSelector" class="control-label">状态</label>--%>
             <div class="row">
-                <div class="col-sm-3"> <span style="display: inline-block;max-width: 100%;margin-bottom: 5px;font-weight: 700;margin-right: ">状态</span></div>
+                <div class="col-sm-1"></div>
                     <div class="col-sm-9">
                         <select class="form-control" id="typeSelector" style="width: 130px;padding-left:40px">
                             <c:choose>

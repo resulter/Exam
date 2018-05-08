@@ -58,8 +58,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							<li><a class="hvr-overline-from-center button2" href="${ctx}/user/toIndex.action?userId=${user.userId}">首页</a></li>
 							<li><a class="hvr-overline-from-center button2  active" href="${ctx}/toUserInfo.action?userId=${user.userId}">个人中心</a></li>
 							<!-- <li><a class="hvr-overline-from-center button2" href="onlinecheck.html">在线考试</a></li> -->
-							<li><a class="hvr-overline-from-center button2" href="${ctx}/toScoreQry.action?userId=${user.userId}">成绩查询</a></li>
-							<li><a class="hvr-overline-from-center button2" href="${ctx}/toMyBooksPage.action?userId=${user.userId}">我的错题本</a></li>
+							<li><a class="hvr-overline-from-center button2" href="${ctx}/mock/toScoreQry.action?userId=${user.userId}">成绩查询</a></li>
+							<li><a class="hvr-overline-from-center button2" href="${ctx}/mock/toMyBooksPage.action?userId=${user.userId}">我的答题记录</a></li>
 							<li><a class="hvr-overline-from-center button2" href="${ctx}/mock/toMyExamPaperPage.action?userId=${user.userId}">我的试卷</a></li>
 							<li><a class="hvr-overline-from-center button2" href="${ctx}/toAbout.action">关于</a></li>
 						</ul>
@@ -96,11 +96,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			  		id="userName" name="userName" value="${user.userName }"/>
 			</div>
 		
-			<div class="input-group">
+		<%--	<div class="input-group">
 			  <span class="input-group-addon" id="basic-addon1">&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;级：</span>
 			  <input type="text" class="form-control" 
 			  		id="grade" name="grade" value="${user.grade }" readonly="readonly">
-			</div>
+			</div>--%>
 			<div class="input-group">
 			  <span class="input-group-addon" id="basic-addon1">常用邮箱：</span>
 			  <input type="text" class="form-control"

@@ -113,10 +113,10 @@
             var userId = "${userId}"
             savaOptionAnswer(${paperId},userId);
             var sub = Number(localStorage.getItem("subject"));
-            alert(sub + "--");
+            // alert(sub + "--");
             if(sub == 1||sub==2){//第一篇或第二篇的时候，获取下一篇内容
                 var order = Number(sub) +1;//下一篇 序号
-                alert("order"+order);
+                // alert("order"+order);
                 getSecondReading(order);
                 <%--alert("试卷id"+${paperId});--%>
 
@@ -205,7 +205,7 @@
                 },
                 function (data) {
                     alert(data.errorInfo);
-                    document.myForm.attributes["action"].value = "${ctx}/toScoreQry.action?userId=${user.userId}";
+                    document.myForm.attributes["action"].value = "${ctx}/mock/toScoreQry.action?userId=${user.userId}";
                     $("form").submit();
                 }, "json");
         }
@@ -309,8 +309,8 @@
                         <li><a class="hvr-overline-from-center button2" href="${ctx}/toUserInfo.action">个人中心</a></li>
                         <!-- <li><a class="hvr-overline-from-center button2" href="onlinecheck.html">在线考试</a></li> -->
                         <li><a class="hvr-overline-from-center button2"
-                               href="${ctx}/toScoreQry.action?userId=${user.userId}">成绩查询</a></li>
-                        <li><a class="hvr-overline-from-center button2" href="${ctx}/toMyBooksPage.action">我的错题本</a>
+                               href="${ctx}/mock/toScoreQry.action?userId=${user.userId}">成绩查询</a></li>
+                        <li><a class="hvr-overline-from-center button2" href="${ctx}/mock/toMyBooksPage.action">我的答题记录</a>
                         </li>
                         <li><a class="hvr-overline-from-center button2  active"
                                href="${ctx}/mock/toMyExamPaperPage.action">我的试卷</a></li>
@@ -723,7 +723,7 @@
         // answer +=  localStorage.getItem("8")+",";
         // answer +=  localStorage.getItem("9")+",";
         // answer +=  localStorage.getItem("10");
-        alert(answer);
+        // alert(answer);
         // alert( localStorage.getItem("subject")+"  提交前");
         var subjectId =   localStorage.getItem("subject");
         $.ajax({

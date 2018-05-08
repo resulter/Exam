@@ -190,7 +190,7 @@
                 },
                 function (data) {
                     alert(data.errorInfo);
-                    document.myForm.attributes["action"].value = "${ctx}/toScoreQry.action?userId=${user.userId}";
+                    document.myForm.attributes["action"].value = "${ctx}/mock/toScoreQry.action?userId=${user.userId}";
                     $("form").submit();
                 }, "json");
         }
@@ -294,8 +294,8 @@
                         <li><a class="hvr-overline-from-center button2" href="${ctx}/toUserInfo.action">个人中心</a></li>
                         <!-- <li><a class="hvr-overline-from-center button2" href="onlinecheck.html">在线考试</a></li> -->
                         <li><a class="hvr-overline-from-center button2"
-                               href="${ctx}/toScoreQry.action?userId=${user.userId}">成绩查询</a></li>
-                        <li><a class="hvr-overline-from-center button2" href="${ctx}/toMyBooksPage.action">我的错题本</a>
+                               href="${ctx}/mock/toScoreQry.action?userId=${user.userId}">成绩查询</a></li>
+                        <li><a class="hvr-overline-from-center button2" href="${ctx}/mock/toMyBooksPage.action">我的答题记录</a>
                         </li>
                         <li><a class="hvr-overline-from-center button2  active"
                                href="${ctx}/mock/toMyExamPaperPage.action">我的试卷</a></li>
@@ -355,15 +355,16 @@
                         id="questionNum">${dataList[0].questionNum}</span>.${dataList[0].queation}</div>
                 <div id="questionOption">
                     <c:forEach items="${dataList[0].optionReadingVos}" var="item">
-                        <div style="margin-left: 35px"><input id="answer${item.itemCode}" type="radio" name="answer"
-                                                              value="${item.itemCode}" style="z-index:-2">
+                        <div style="margin-left: 35px">
+                            <input id="answer${item.itemCode}" type="radio" name="answer"     value="${item.itemCode}" style="z-index:-2">
                             <label class="label-radio" for="answer${item.itemCode}">
-                                <span>${item.itemCode}.${item.itemName}</span> </label></div>
+                                <span>${item.itemCode}.${item.itemName}</span>
+                            </label>
+                        </div>
                     </c:forEach>
                 </div>
             </div>
             <div class="content-text-r">
-                <div class="passage-title"><h3>${dataList[0].passageTitle}</h3></div>
                 ${dataList[0].passage}
             </div>
         </div>

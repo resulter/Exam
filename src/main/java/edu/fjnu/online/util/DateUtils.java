@@ -129,6 +129,11 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils{
         }
     }
 
+    public static Date getMyDate(Date date){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        return DateUtils.translateStringToDateFull(sdf.format(date));
+    }
+
     /**
      * 获取过去的天数
      *

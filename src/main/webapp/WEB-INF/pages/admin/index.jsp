@@ -60,17 +60,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                             <li><a href="#" onclick="formSubmit('${ctx}/admin/getFindPending.action','mframe');this.blur();">身份审核</a></li>
                         </ul>
 					</li>
-                    <li class="agency">
+                  <%--  <li class="agency">
 						<div class="nav-header"><a href="javascript:;" class="ue-clear"><span>基础管理</span><i class="icon"></i></a></div>
 						<ul class="subnav">
                         	<li><a href="javascript:;" onclick="formSubmit('${ctx}/toGradePage.action','mframe');this.blur();">年级管理</a></li>
                             <li><a href="javascript:;" onclick="formSubmit('${ctx}/toCoursePage.action','mframe');this.blur();">课程管理</a></li>
                         </ul>
-					</li>
+					</li>--%>
                     <li class="system"><div class="nav-header"><a href="javascript:;" class="ue-clear"><span>试卷管理</span><i class="icon"></i></a></div>
                     	<ul class="subnav">
-                        	<li><a href="javascript:;" onclick="formSubmit('${ctx}/toPaperPage.action','mframe');this.blur();">试卷管理</a></li>
-                        	<li><a href="javascript:;" onclick="formSubmit('${ctx}/mock/toExamPaper.action','mframe');this.blur();">TPO试卷管理</a></li>
+                        	<%--<li><a href="javascript:;" onclick="formSubmit('${ctx}/toPaperPage.action','mframe');this.blur();">试卷管理</a></li>--%>
+                        	<li><a href="javascript:;" onclick="formSubmit('${ctx}/mock/toExamPaper.action','mframe');this.blur();">试卷管理</a></li>
                         </ul>
                     </li>
                     <li class="gongwen">
@@ -96,7 +96,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             <em>Online&nbsp;Exame&nbsp;System</em>
         </div>
         <div class="ft-right">
-            <span>Automation</span>
+            <span>Version </span>
             <em>V1.0</em>
         </div>
     </div>
