@@ -77,6 +77,35 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		}
 		
 	}
+
+    function checkMyPhone(){
+        var email = $("#telphone").val();
+        if(email == ""){
+            $("#phoneInfo").html("<span style='color: red' >请输入手机号</span>");
+            return;
+        }
+        var req =  /^1\d{10}$/;
+        if(!req.test(email)){
+            $("#phoneInfo").html("<span style='color: red' >手机号格式不正确</span>");
+            $("#telphone").focus();
+            return;
+        }
+        $("#phoneInfo").html("<span style='color: green' >验证通过</span>");
+    }
+    function checkMyEmail() {
+        var email = $("#email").val();
+        if(email == ""){
+            $("#emailInfo").html("<span style='color: red' >请输入邮箱</span>");
+            return;
+        }
+        var req = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
+        if(!req.test(email)){
+            $("#emailInfo").html("<span style='color: red' >邮箱格式不正确</span>");
+            $("#email").focus();
+            return;
+        }
+        $("#emailInfo").html("<span style='color: green' >验证通过</span>");
+    }
 	
 </script>
 </head>
@@ -84,7 +113,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <div class="page-container">
         <h1>用户注册</h1>
         <form action="${ctx}/user/toIndex.action" method="post" name="myform" id="myform">
-            <input type="text" name="userId" id="userId" class="username" placeholder="用户账号" onblur="checkUserId()"><br><span style="color: red" id="tipInfo">${message }</span><br>
+            <input type="text" name="userId" id="userId" class="username" placeholder="用户账号" onblur="checkUserId()"><br>
+            <div style="padding-top: 7px">
+            <span style="color: red" id="tipInfo">${message }</span>
+            </div>
             <input type="text" name="userName" id="userName" placeholder="用户昵称">
             <input type="password" name="Pwd" id="Pwd" class="password" placeholder="登录密码">
             <input type="password" name="userPwd" id="userPwd" class="password" placeholder="确认密码" onblur="checkPwd()"><br/>
@@ -92,8 +124,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<input type="radio" checked="checked" name="grade" value="${grade.gradeId }" 
 					class="radio" />${grade.gradeName } &nbsp;
 			</c:forEach>--%>
-            <input type="text" name="email" id="email" class="username" placeholder="邮箱">
-            <input type="text" name="telphone" id="telphone" placeholder="联系电话">
+            <input type="text" name="email" id="email" class="username" placeholder="邮箱" onblur="checkMyEmail()">
+            <div style="padding-top: 7px" id="emailInfo">
+                <span style="color: red"></span>
+            </div>
+            <input type="text" name="telphone" id="telphone" placeholder="联系电话" onblur="checkMyPhone()">
+            <div style="padding-top: 7px" id="phoneInfo">
+                <span style="color: red" ></span>
+            </div>
             <input type="text" name="address" id="address" placeholder="联系地址">
             <button type="button" onclick="regist()">注册</button>
             <div class="error"><span>${message }</span></div>

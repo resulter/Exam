@@ -57,7 +57,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					<td>${o.email}</td>
 					<td>${o.telephone}</td>
 					<td class="operate">
-						<a href="javascript:;" class="del" onclick="addUser()">通过</a>
+						<a href="javascript:;" class="del" onclick="addUser(${o.userId})">通过</a>
 						<a href="javascript:;" class="edit" onclick="deleteUser()">注销</a>
 						<a href="javascript:;" class="count" onclick="showDetail('+${o.userId}+')">查看</a>
 					</td>
@@ -160,7 +160,7 @@ function deleteUser(){
 	$("form").submit();
 }
 //通过审核
-function addUser(){
+function addUser(uid){
 	var ids = "";
 	$("input:checkbox[name='userId']:checked").each(function() {
 		ids += $(this).val() + ",";

@@ -66,7 +66,7 @@
         function timer(intDiff) {
             window.setInterval(function () {
                 var day = 0,
-                    hour = 1,
+                    hour = 0,
                     minute = 30,
                     second = 0;//时间默认值
                 if (intDiff > 0) {

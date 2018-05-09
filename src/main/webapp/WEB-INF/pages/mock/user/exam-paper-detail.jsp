@@ -56,7 +56,7 @@
         function timer(intDiff) {
             window.setInterval(function () {
                 var day = 0,
-                    hour = 1,
+                    hour = 0,
                     minute = 30,
                     second = 0;//时间默认值
                 if (intDiff > 0) {
@@ -74,7 +74,12 @@
                 $('#hour_show').html('<s id="h"></s>' + hour + '时');
                 $('#minute_show').html('<s></s>' + minute + '分');
                 $('#second_show').html('<s></s>' + second + '秒');
+                console.log('s', second);
+                console.log('i', intDiff);
                 intDiff--;
+               /* if(intDiff == -1){
+                    alert("time out");
+                }*/
             }, 1000);
         }
 
@@ -447,6 +452,7 @@
                     $("#myDiv").html("");
                     $("#myDiv").append(html);
                     $('input[name=answer]').on('click', selectAnswer)
+                    $('.label-radio').css('display', 'initial');
                 },
                 error: function (data) {
                     alert("error");
@@ -517,7 +523,8 @@
                 html += "</div>";
                 $("#myDiv").html("");
                 $("#myDiv").append(html);
-                $('input[name=answer]').on('click', selectAnswer)
+                $('input[name=answer]').on('click', selectAnswer);
+                $('.label-radio').css('display', 'initial');
             },
             error: function (data) {
                 alert("error");
@@ -568,7 +575,8 @@
                         html += "</div>";
                         $("#myDiv").html("");
                         $("#myDiv").append(html);
-                        $('input[name=answer]').on('click', selectAnswer)
+                        $('input[name=answer]').on('click', selectAnswer);
+                        $('.label-radio').css('display', 'initial');
                     },
                     error: function (data) {
                         alert("error");
@@ -630,8 +638,9 @@
     }
 
 
-
+$('.label-radio').css('display', 'initial');
 </script>
+
 <a href="#" id="toTop" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
 </body>
 </html>

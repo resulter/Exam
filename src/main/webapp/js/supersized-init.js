@@ -1,5 +1,12 @@
 jQuery(function($){
+    function getContextPath() {
 
+        var pathName = document.location.pathname;
+        var index = pathName.substr(1).indexOf("/");
+        var result = pathName.substr(0,index+1);
+        return result;
+    }
+    var path = getContextPath();
     $.supersized({
 
         // Functionality
@@ -20,9 +27,9 @@ jQuery(function($){
         // Components
         slide_links        : 'blank',    // Individual links for each slide (Options: false, 'num', 'name', 'blank')
         slides             : [    // Slideshow Images
-                                 {image : '/images/backgrounds/1.jpg'},
-                                 {image : '/images/backgrounds/2.jpg'},
-                                 {image : '/images/backgrounds/3.jpg'}
+                                 {image : path+'/images/backgrounds/1.jpg'},
+                                 {image : path+'/images/backgrounds/2.jpg'},
+                                 {image : path+'./images/backgrounds/3.jpg'}
                              ]
 
     });

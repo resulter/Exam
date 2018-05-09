@@ -5,9 +5,9 @@
 	<artifactId>Check</artifactId>
 	<packaging>pom</packaging>
 	<version>0.0.1-SNAPSHOT</version>
-	<modules>
+	<!--<modules>
 		<module>GeneratorForProject</module>
-	</modules>
+	</modules>-->
 	<name>Check Maven Webapp</name>
 	<url>http://maven.apache.org</url>
 

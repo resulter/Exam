@@ -63,7 +63,7 @@
         function timer(intDiff) {
             window.setInterval(function () {
                 var day = 0,
-                    hour = 1,
+                    hour = 0,
                     minute = 30,
                     second = 0;//时间默认值
                 if (intDiff > 0) {
@@ -364,7 +364,7 @@
             <div id="passage-div">
                 <img src="${dataList[0].imageURL}" width="460px" height="232px" style="clear: both;display: block; margin:auto;padding-bottom: 5px">
                 <img src="../images/start-passage.png" width="50px" height="50px" style="clear: both;display: block; margin:auto;padding-bottom: 5px" id="audio-play">
-                <audio src="${dataList[0].questionURL}" controls="true" id="audio" style="display:none;"></audio>
+                <audio src="${dataList[0].audioURL}" controls="true" id="audio" style="display:none;"></audio>
             </div>
             <div id="question-div" style="display: none">
                 <div style="margin-left: 35px" id="questionContent"><span id="questionNum">${dataList[0].questionNum}</span>.${dataList[0].question}
